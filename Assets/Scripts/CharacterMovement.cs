@@ -187,4 +187,12 @@ public class CharacterMovement : MonoBehaviour
     {
         _characterSpeed = _baseSpeed;
     }
+
+    private Vector2 nearbyHitOppositeForceDirection(Vector2 hitPosition)
+    {
+        Vector2 oppositeForceVector = hitPosition - (Vector2)transform.position;
+        return oppositeForceVector.normalized;
+    }
+
+
 }

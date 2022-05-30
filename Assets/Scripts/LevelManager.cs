@@ -110,7 +110,7 @@ public class LevelManager : MonoBehaviour
         initializeObjects(GameAssets.Instance.ObstacleObject, _numOfObstacles, _obstacleLayerMask, _obstaclesList);
         initializeObjects(GameAssets.Instance.CharacterObject, _numOfCharacters, _characterLayerMask, _charactersList);
 
-        if (AlpacaUtils.ChanceFunc(90))
+        if (AlpacaUtils.ChanceFunc(90) && _levelNumber >= 3)
             _affiliationTransform = spawnObject(GameAssets.Instance.AffiliationTrigger);
     }
 

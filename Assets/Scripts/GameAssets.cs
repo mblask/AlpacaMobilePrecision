@@ -14,6 +14,7 @@ public class GameAssets : MonoBehaviour
         }
     }
 
+    public Transform BulletMark;
     public Transform AffiliationTrigger;
     public Transform CharacterObject;
     public Transform ObstacleObject;

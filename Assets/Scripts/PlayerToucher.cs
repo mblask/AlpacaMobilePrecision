@@ -1,14 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerToucher : MonoBehaviour
 {
-    [SerializeField] private Transform _testCircle;
+    public Action<Vector3> OnPlayerTouchPosition;
+
+    private static PlayerToucher _instance;
+
+    public static PlayerToucher Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
 
     private Camera _mainCamera;
 
     private float _touchTime;
+
+    private void Awake()
+    {
+        _instance = this;
+    }
 
     private void Start()
     {
@@ -19,10 +35,12 @@ public class PlayerToucher : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    detectHit(Input.mousePosition);
-        //}
+        //FOR TESTING, REMOVE LATER
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 worldClickPosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            OnPlayerTouchPosition?.Invoke(worldClickPosition);
+        }
 
         if (Input.touchCount > 0)
         {
@@ -33,8 +51,7 @@ public class PlayerToucher : MonoBehaviour
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    detectHit(worldTouchPosition);
-                    Instantiate(_testCircle, worldTouchPosition, Quaternion.identity, null);
+                    OnPlayerTouchPosition?.Invoke(worldTouchPosition);
                     break;
 
                 case TouchPhase.Moved:
@@ -59,29 +76,5 @@ public class PlayerToucher : MonoBehaviour
                     break;
             }
         }
-    }
-
-    private void detectHit(Vector3 worldPosition)
-    {
-        RaycastHit2D hitInfo = Physics2D.Raycast(worldPosition, Vector2.up * 0.1f);
-
-        if (hitInfo)
-        {
-            IDamagable damagable = hitInfo.collider.gameObject.GetComponent<IDamagable>();
-
-            if (damagable != null)
-                damagable.DamageThis();
-
-            AffiliationTrigger affiliationTrigger = hitInfo.collider.gameObject.GetComponent<AffiliationTrigger>();
-
-            if (affiliationTrigger != null)
-                affiliationTrigger.TriggerAffiliationSwitch();
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(Vector3.zero, Vector3.up * 0.1f);
     }
 }
