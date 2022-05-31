@@ -43,7 +43,7 @@ public class Character : MonoBehaviour, IDamagable
 
     public void DamageThis()
     {
-        OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = getCharacterColor(_characterType) });
+        OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = _spriteRenderer.color });
         OnCharacterDestroyed?.Invoke(this);
         Destroy(gameObject);
     }
@@ -69,12 +69,6 @@ public class Character : MonoBehaviour, IDamagable
             return CharacterType.Positive;
         else
             return CharacterType.Negative;
-
-        /*
-        int numOfObstacles = System.Enum.GetValues(typeof(CharacterType)).Length;
-
-        return (CharacterType)UnityEngine.Random.Range(0, numOfObstacles);
-        */
     }
 
     public void AssignCharacterType(CharacterType type)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class AffiliationTrigger : Character, IDamagable
+public class AffiliationTrigger : Character, IAffiliationTrigger
 {
     public static Action OnAffiliationTriggerHit;
 

@@ -262,9 +262,10 @@ public class LevelManager : MonoBehaviour
 
     private void checkLevelCompletion(Character characterDestroyed)
     {
-        Debug.Log(characterDestroyed.GetComponent<AffiliationTrigger>() == null);
+        AffiliationTrigger afiiliationTrigger = characterDestroyed.GetComponent<AffiliationTrigger>();
 
-        _charactersList.Remove(characterDestroyed.transform);
+        if (afiiliationTrigger == null)
+            _charactersList.Remove(characterDestroyed.transform);
 
         int badCharactersNum = getCharacterTypeAmount(CharacterType.Negative);
         int goodCharactersNum = getCharacterTypeAmount(CharacterType.Positive);

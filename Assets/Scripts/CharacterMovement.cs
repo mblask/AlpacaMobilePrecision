@@ -29,6 +29,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] [Tooltip("Speed depending on distance factor")] [Range(0.0f, 0.1f)] private float _distanceDependance = 0.07f;
 
     private LevelManager _levelManager;
+    private Camera _camera;
 
     private void Awake()
     {
@@ -38,6 +39,7 @@ public class CharacterMovement : MonoBehaviour
     private void Start()
     {
         _levelManager = LevelManager.Instance;
+        _camera = Camera.main;
 
         if (_equalSpeeds)
             _characterSpeed = _baseSpeed;
@@ -187,12 +189,4 @@ public class CharacterMovement : MonoBehaviour
     {
         _characterSpeed = _baseSpeed;
     }
-
-    private Vector2 nearbyHitOppositeForceDirection(Vector2 hitPosition)
-    {
-        Vector2 oppositeForceVector = hitPosition - (Vector2)transform.position;
-        return oppositeForceVector.normalized;
-    }
-
-
 }

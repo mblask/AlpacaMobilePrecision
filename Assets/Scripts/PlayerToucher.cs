@@ -5,7 +5,7 @@ using System;
 
 public class PlayerToucher : MonoBehaviour
 {
-    public Action<Vector3> OnPlayerTouchPosition;
+    public Action<Vector2> OnPlayerTouchPosition;
 
     private static PlayerToucher _instance;
 

@@ -13,7 +13,7 @@ public class Obstacle : MonoBehaviour, IDamagable
 {
     public static Action<Obstacle> OnObstacleDestroy;
 
-    public const int SOLID_HIT_POINT = 9999;
+    private int _solidHitPoint = 9999;
 
     private ObstacleType _obstacleType;
     private SpriteRenderer _spriteRenderer;
@@ -50,7 +50,7 @@ public class Obstacle : MonoBehaviour, IDamagable
         switch (type)
         {
             case ObstacleType.Solid:
-                return SOLID_HIT_POINT;
+                return _solidHitPoint;
             case ObstacleType.Fragile:
                 return UnityEngine.Random.Range(1, 3);
             default:

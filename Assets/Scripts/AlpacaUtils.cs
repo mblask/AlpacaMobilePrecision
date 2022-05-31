@@ -32,4 +32,12 @@ public static class AlpacaUtils
 
         return new Vector2(Random.Range(x0y0, 1.0f) * borderScaling * Screen.width, Random.Range(x0y0, 1.0f) * borderScaling * Screen.height);
     }
+
+    public static bool IsInsideScreen(Vector2 position)
+    {
+        if (position.x >= 0.0f && position.x < Screen.width && position.y >= 0.0f && position.y < Screen.height)
+            return true;
+        else
+            return false;
+    }
 }

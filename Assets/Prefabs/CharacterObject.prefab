@@ -141,8 +141,6 @@ MonoBehaviour:
   _baseSpeed: 5
   _equalSpeeds: 1
   _distanceDependance: 0.07
-  _nearbyHitEffects: 0
-  _nearbyHitRadius: 1
 --- !u!114 &-3875785134196395561
 MonoBehaviour:
   m_ObjectHideFlags: 0

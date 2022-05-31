@@ -22,45 +22,63 @@ public class HitManager : MonoBehaviour
         PlayerToucher.Instance.OnPlayerTouchPosition -= playerToucher_OnPlayerTouch;
     }
 
-    private void playerToucher_OnPlayerTouch(Vector3 worldPosition)
+    private void playerToucher_OnPlayerTouch(Vector2 worldPosition)
     {
         detectCharacterHit(worldPosition);
-        detectHitInArea(worldPosition);
         Instantiate(_gameAssets.BulletMark, (Vector2)worldPosition, Quaternion.identity, null);
     }
 
-    private void detectHitInArea(Vector3 worldPosition)
+    private void detectCharacterHit(Vector2 worldPosition)
     {
-        Collider2D[] hitInfo = Physics2D.OverlapCircleAll(worldPosition, _nearbyHitRadius);
+        //RaycastHit2D hitInfo = Physics2D.Raycast(worldPosition, Vector2.up, 0.1f);
 
-        if (hitInfo.Length > 0)
+        RaycastHit2D[] hitInfoArray = Physics2D.RaycastAll(worldPosition, Vector2.up, 0.1f);
+        if (hitInfoArray.Length >= 1)
         {
-            foreach (Collider2D collider in hitInfo)
-            {
-                CharacterMovement characterMovement = collider.GetComponent<CharacterMovement>();
+            bool obstacleExists = false;
 
-                if (characterMovement != null)
-                    Debug.Log("Character affected in range: " + _nearbyHitRadius);
+            foreach (RaycastHit2D hit in hitInfoArray)
+            {
+                Obstacle obstacle = hit.collider.GetComponent<Obstacle>();
+                if (obstacle != null)
+                {
+                    obstacleExists = true;
+                    obstacle.DamageThis();
+                    break;
+                }
+            }
+
+            if (!obstacleExists)
+            {
+                Collider2D firstCollider = hitInfoArray[0].collider;
+
+                IDamagable damagable = firstCollider.GetComponent<IDamagable>();
+
+                if (damagable != null)
+                {
+                    IAffiliationTrigger affiliationTrigger = firstCollider.GetComponent<IAffiliationTrigger>();
+                    if (affiliationTrigger != null)
+                        affiliationTrigger.TriggerAffiliationSwitch();
+
+                    damagable.DamageThis();
+                }
             }
         }
-    }
 
-    private void detectCharacterHit(Vector3 worldPosition)
-    {
-        RaycastHit2D hitInfo = Physics2D.Raycast(worldPosition, Vector2.up * 0.1f);
-
+        /*
         if (hitInfo)
         {
-            IDamagable damagable = hitInfo.collider.gameObject.GetComponent<IDamagable>();
+            IDamagable damagable = hitInfo.collider.GetComponent<IDamagable>();
 
             if (damagable != null)
                 damagable.DamageThis();
 
-            AffiliationTrigger affiliationTrigger = hitInfo.collider.gameObject.GetComponent<AffiliationTrigger>();
+            AffiliationTrigger affiliationTrigger = hitInfo.collider.GetComponent<AffiliationTrigger>();
 
             if (affiliationTrigger != null)
                 affiliationTrigger.TriggerAffiliationSwitch();
         }
+        */
     }
 
     private void OnDrawGizmos()
