@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5160613043861113338}
   - component: {fileID: 6211348378515153102}
   - component: {fileID: -4217978628812724406}
-  - component: {fileID: -8971359266366394522}
+  - component: {fileID: 3675200885128506000}
   m_Layer: 0
   m_Name: BulletMark
   m_TagString: Untagged
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fadeAfter: 2
---- !u!114 &-8971359266366394522
+--- !u!114 &3675200885128506000
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

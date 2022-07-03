@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class PlayerToucher : MonoBehaviour
+public class PlayerTouchManager : MonoBehaviour
 {
     public Action<Vector2> OnPlayerTouchPosition;
 
-    private static PlayerToucher _instance;
+    private static PlayerTouchManager _instance;
 
-    public static PlayerToucher Instance
+    public static PlayerTouchManager Instance
     {
         get
         {
@@ -21,6 +21,9 @@ public class PlayerToucher : MonoBehaviour
 
     private float _touchTime;
 
+    [Header("For Testing")]
+    [SerializeField] private bool _inputActive = true;
+
     private void Awake()
     {
         _instance = this;
@@ -28,6 +31,8 @@ public class PlayerToucher : MonoBehaviour
 
     private void Start()
     {
+        LevelManager.Instance.OnInitializeGame += activateInput;
+
         _mainCamera = Camera.main;
 
         _touchTime = 0.0f;
@@ -35,6 +40,9 @@ public class PlayerToucher : MonoBehaviour
 
     private void Update()
     {
+        if (!_inputActive)
+            return;
+
         //FOR TESTING, REMOVE LATER
         if (Input.GetMouseButtonDown(0))
         {
@@ -76,5 +84,20 @@ public class PlayerToucher : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        LevelManager.Instance.OnInitializeGame -= activateInput;
+    }
+
+    private void activateInput()
+    {
+        _inputActive = true;
+    }
+
+    private void deactivateInput()
+    {
+        _inputActive = false;
     }
 }

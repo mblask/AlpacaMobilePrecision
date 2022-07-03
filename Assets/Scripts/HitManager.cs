@@ -7,31 +7,48 @@ public class HitManager : MonoBehaviour
     private GameAssets _gameAssets;
 
     [Header("Hit effect")]
-    [SerializeField] private bool _nearbyHitEffects = false;
     [SerializeField][Range(0.0f, 2.0f)] private float _nearbyHitRadius = 1.0f;
 
     private void Start()
     {
-        PlayerToucher.Instance.OnPlayerTouchPosition += playerToucher_OnPlayerTouch;
+        PlayerTouchManager.Instance.OnPlayerTouchPosition += playerTouchManager_OnPlayerTouch;
 
         _gameAssets = GameAssets.Instance;
     }
 
     private void OnDestroy()
     {
-        PlayerToucher.Instance.OnPlayerTouchPosition -= playerToucher_OnPlayerTouch;
+        PlayerTouchManager.Instance.OnPlayerTouchPosition -= playerTouchManager_OnPlayerTouch;
     }
 
-    private void playerToucher_OnPlayerTouch(Vector2 worldPosition)
+    private void playerTouchManager_OnPlayerTouch(Vector2 worldPosition)
     {
         detectCharacterHit(worldPosition);
+        detectAreaEffectHits(worldPosition);
         Instantiate(_gameAssets.BulletMark, (Vector2)worldPosition, Quaternion.identity, null);
+    }
+
+    private void detectAreaEffectHits(Vector3 worldPosition)
+    {
+        Collider2D[] hitInfo = Physics2D.OverlapCircleAll(worldPosition, _nearbyHitRadius);
+
+        if (hitInfo.Length != 0)
+        {
+            foreach (Collider2D hit in hitInfo)
+            {
+                CharacterMovement characterMovement = hit.GetComponent<CharacterMovement>();
+
+                if (characterMovement != null)
+                {
+                    characterMovement.ActivateRotation();
+                    characterMovement.NearbyHitDetectedAt(worldPosition);
+                }
+            }
+        }
     }
 
     private void detectCharacterHit(Vector2 worldPosition)
     {
-        //RaycastHit2D hitInfo = Physics2D.Raycast(worldPosition, Vector2.up, 0.1f);
-
         RaycastHit2D[] hitInfoArray = Physics2D.RaycastAll(worldPosition, Vector2.up, 0.1f);
         if (hitInfoArray.Length >= 1)
         {
@@ -64,21 +81,6 @@ public class HitManager : MonoBehaviour
                 }
             }
         }
-
-        /*
-        if (hitInfo)
-        {
-            IDamagable damagable = hitInfo.collider.GetComponent<IDamagable>();
-
-            if (damagable != null)
-                damagable.DamageThis();
-
-            AffiliationTrigger affiliationTrigger = hitInfo.collider.GetComponent<AffiliationTrigger>();
-
-            if (affiliationTrigger != null)
-                affiliationTrigger.TriggerAffiliationSwitch();
-        }
-        */
     }
 
     private void OnDrawGizmos()

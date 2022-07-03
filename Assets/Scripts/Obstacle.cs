@@ -18,8 +18,6 @@ public class Obstacle : MonoBehaviour, IDamagable
     private ObstacleType _obstacleType;
     private SpriteRenderer _spriteRenderer;
 
-    private int _fragileObjectHit = -1;
-
     private int _obstacleHitPoint;
 
     private void Awake()

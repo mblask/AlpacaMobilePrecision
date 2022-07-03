@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class ScoreKeeper : MonoBehaviour
+public class ScoreKeeperUI : MonoBehaviour
 {
     private TextMeshProUGUI _scoreText;
 

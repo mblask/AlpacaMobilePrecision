@@ -1,6 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
+public class CharacterLevelUpProperties
+{
+    public int PercentageSpeedIncrease;
+    public SpeedDistanceDependance SpeedDistanceDependance;
+}
 
 public enum SpeedDistanceDependance
 {
@@ -15,21 +22,26 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private bool _waypointsDependOnObstacles = false;
     private List<Vector3> _waypointPositions = new List<Vector3>();
 
+    private bool _isRotating = false;
+    private int _rotationDirection = 1;
+    private float _rotationSpeed = 300.0f;
+
     private bool _isWaiting = false;
     private float _waitTime = 0.0f;
     private Vector2 _waitInterval = new Vector2(0.5f, 1.0f);
     private float _waitingTimer = 0.0f;
+
+    private Vector3 _nearbyHit;
 
     [Header("Character Speed")]
     [SerializeField]
     [Range(4.0f, 8.0f)] private float _baseSpeed = 4.0f;
     private float _characterSpeed = 4.0f;
     [SerializeField] [Tooltip("Current speed is equal to base speed")] private bool _equalSpeeds;
-    //if distance is great, the speed is greatly increased, if distance is short the slightly increased
+    //if distance is great, the speed is greatly increased, if distance is short the speed is slightly increased
     [SerializeField] [Tooltip("Speed depending on distance factor")] [Range(0.0f, 0.1f)] private float _distanceDependance = 0.07f;
 
     private LevelManager _levelManager;
-    private Camera _camera;
 
     private void Awake()
     {
@@ -39,7 +51,6 @@ public class CharacterMovement : MonoBehaviour
     private void Start()
     {
         _levelManager = LevelManager.Instance;
-        _camera = Camera.main;
 
         if (_equalSpeeds)
             _characterSpeed = _baseSpeed;
@@ -56,10 +67,17 @@ public class CharacterMovement : MonoBehaviour
     {
         LevelManager.Instance.OnCharacterLevelUp -= levelUpCharacter;
     }
-    private void levelUpCharacter(int percentage, SpeedDistanceDependance distanceDependance)
+
+    public void MoveTo(Vector2 position, Action funcToPerform = null)
     {
-        SetCharacterSpeedPerc(percentage);
-        SetDistanceDependance(distanceDependance);
+        Debug.Log("Move to: " + position + ", then do an action.");
+        funcToPerform?.Invoke();
+    }
+
+    private void levelUpCharacter(CharacterLevelUpProperties properties)
+    {
+        SetCharacterSpeedPerc(properties.PercentageSpeedIncrease);
+        SetDistanceDependance(properties.SpeedDistanceDependance);
     }
 
     private void characterMovement()
@@ -77,10 +95,16 @@ public class CharacterMovement : MonoBehaviour
             return;
         }
 
+        if (_nearbyHit != default(Vector3))
+            generateWaypointOppositeOfCharacterMovement();
+
         if (_waypointPositions.Count == 0)
             generateWaypoints();
         else
             move();
+
+        if (_isRotating)
+            rotateCharacter();
     }
 
     private void generateWaypoints()
@@ -95,15 +119,43 @@ public class CharacterMovement : MonoBehaviour
             }
             else
             {
-                Vector2 randomPosition = AlpacaUtils.GetRandomPositionOnScreen(3);
+                Vector2 randomPosition = AlpacaUtils.GetRandomWorldPosition(2);
                 _waypointPositions.Add(randomPosition);
             }
         }
         else
         {
-            Vector2 randomPosition = AlpacaUtils.GetRandomPositionOnScreen(3);
+            Vector2 randomPosition = AlpacaUtils.GetRandomWorldPosition(2);
             _waypointPositions.Add(randomPosition);
         }
+    }
+
+    private void generateWaypointOppositeOfCharacterMovement()
+    {
+        if (_isWaiting)
+            _isWaiting = false;
+
+        Vector3 hitVector = transform.position - _nearbyHit;
+        Vector3 oppositeDirectionOfHit = hitVector.normalized;
+
+        //delete current waypoint
+        _waypointPositions.Clear();
+
+        //check how far the nearest edge is
+        Vector2 distanceToNearestEdges = AlpacaUtils.GetDistanceToNearestWorldEdges(transform.position);
+
+        //create new waypoint
+        float minDistanceToEdges = Mathf.Min(distanceToNearestEdges.x, distanceToNearestEdges.y);
+        float newWaypointDistance = minDistanceToEdges / hitVector.magnitude;
+
+        if (newWaypointDistance > minDistanceToEdges)
+            newWaypointDistance = minDistanceToEdges;
+
+        Vector2 newWaypointLocation = transform.position + newWaypointDistance * oppositeDirectionOfHit;
+        _waypointPositions.Add(newWaypointLocation);
+
+        //reset nearby hit
+        _nearbyHit = new Vector3();
     }
 
     private bool isBehindObstacle()
@@ -188,5 +240,38 @@ public class CharacterMovement : MonoBehaviour
     public void ResetCharacterSpeed()
     {
         _characterSpeed = _baseSpeed;
+    }
+
+    public void ActivateRotation()
+    {
+        if (_isRotating)
+            return;
+
+        _isRotating = true;
+
+        float minRotSpeed = 300.0f;
+        float maxRotSpeed = 500.0f;
+
+        _rotationDirection = AlpacaUtils.ChanceFunc(50) ? 1 : -1;
+        _rotationSpeed = UnityEngine.Random.Range(minRotSpeed, maxRotSpeed);
+
+        Invoke(nameof(deactivateRotation), 1.0f);
+    }
+
+    private void deactivateRotation()
+    {
+        _isRotating = false;
+    }
+
+    private void rotateCharacter()
+    {
+        Quaternion eulerRotation = Quaternion.Euler(transform.rotation.eulerAngles + _rotationDirection * new Vector3(0.0f, 0.0f, _rotationSpeed * Time.deltaTime));
+
+        transform.rotation = eulerRotation;
+    }
+
+    public void NearbyHitDetectedAt(Vector3 position)
+    {
+        _nearbyHit = position;
     }
 }

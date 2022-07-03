@@ -7,7 +7,6 @@ public class BulletMark : MonoBehaviour
     private FadeObject _fadeObject;
 
     [SerializeField] private float _fadeAfter;
-    private float _timer = 0.0f;
 
     private void Awake()
     {
@@ -16,7 +15,8 @@ public class BulletMark : MonoBehaviour
 
     private void Start()
     {
-        Invoke("removeMark", _fadeAfter);
+        
+        Invoke(nameof(removeMark), _fadeAfter);
     }
 
     private void removeMark()

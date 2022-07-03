@@ -24,6 +24,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _negCharHit = 15;
     [SerializeField] private int _fragileObstHit = -2;
 
+    [Header("Testing")]
+    [SerializeField] private GameObject _shadowPanel;
+    [SerializeField] private GameObject _gameOverText;
+    [SerializeField] private GameObject _playerTouchManager;
+
+    private bool _affiliationChangedThisLevel = false;
+
     private void Awake()
     {
         _instance = this;
@@ -33,6 +40,9 @@ public class GameManager : MonoBehaviour
     {
         Character.OnCharacterDestroyed += updateScoreByCharacterType;
         Obstacle.OnObstacleDestroy += updateScoreByObstacle;
+        AffiliationTrigger.OnAffiliationTriggerHit += affiliationChangedThisLevel;
+        LevelManager.Instance.OnGameReload += ResetScore;
+        TimeManager.Instance.OnTimeIsOut += gameOver;
 
         ResetScore();
 
@@ -44,6 +54,9 @@ public class GameManager : MonoBehaviour
     {
         Character.OnCharacterDestroyed -= updateScoreByCharacterType;
         Obstacle.OnObstacleDestroy -= updateScoreByObstacle;
+        AffiliationTrigger.OnAffiliationTriggerHit -= affiliationChangedThisLevel;
+        LevelManager.Instance.OnGameReload -= ResetScore;
+        TimeManager.Instance.OnTimeIsOut -= gameOver;
     }
 
     private void updateScoreByObstacle(Obstacle obstacle)
@@ -56,7 +69,10 @@ public class GameManager : MonoBehaviour
         switch (character.GetCharacterType())
         {
             case CharacterType.Positive:
-                UpdateScore(_posCharHit);
+                if (!_affiliationChangedThisLevel)
+                    UpdateScore(_posCharHit);
+                else
+                    gameOver();
                 break;
             case CharacterType.Negative:
                 UpdateScore(_negCharHit);
@@ -67,9 +83,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdateScore(int score)
+    public void UpdateScore(int scoreIncrement)
     {
-        _score += score;
+        _score += scoreIncrement;
         OnScoreUpdate?.Invoke(_score);
     }
 
@@ -77,5 +93,19 @@ public class GameManager : MonoBehaviour
     {
         _score = 0;
         OnScoreUpdate?.Invoke(_score);
+    }
+
+    private void gameOver()
+    {
+        Debug.LogError("Game Over");
+        Debug.Log("Activate game over screen and disable the touch feature.");
+        _shadowPanel.SetActive(true);
+        _gameOverText.SetActive(true);
+        _playerTouchManager.SetActive(false);
+    }
+
+    private void affiliationChangedThisLevel()
+    {
+        _affiliationChangedThisLevel = true;
     }
 }
