@@ -6,6 +6,7 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public event Action<int> OnScoreUpdate;
+    public event Action OnGameOver;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -23,11 +24,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _posCharHit = -10;
     [SerializeField] private int _negCharHit = 15;
     [SerializeField] private int _fragileObstHit = -2;
-
-    [Header("Testing")]
-    [SerializeField] private GameObject _shadowPanel;
-    [SerializeField] private GameObject _gameOverText;
-    [SerializeField] private GameObject _playerTouchManager;
 
     private bool _affiliationChangedThisLevel = false;
 
@@ -99,9 +95,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.LogError("Game Over");
         Debug.Log("Activate game over screen and disable the touch feature.");
-        _shadowPanel.SetActive(true);
-        _gameOverText.SetActive(true);
-        _playerTouchManager.SetActive(false);
+        OnGameOver?.Invoke();
     }
 
     private void affiliationChangedThisLevel()

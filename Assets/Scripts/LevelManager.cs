@@ -22,6 +22,7 @@ public class LevelManager : MonoBehaviour
     }
 
     public Action OnInitializeGame;
+    public Action<int> OnLoadLevel;
     public Action OnGameReload;
     public Action<CharacterLevelUpProperties> OnCharacterLevelUp;
     public Action<float> OnActivateTimer;
@@ -50,8 +51,6 @@ public class LevelManager : MonoBehaviour
 
     private GameAssets _gameAssets;
 
-    [SerializeField] private float _timer;
-
     [Space]
     [SerializeField] private LayerMask _obstacleLayerMask;
     [SerializeField] private LayerMask _characterLayerMask;
@@ -60,6 +59,9 @@ public class LevelManager : MonoBehaviour
     private float _objectMinDistance = 1.0f;
 
     private bool _fadeCharacters = false;
+    private bool _charactersSpawnNewCharacters = false;
+
+    private bool _gameRunning = true;
 
     private void Awake()
     {
@@ -70,6 +72,7 @@ public class LevelManager : MonoBehaviour
     {
         Character.OnCharacterDestroyed += checkLevelCompletion;
         Obstacle.OnObstacleDestroy += removeObstacleFromList;
+        CharacterSpawning.OnCharacterSpawn += addCharacterToList;
 
         _mainCamera = Camera.main;
         _gameAssets = GameAssets.Instance;
@@ -82,30 +85,50 @@ public class LevelManager : MonoBehaviour
 
         if (_spawnSingleCharacter)
             initializeObjects(_gameAssets.CharacterObject, 1, _characterLayerMask);
+
+        if (!_initializeGame && !_spawnSingleCharacter)
+            InitializeGame();
     }
 
     private void OnDestroy()
     {
         Character.OnCharacterDestroyed -= checkLevelCompletion;
         Obstacle.OnObstacleDestroy -= removeObstacleFromList;
+        CharacterSpawning.OnCharacterSpawn -= addCharacterToList;
     }
 
     private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            initializePlayground();
-        }
-        
+    {        
         if (Input.GetMouseButtonDown(1))
         {
             //TESTING
             if (_charactersList.Count != 0)
             {
                 Transform randomCharacterTransform = _charactersList[UnityEngine.Random.Range(0, _charactersList.Count)];
-                randomCharacterTransform.GetComponent<IDamagable>().DamageThis();
+                randomCharacterTransform.GetComponentInChildren<IDamagable>().DamageThis();
             }
         }
+    }
+
+    private void addCharacterToList(Transform characterToAdd)
+    {
+        _charactersList.Add(characterToAdd);
+    }
+
+    public void ClearGame()
+    {
+        foreach (Transform transform in _charactersList)
+        {
+            Destroy(transform.gameObject);
+        }
+
+        foreach (Transform transform in _obstaclesList)
+        {
+            Destroy(transform.gameObject);
+        }
+
+        _charactersList.Clear();
+        _obstaclesList.Clear();
     }
 
     public void InitializeGame()
@@ -117,6 +140,7 @@ public class LevelManager : MonoBehaviour
 
     private void initializePlayground()
     {
+        //cleaning the lists and destroying existing objects
         foreach(ObjectListType objectList in System.Enum.GetValues(typeof(ObjectListType)))
         {
             if (GetObjectList(objectList) != null)
@@ -133,6 +157,7 @@ public class LevelManager : MonoBehaviour
         if (_affiliationTransform != null)
             Destroy(_affiliationTransform.gameObject);
 
+        //initializing new objects
         initializeObjects(_gameAssets.ObstacleObject, _numOfObstacles, _obstacleLayerMask, _obstaclesList);
         initializeObjects(_gameAssets.CharacterObject, _numOfCharacters, _characterLayerMask, _charactersList);
 
@@ -222,13 +247,13 @@ public class LevelManager : MonoBehaviour
 
         initializePlayground();
 
-
-        Debug.Log("Reload Level");
+        //Debug.Log("Reload Level");
     }
 
     private void loadNewLevel()
     {
         _levelNumber++;
+        OnLoadLevel?.Invoke(_levelNumber);
 
         //increase the number of obstacles and characters
         alterLevelObstaclesAndCharactersPerLevel(_levelNumber);
@@ -240,8 +265,6 @@ public class LevelManager : MonoBehaviour
         OnActivateTimer?.Invoke(0.0f);
 
         changeLevelSettings(_levelNumber);
-
-        Debug.Log("Next level!");
     }
 
     private void alterLevelObstaclesAndCharactersPerLevel(int levelNumber)
@@ -267,46 +290,55 @@ public class LevelManager : MonoBehaviour
 
     private void changeLevelSettings(int levelNumber)
     {
-        if (levelNumber >= 2 && levelNumber < 3)
+        if (levelNumber >= 3 && levelNumber < 5)
         {
-            Debug.Log("Increase the characters' speed");
+            //Debug.Log("Increase the characters' speed");
             _fadeCharacters = false;
             OnActivateTimer?.Invoke(5.0f);
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 20, SpeedDistanceDependance = SpeedDistanceDependance.Medium });
         }
-        else if (levelNumber >= 3 && levelNumber < 4)
+        else if (levelNumber >= 5 && levelNumber < 7)
         {
-            Debug.Log("Activate fading option on characters");
+            //Debug.Log("Activate fading option on characters");
             _fadeCharacters = true;
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None });
         }
-        else if (levelNumber >= 4 && levelNumber < 5)
+        else if (levelNumber >= 7 && levelNumber < 9)
         {
-            Debug.Log("Activate fading and release the affiliation trigger");
+            //Debug.Log("Activate fading and release the affiliation trigger");
             _initializeAffiliationTrigger = true;
             _fadeCharacters = true;
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None });
         }
-        else if (levelNumber >= 5 && levelNumber < 6)
+        else if (levelNumber >= 9 && levelNumber < 12)
         {
-            Debug.Log("Increase the speed and activate fading option");
+            //Debug.Log("Increase the speed and activate fading option");
             _initializeAffiliationTrigger = false;
             _fadeCharacters = true;
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 30, SpeedDistanceDependance = SpeedDistanceDependance.Medium });
         }
-        else if (levelNumber >= 6 && levelNumber < 7)
+        else if (levelNumber >= 12 && levelNumber < 15)
         {
-            Debug.Log("Increase the speed, activate fading and release the affiliation trigger");
+            //Debug.Log("Increase the speed, activate fading and release the affiliation trigger");
             _initializeAffiliationTrigger = true;
             _fadeCharacters = true;
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 40, SpeedDistanceDependance = SpeedDistanceDependance.High });
         }
-        else if (levelNumber >= 7 && levelNumber < 9)
+        else if (levelNumber >= 15 && levelNumber < 18)
         {
-            Debug.Log("Increase the speed, activate fading, affiliation trigger and run time");
-            float timerValue = 15.0f - (levelNumber - 7) * 5.0f;
+            //Debug.Log("Increase the speed, activate fading, affiliation trigger and run time");
+            float timerValue = 15.0f - (levelNumber - 15) * 3.0f;
             OnActivateTimer?.Invoke(timerValue);
-            OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 50, SpeedDistanceDependance = SpeedDistanceDependance.High });
+            OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 50, SpeedDistanceDependance = SpeedDistanceDependance.Medium });
+        }
+        else if (levelNumber >= 18 && levelNumber <= 35)
+        {
+            //Debug.Log("Increase the speed, activate fading, affiliation trigger, run time and spawn new characters");
+            float timerValue = Mathf.Floor(30.0f - (levelNumber - 18) * levelNumber / 25.0f);
+            OnActivateTimer?.Invoke(timerValue);
+            OnCharacterLevelUp?.Invoke(
+                new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(20 * levelNumber/10.0f), SpeedDistanceDependance = SpeedDistanceDependance.High, CharactersSpawnNewCharacters = true }
+                );
         }
         else
             return;
@@ -359,7 +391,7 @@ public class LevelManager : MonoBehaviour
 
         foreach (Transform charTransform in _charactersList)
         {
-            Character character = charTransform.GetComponent<Character>();
+            Character character = charTransform.GetComponentInChildren<Character>();
             if (character.GetCharacterType().Equals(type))
                 characterTypeNumber++;
         }
@@ -380,7 +412,7 @@ public class LevelManager : MonoBehaviour
 
     private void fadeCharacter()
     {
-        if (_fadeCharacters)
+        if (_fadeCharacters && _gameRunning)
         {
             Transform characterTransform = _charactersList[UnityEngine.Random.Range(0, _charactersList.Count)];
             FadeObject fadeObject = characterTransform.GetComponent<FadeObject>();
@@ -388,5 +420,10 @@ public class LevelManager : MonoBehaviour
             if (fadeObject != null)
                 fadeObject.ActivateFade(!fadeObject.IsInvisible());
         }
+    }
+
+    public bool IsGameRunning()
+    {
+        return _gameRunning;
     }
 }

@@ -27,27 +27,6 @@ public class Character : MonoBehaviour, IDamagable
         _spriteRenderer.color = getCharacterColor(_characterType);
     }
 
-    private void Start()
-    {
-        //TESTING
-        Invoke(nameof(testSpawning), 2.0f);
-    }
-
-    private void testSpawning()
-    {
-        CharacterSpawning spawning = GetComponent<CharacterSpawning>();
-        spawning.SpawnNewCharacter(_characterType);
-    }
-
-    private void Update()
-    {
-        //TESTING
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            switchAffiliation();
-        }
-    }
-
     private void OnDestroy()
     {
         AffiliationTrigger.OnAffiliationTriggerHit -= switchAffiliation;

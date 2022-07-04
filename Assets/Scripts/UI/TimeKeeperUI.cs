@@ -31,7 +31,7 @@ public class TimeKeeperUI: MonoBehaviour
 
     private void updateTime(float timeValue)
     {
-        _textMesh.SetText(timeValue.ToString("F1"));
+        _textMesh.SetText("Time: " + timeValue.ToString("F1"));
     }
 
     private void showTimeUI(bool value)

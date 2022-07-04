@@ -16,10 +16,10 @@ public class CharacterGrowth : MonoBehaviour
     private void LateUpdate()
     {
         if (_isGrowing)
-            growCharacterX();
+            growCharacterEqually();
     }
 
-    private void growCharacterX()
+    private void growCharacterEqually()
     {
         float localScale = GetCharacterScale();
 

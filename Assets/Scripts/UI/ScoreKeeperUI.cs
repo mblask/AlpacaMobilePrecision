@@ -22,6 +22,6 @@ public class ScoreKeeperUI : MonoBehaviour
 
     public void UpdateScoreText(int score)
     {
-        _scoreText.SetText(score.ToString());
+        _scoreText.SetText("Score: " + score.ToString());
     }
 }

@@ -32,6 +32,7 @@ public class PlayerTouchManager : MonoBehaviour
     private void Start()
     {
         LevelManager.Instance.OnInitializeGame += activateInput;
+        GameManager.Instance.OnGameOver += deactivateInput;
 
         _mainCamera = Camera.main;
 
@@ -89,6 +90,7 @@ public class PlayerTouchManager : MonoBehaviour
     private void OnDestroy()
     {
         LevelManager.Instance.OnInitializeGame -= activateInput;
+        GameManager.Instance.OnGameOver -= deactivateInput;
     }
 
     private void activateInput()
