@@ -1,17 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class HitManager : MonoBehaviour
 {
+    public Action<float> OnSendPlayerAccuracy;
+
+    private static HitManager _instance;
+
+    public static HitManager Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+
     private GameAssets _gameAssets;
 
     [Header("Hit effect")]
     [SerializeField][Range(0.0f, 2.0f)] private float _nearbyHitRadius = 1.0f;
 
+    private int _playerTouchNumber = 0;
+    private int _playerHit = 0;
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+
     private void Start()
     {
         PlayerTouchManager.Instance.OnPlayerTouchPosition += playerTouchManager_OnPlayerTouch;
+        LevelManager.Instance.OnLoadLevel += levelManager_onLoadLevel;
+        LevelManager.Instance.OnGrabPlayerAccuracy += sendPlayerAccuracy;
 
         _gameAssets = GameAssets.Instance;
     }
@@ -19,13 +42,23 @@ public class HitManager : MonoBehaviour
     private void OnDestroy()
     {
         PlayerTouchManager.Instance.OnPlayerTouchPosition -= playerTouchManager_OnPlayerTouch;
+        LevelManager.Instance.OnLoadLevel += levelManager_onLoadLevel;
+        LevelManager.Instance.OnGrabPlayerAccuracy -= sendPlayerAccuracy;
+    }
+
+    private void levelManager_onLoadLevel(int levelNumber)
+    {
+        resetAccuracyCount();
     }
 
     private void playerTouchManager_OnPlayerTouch(Vector2 worldPosition)
     {
+        _playerTouchNumber++;
+
         detectCharacterHit(worldPosition);
         detectAreaEffectHits(worldPosition);
-        Instantiate(_gameAssets.BulletMark, (Vector2)worldPosition, Quaternion.identity, null);
+        Instantiate(_gameAssets.BulletMark, worldPosition, Quaternion.identity, null);
+        sendPlayerAccuracy();
     }
 
     private void detectAreaEffectHits(Vector3 worldPosition)
@@ -36,7 +69,7 @@ public class HitManager : MonoBehaviour
         {
             foreach (Collider2D hit in hitInfo)
             {
-                CharacterMovement characterMovement = hit.GetComponent<CharacterMovement>();
+                ICharacterMove characterMovement = hit.GetComponent<ICharacterMove>();
 
                 if (characterMovement != null)
                 {
@@ -77,10 +110,30 @@ public class HitManager : MonoBehaviour
                     if (affiliationTrigger != null)
                         affiliationTrigger.TriggerAffiliationSwitch();
 
+                    _playerHit++;
                     damagable.DamageThis();
                 }
             }
         }
+    }
+
+    private void sendPlayerAccuracy()
+    {
+        OnSendPlayerAccuracy?.Invoke(getPlayerAccuracy());
+    }
+
+    private float getPlayerAccuracy()
+    {
+        if (_playerTouchNumber == 0)
+            return 0.0f;
+
+        return (float)_playerHit / _playerTouchNumber;
+    }
+
+    private void resetAccuracyCount()
+    {
+        _playerHit = 0;
+        _playerTouchNumber = 0;
     }
 
     private void OnDrawGizmos()

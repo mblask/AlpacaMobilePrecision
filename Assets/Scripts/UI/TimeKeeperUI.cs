@@ -6,13 +6,15 @@ using TMPro;
 
 public class TimeKeeperUI: MonoBehaviour
 {
-    private Transform _timeTransform;
+    private Transform _timeNumberTransform;
+    private Transform _timeTextTransform;
     private TextMeshProUGUI _textMesh;
 
     private void Awake()
     {
-        _timeTransform = transform.Find("Time");
-        _textMesh = _timeTransform.GetComponent<TextMeshProUGUI>();
+        _timeTextTransform = transform.Find("TimeText");
+        _timeNumberTransform = transform.Find("TimeNumber");
+        _textMesh = _timeNumberTransform.GetComponent<TextMeshProUGUI>();
     }
 
     private void Start()
@@ -31,11 +33,14 @@ public class TimeKeeperUI: MonoBehaviour
 
     private void updateTime(float timeValue)
     {
-        _textMesh.SetText("Time: " + timeValue.ToString("F1"));
+        string timeNumber = timeValue.ToString("F1");
+        timeNumber = timeNumber.Replace(",", ".");
+        _textMesh.SetText(timeNumber);
     }
 
     private void showTimeUI(bool value)
     {
-        _timeTransform.gameObject.SetActive(value);
+        _timeTextTransform.gameObject.SetActive(value);
+        _timeNumberTransform.gameObject.SetActive(value);
     }
 }

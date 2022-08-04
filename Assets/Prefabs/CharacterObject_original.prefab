@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waypointsDependOnObstacles: 1
   _baseSpeed: 5
-  _equalSpeeds: 1
+  _equalSpeeds: 0
   _distanceDependance: 0.07
 --- !u!114 &4849055779707097384
 MonoBehaviour:
@@ -181,6 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d6c86b59f92f284d8b89cc5471235f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isSpawning: 0
 --- !u!114 &-8864399265893300532
 MonoBehaviour:
   m_ObjectHideFlags: 0

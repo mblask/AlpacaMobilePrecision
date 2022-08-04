@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class CharacterSpawning : MonoBehaviour
+public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
 {
     public static Action<Transform> OnCharacterSpawn;
 
@@ -13,6 +13,8 @@ public class CharacterSpawning : MonoBehaviour
     private float _spawnTimer;
     private float _minSpawnTime = 5.0f;
     private float _maxSpawnTime = 10.0f;
+
+    [SerializeField] private bool _isSpawning = false;
 
     private void Awake()
     {
@@ -27,7 +29,8 @@ public class CharacterSpawning : MonoBehaviour
 
     private void Update()
     {
-        spawnProcedure();
+        if (_isSpawning)
+            spawnProcedure();
     }
 
     private void spawnProcedure()
@@ -49,13 +52,18 @@ public class CharacterSpawning : MonoBehaviour
 
         OnCharacterSpawn?.Invoke(newCharacterTransform);
 
-        Character character = newCharacterTransform.GetComponent<Character>();
-        character.AssignCharacterType(characterType);
+        //Character character = newCharacterTransform.GetComponent<Character>();
+        //character.AssignCharacterType(characterType);
 
         CharacterGrowth growth = newCharacterTransform.GetComponent<CharacterGrowth>();
         growth.SetCharacterScale(0.3f);
 
         CharacterMovement movement = newCharacterTransform.GetComponent<CharacterMovement>();
         movement.ActivateRotation();
+    }
+
+    public void ActivateSpawning(bool value)
+    {
+        _isSpawning = value;
     }
 }

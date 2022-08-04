@@ -18,18 +18,34 @@ public class Character : MonoBehaviour, IDamagable
     [SerializeField] private CharacterType _characterType;
     private SpriteRenderer _spriteRenderer;
 
+    private ICharacterMove _characterMove;
+    private ISpawnCharacters _characterSpawning;
+
     private void Awake()
     {
         AffiliationTrigger.OnAffiliationTriggerHit += switchAffiliation;
+        LevelManager.Instance.OnCharacterLevelUp += levelUpCharacter;
 
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _characterType = AssignRandomCharacterType();
         _spriteRenderer.color = getCharacterColor(_characterType);
+
+        _characterMove = GetComponent<ICharacterMove>();
+        _characterSpawning = GetComponent<ISpawnCharacters>();
     }
 
     private void OnDestroy()
     {
         AffiliationTrigger.OnAffiliationTriggerHit -= switchAffiliation;
+        LevelManager.Instance.OnCharacterLevelUp -= levelUpCharacter;
+    }
+
+    private void levelUpCharacter(CharacterLevelUpProperties properties)
+    {
+        _characterMove?.SetCharacterSpeedPerc(properties.PercentageSpeedIncrease);
+        _characterMove?.SetDistanceDependance(properties.SpeedDistanceDependance);
+
+        _characterSpawning?.ActivateSpawning(properties.CharactersSpawnNewCharacters);
     }
 
     public void DamageThis()

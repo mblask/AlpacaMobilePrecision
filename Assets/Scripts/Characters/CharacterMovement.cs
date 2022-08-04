@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class CharacterLevelUpProperties
-{
-    public int PercentageSpeedIncrease;
-    public SpeedDistanceDependance SpeedDistanceDependance;
-    public bool CharactersSpawnNewCharacters = false;
-}
-
 public enum SpeedDistanceDependance
 {
     None,
@@ -17,7 +10,7 @@ public enum SpeedDistanceDependance
     High,
 }
 
-public class CharacterMovement : MonoBehaviour
+public class CharacterMovement : MonoBehaviour, ICharacterMove
 {
     [Header("Waypoints")]
     [SerializeField] private bool _waypointsDependOnObstacles = false;
@@ -46,7 +39,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void Awake()
     {
-        LevelManager.Instance.OnCharacterLevelUp += levelUpCharacter;
+        //LevelManager.Instance.OnCharacterLevelUp += levelUpCharacter;
     }
 
     private void Start()
@@ -66,7 +59,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void OnDestroy()
     {
-        LevelManager.Instance.OnCharacterLevelUp -= levelUpCharacter;
+        //LevelManager.Instance.OnCharacterLevelUp -= levelUpCharacter;
     }
 
     public void MoveTo(Vector2 position, Action funcToPerform = null)
@@ -79,6 +72,9 @@ public class CharacterMovement : MonoBehaviour
     {
         SetCharacterSpeedPerc(properties.PercentageSpeedIncrease);
         SetDistanceDependance(properties.SpeedDistanceDependance);
+        
+        ISpawnCharacters characterSpawning = GetComponent<ISpawnCharacters>();
+        characterSpawning?.ActivateSpawning(properties.CharactersSpawnNewCharacters);
     }
 
     private void characterMovement()
@@ -206,18 +202,10 @@ public class CharacterMovement : MonoBehaviour
 
     public void SetCharacterSpeedPerc(int value)
     {
-        if (value > 0)
-        {
+        if (value != 0)
             _characterSpeed = _baseSpeed * (1.0f + value / 100.0f);
-        }
-        else if (value < 0)
-        {
-            _characterSpeed = _baseSpeed * (1.0f - value / 100.0f);
-        }
         else
-        {
             ResetCharacterSpeed();
-        }
     }
 
     public void SetDistanceDependance(SpeedDistanceDependance distanceDependance)
