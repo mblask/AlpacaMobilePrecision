@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class MessageObject : MonoBehaviour
 {
+    public bool DisplayMessages = true;
+
     [TextArea]
     public List<string> Messages;
 
     private void Start()
     {
-        foreach (string message in Messages)
+        if (DisplayMessages)
         {
-            Debug.LogError(message);
+            foreach (string message in Messages)
+                Debug.LogError(message);
         }
     }
 }

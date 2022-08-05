@@ -45,7 +45,7 @@ public class FadeObject : MonoBehaviour
 
         float fadeDuration = 1 / _fadingSpeed;
         string dissolveIntensity = "_DissolveIntensity";
-        float minDissolveIntensity = 0.05f;
+        float minDissolveIntensity = -0.05f;
         float maxDissolveIntensity = 1.0f;
 
         float dissolveMagnitude = _spriteRenderer.sharedMaterial.GetFloat(dissolveIntensity);

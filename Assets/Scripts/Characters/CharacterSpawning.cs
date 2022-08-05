@@ -29,12 +29,14 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
 
     private void Update()
     {
-        if (_isSpawning)
-            spawnProcedure();
+        spawnProcedure();
     }
 
     private void spawnProcedure()
     {
+        if (!_isSpawning)
+            return;
+
         _spawnTimer -= Time.deltaTime;
 
         if (_spawnTimer <= 0.0f)

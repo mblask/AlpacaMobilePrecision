@@ -35,6 +35,8 @@ public class LevelManager : MonoBehaviour
     [Header("For testing")]
     [SerializeField] private bool _initializeGame = true;
     [SerializeField] bool _spawnSingleCharacter = false;
+    [SerializeField] bool _spawnAffiliationTrigger = false;
+    [SerializeField] private bool _charactersSpawnNewCharacters = false;
 
     [Header("Initial game settings")]
     [SerializeField] private int _levelNumber = 1;
@@ -62,7 +64,6 @@ public class LevelManager : MonoBehaviour
     private float _objectMinDistance = 1.0f;
 
     private bool _fadeCharacters = false;
-    private bool _charactersSpawnNewCharacters = false;
     private float _accuracyRequiredToPassLevel = 0.0f;
     private float _currentAccuracy = 0.0f;
 
@@ -89,6 +90,7 @@ public class LevelManager : MonoBehaviour
         if (_initializeGame)
             InitializeGame();
 
+        //Testing purposes
         if (_spawnSingleCharacter)
             initializeObjects(_gameAssets.CharacterObject, 1, _characterLayerMask);
 
@@ -176,6 +178,12 @@ public class LevelManager : MonoBehaviour
 
         if (AlpacaUtils.ChanceFunc(90) && _initializeAffiliationTrigger)
             _affiliationTransform = spawnObject(_gameAssets.AffiliationTrigger);
+
+        //Testing purposes
+        if (_spawnAffiliationTrigger)
+            _affiliationTransform = spawnObject(_gameAssets.AffiliationTrigger);
+        //Testing purposes
+        OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None, CharactersSpawnNewCharacters = _charactersSpawnNewCharacters });
     }
 
     private void initializeObjects(Transform objectTransform, int numOfObjects, LayerMask layerToAvoid, List<Transform> listToStoreObjects = null)
@@ -279,7 +287,6 @@ public class LevelManager : MonoBehaviour
         _accuracyRequiredToPassLevel = 0.0f;
         OnActivateTimer?.Invoke(timer);
         OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
-        _accuracyRequiredToPassLevel = 0.0f;
 
         changeLevelSettings(_levelNumber);
     }
@@ -370,9 +377,10 @@ public class LevelManager : MonoBehaviour
         AffiliationTrigger afiiliationTrigger = characterDestroyed.GetComponent<AffiliationTrigger>();
 
         if (afiiliationTrigger == null)
+        {
             _charactersList.Remove(characterDestroyed.transform);
-
-        checkAmountOfGoodBadChars(characterDestroyed);
+            checkAmountOfGoodBadChars(characterDestroyed);
+        }
     }
 
     private void checkAmountOfGoodBadChars(Character lastCharacterDestroyed)
@@ -387,7 +395,7 @@ public class LevelManager : MonoBehaviour
             else
             {
                 if (badCharactersNum == 0)
-                    checkAccuracyRequirements(_accuracyRequiredToPassLevel, _currentAccuracy);
+                    checkAccuracyRequirements(_accuracyRequiredToPassLevel);
                 else
                     return;
             }
@@ -395,24 +403,26 @@ public class LevelManager : MonoBehaviour
         else
         {
             if (badCharactersNum == 0)
-                checkAccuracyRequirements(_accuracyRequiredToPassLevel, _currentAccuracy);
+                checkAccuracyRequirements(_accuracyRequiredToPassLevel);
             else
                 return;
         }
     }
     
-    private void checkAccuracyRequirements(float accuracyRequired, float currentAccuracy)
+    private void checkAccuracyRequirements(float accuracyRequired)
     {
         if (accuracyRequired > 0.0f)
         {
             requestPlayerAccuracy();
-            if (currentAccuracy >= accuracyRequired)
+            if (_currentAccuracy >= accuracyRequired)
                 loadNewLevel();
             else
                 reloadGame();
         }
         else
             loadNewLevel();
+
+        _currentAccuracy = 0.0f;
     }
 
     private void requestPlayerAccuracy()

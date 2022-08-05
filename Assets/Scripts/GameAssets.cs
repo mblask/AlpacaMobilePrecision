@@ -21,6 +21,7 @@ public class GameAssets : MonoBehaviour
 
     [Header("Particle Systems")]
     public Transform DestroyObjectPS;
+    public Transform GlobalDestructionPS;
 
     private void Awake()
     {

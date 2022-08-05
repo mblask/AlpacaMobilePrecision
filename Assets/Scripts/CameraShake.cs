@@ -10,6 +10,20 @@ public class CameraShake : MonoBehaviour
     private void Start()
     {
         Character.OnCharacterDestroyed += shakeOnCharacterDestroyed;
+        GameManager.Instance.OnWorldDestruction += shakeOnWorldDestruction;
+    }
+
+    private void OnDestroy()
+    {
+        Character.OnCharacterDestroyed -= shakeOnCharacterDestroyed;
+        GameManager.Instance.OnWorldDestruction -= shakeOnWorldDestruction;
+    }
+
+    private void shakeOnWorldDestruction()
+    {
+        float worldMagnitude = 1.5f;
+        float worldDuration = 1.0f;
+        StartCoroutine(CameraShaker(worldMagnitude * _magnitude, worldDuration));
     }
 
     private void shakeOnCharacterDestroyed(Character character)

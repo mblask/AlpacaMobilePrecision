@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public event Action<int> OnScoreUpdate;
     public event Action OnGameOver;
+    public event Action OnWorldDestruction;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -68,7 +69,10 @@ public class GameManager : MonoBehaviour
                 if (!_affiliationChangedThisLevel)
                     UpdateScore(_posCharHit);
                 else
+                {
                     gameOver();
+                    destroyWorld();
+                }
                 break;
             case CharacterType.Negative:
                 UpdateScore(_negCharHit);
@@ -96,6 +100,19 @@ public class GameManager : MonoBehaviour
         Debug.LogError("Game Over");
         Debug.Log("Activate game over screen and disable the touch feature.");
         OnGameOver?.Invoke();
+    }
+
+    private void destroyWorld()
+    {
+        //create explosions
+        int numOfExplosions = 4;
+        for (int i = 0; i < numOfExplosions; i++)
+        {
+            Instantiate(GameAssets.Instance.GlobalDestructionPS, AlpacaUtils.GetRandomWorldPosition(), Quaternion.identity, null);
+        }
+
+        //shake camera
+        OnWorldDestruction?.Invoke();
     }
 
     private void affiliationChangedThisLevel()
