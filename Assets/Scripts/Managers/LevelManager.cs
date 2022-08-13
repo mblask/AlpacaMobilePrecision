@@ -22,6 +22,7 @@ public class LevelManager : MonoBehaviour
     }
 
     public Action OnInitializeGame;
+    public Action<float> OnBeforeLoadLevel;
     public Action<int> OnLoadLevel;
     public Action OnGameReload;
     public Action<CharacterLevelUpProperties> OnCharacterLevelUp;
@@ -272,6 +273,15 @@ public class LevelManager : MonoBehaviour
         initializePlayground();
     }
 
+    private void beforeLoadNewLevel()
+    {
+        if (_accuracyRequiredToPassLevel != 0.0f)
+        {
+            float playerAccuracy = HitManager.GrabPlayerAccuracy();
+            OnBeforeLoadLevel?.Invoke(playerAccuracy);
+        }
+    }
+
     private void loadNewLevel()
     {
         _levelNumber++;
@@ -319,7 +329,7 @@ public class LevelManager : MonoBehaviour
             //Debug.Log("Increase the characters' speed");
             _fadeCharacters = false;
             _accuracyRequiredToPassLevel = (levelNumber - 1) / 10.0f;
-            OnActivateAccuracy(_accuracyRequiredToPassLevel);
+            OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 30, SpeedDistanceDependance = SpeedDistanceDependance.Medium });
         }
         else if (levelNumber >= 5 && levelNumber < 7)
@@ -360,7 +370,10 @@ public class LevelManager : MonoBehaviour
         {
             //Debug.Log("Increase the speed, activate fading, affiliation trigger, run time and spawn new characters");
             if (levelNumber >= 22)
+            {
                 _accuracyRequiredToPassLevel = levelNumber * 2.0f / 100.0f;
+                OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
+            }
 
             float timerValue = Mathf.Floor(30.0f - (levelNumber - 18) * levelNumber / 25.0f);
             OnActivateTimer?.Invoke(timerValue);
@@ -415,12 +428,18 @@ public class LevelManager : MonoBehaviour
         {
             requestPlayerAccuracy();
             if (_currentAccuracy >= accuracyRequired)
+            {
+                beforeLoadNewLevel();
                 loadNewLevel();
+            }
             else
                 reloadGame();
         }
         else
+        {
+            beforeLoadNewLevel();
             loadNewLevel();
+        }
 
         _currentAccuracy = 0.0f;
     }

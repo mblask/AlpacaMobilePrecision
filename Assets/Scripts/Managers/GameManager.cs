@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public event Action<int> OnScoreUpdate;
     public event Action OnGameOver;
+    public event Action OnGamePaused;
     public event Action OnWorldDestruction;
 
     private static GameManager _instance;
@@ -27,6 +28,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _fragileObstHit = -2;
 
     private bool _affiliationChangedThisLevel = false;
+
+    private bool _gamePaused;
 
     private void Awake()
     {
@@ -118,5 +121,13 @@ public class GameManager : MonoBehaviour
     private void affiliationChangedThisLevel()
     {
         _affiliationChangedThisLevel = true;
+    }
+
+    public void ActivatePauseGame()
+    {
+        _gamePaused = !_gamePaused;
+
+        Time.timeScale = _gamePaused ? 0.0f : 1.0f;
+        OnGamePaused?.Invoke();
     }
 }

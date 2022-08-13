@@ -122,6 +122,11 @@ public class HitManager : MonoBehaviour
         OnSendPlayerAccuracy?.Invoke(getPlayerAccuracy());
     }
 
+    public static float GrabPlayerAccuracy()
+    {
+        return _instance.getPlayerAccuracy();
+    }
+
     private float getPlayerAccuracy()
     {
         if (_playerTouchNumber == 0)
