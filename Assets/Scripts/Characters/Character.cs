@@ -18,6 +18,10 @@ public class Character : MonoBehaviour, IDamagable
     [SerializeField] private CharacterType _characterType;
     private SpriteRenderer _spriteRenderer;
 
+    private Color _positiveColor = Color.red;
+    private Color _negativeColor = Color.green;
+    private Color _neutralColor = Color.yellow;
+
     private ICharacterMove _characterMove;
     private ISpawnCharacters _characterSpawning;
 
@@ -60,11 +64,11 @@ public class Character : MonoBehaviour, IDamagable
         switch (type)
         {
             case CharacterType.Positive:
-                return Color.red;
+                return _positiveColor;
             case CharacterType.Negative:
-                return Color.green;
+                return _negativeColor;
             case CharacterType.Neutral:
-                return Color.yellow;
+                return _neutralColor;
             default:
                 return Color.black;
         }
