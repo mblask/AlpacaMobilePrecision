@@ -44,6 +44,14 @@ public class AchievementTooltipUI : MonoBehaviour
         activateTooltip();
     }
 
+    public void TooltipSetActive(bool value)
+    {
+        if (value)
+            activateTooltip();
+        else
+            deactivateTooltip();
+    }
+
     private void activateTooltip()
     {
         _tooltipContainer.gameObject.SetActive(true);

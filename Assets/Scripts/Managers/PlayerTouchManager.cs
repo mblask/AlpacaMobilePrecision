@@ -22,7 +22,7 @@ public class PlayerTouchManager : MonoBehaviour
     private float _touchTime;
 
     [Header("For Testing")]
-    [SerializeField] private bool _inputActive = true;
+    [SerializeField] private bool _inputActive = false;
 
     private void Awake()
     {
@@ -40,7 +40,7 @@ public class PlayerTouchManager : MonoBehaviour
         _touchTime = 0.0f;
     }
 
-    private void onGamePaused()
+    private void onGamePaused(bool value)
     {
         _inputActive = !_inputActive;
 

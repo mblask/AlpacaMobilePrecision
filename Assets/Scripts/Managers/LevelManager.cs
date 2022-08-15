@@ -81,6 +81,7 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy += removeObstacleFromList;
         CharacterSpawning.OnCharacterSpawn += addCharacterToList;
         HitManager.Instance.OnSendPlayerAccuracy += getPlayerAccuracy;
+        GameManager.Instance.OnQuitToMainMenu += ClearGame;
 
         _mainCamera = Camera.main;
         _gameAssets = GameAssets.Instance;
@@ -95,8 +96,8 @@ public class LevelManager : MonoBehaviour
         if (_spawnSingleCharacter)
             initializeObjects(_gameAssets.CharacterObject, 1, _characterLayerMask);
 
-        if (!_initializeGame && !_spawnSingleCharacter)
-            InitializeGame();
+        //if (!_initializeGame && !_spawnSingleCharacter)
+        //    InitializeGame();
     }
 
     private void OnDestroy()
@@ -105,6 +106,7 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy -= removeObstacleFromList;
         CharacterSpawning.OnCharacterSpawn -= addCharacterToList;
         HitManager.Instance.OnSendPlayerAccuracy -= getPlayerAccuracy;
+        GameManager.Instance.OnQuitToMainMenu += ClearGame;
     }
 
     private void Update()
@@ -123,12 +125,6 @@ public class LevelManager : MonoBehaviour
     private void addCharacterToList(Transform characterToAdd)
     {
         _charactersList.Add(characterToAdd);
-    }
-
-    public void QuitToMainMenu()
-    {
-        ClearGame();
-        OnQuitToMainMenu?.Invoke();
     }
 
     public void ClearGame()

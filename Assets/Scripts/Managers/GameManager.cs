@@ -7,7 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public event Action<int> OnScoreUpdate;
     public event Action OnGameOver;
-    public event Action OnGamePaused;
+    public event Action<bool> OnGamePaused;
+    public event Action OnQuitToMainMenu;
     public event Action OnWorldDestruction;
 
     private static GameManager _instance;
@@ -29,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     private bool _affiliationChangedThisLevel = false;
 
-    private bool _gamePaused;
+    private bool _gamePaused = false;
 
     private void Awake()
     {
@@ -123,11 +124,17 @@ public class GameManager : MonoBehaviour
         _affiliationChangedThisLevel = true;
     }
 
+    public void QuitToMainMenu()
+    {
+        ActivatePauseGame();
+        OnQuitToMainMenu?.Invoke();
+    }
+
     public void ActivatePauseGame()
     {
         _gamePaused = !_gamePaused;
 
         Time.timeScale = _gamePaused ? 0.0f : 1.0f;
-        OnGamePaused?.Invoke();
+        OnGamePaused?.Invoke(_gamePaused);
     }
 }

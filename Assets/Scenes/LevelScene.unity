@@ -1048,10 +1048,16 @@ MonoBehaviour:
   - 'I am not angry, I am just dissapointed.
 
     -Mom'
-  - 'You are hereby expelled from Hogwart''s School of Witchcraft and Wizardry.
+  - 'You are hereby expelled from Hagwart''s School of Witchcraft and Wizardry.
 
     -
-    Prof. Dumbledore'
+    Prof. Mumbledore'
+  - 'I am Froot.
+
+    -Froot'
+  - 'Today is not the day I die!
+
+    -He on the day he died'
 --- !u!1 &77425999
 GameObject:
   m_ObjectHideFlags: 0
@@ -2963,6 +2969,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1610829786}
+        m_TargetAssemblyTypeName: AchievementTooltipUI, Assembly-CSharp
+        m_MethodName: TooltipSetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &266386542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4680,11 +4698,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayMessages: 1
   Messages:
-  - Check the CharacterAnimation script
-  - Check if there is a good and easy way to animate characters, using either Animator
-    or writing my own simple animations
-  - Worked on achievements. Prepared the mechanic and the UI. The UI achievements
-    have to be "blocked". The UI and the mechanic have to be combined!!
+  - Check the ActivatePause method in GameManager and see if there is a better way
+    to write it!
+  - After losing the game, reset the game/level properties, so the initialization
+    can run from level 1!
 --- !u!4 &502288634
 Transform:
   m_ObjectHideFlags: 0
@@ -5542,7 +5559,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0467bcc815bcb4b9670f190e545998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initializeGame: 1
+  _initializeGame: 0
   _spawnSingleCharacter: 0
   _spawnAffiliationTrigger: 0
   _charactersSpawnNewCharacters: 0
@@ -6818,7 +6835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f567627451d3c924ab6695a96bce5907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputActive: 1
+  _inputActive: 0
 --- !u!4 &866509036
 Transform:
   m_ObjectHideFlags: 0
@@ -7869,7 +7886,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1018403339
 MonoBehaviour:
@@ -11355,8 +11372,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 625671164}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+      - m_Target: {fileID: 172930422}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: QuitToMainMenu
         m_Mode: 1
         m_Arguments:
@@ -11709,7 +11726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1711740964
 RectTransform:
   m_ObjectHideFlags: 0
