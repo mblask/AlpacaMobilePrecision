@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+public class FinalScore
+{
+    public int Score;
+    public int Level;
+    public float Accuracy;
+    public float TimeRemaining;
+}
+
 public class GameManager : MonoBehaviour
 {
     public event Action<int> OnScoreUpdate;
     public event Action OnGameOver;
+    public event Action<FinalScore> OnGameOverSendFinalScore;
     public event Action<bool> OnGamePaused;
     public event Action OnQuitToMainMenu;
     public event Action OnWorldDestruction;
@@ -42,10 +51,11 @@ public class GameManager : MonoBehaviour
         Character.OnCharacterDestroyed += updateScoreByCharacterType;
         Obstacle.OnObstacleDestroy += updateScoreByObstacle;
         AffiliationTrigger.OnAffiliationTriggerHit += affiliationChangedThisLevel;
-        LevelManager.Instance.OnGameReload += ResetScore;
+        LevelManager.Instance.OnLoadLevel += gameManager_onLoadLevel;
+        LevelManager.Instance.OnGameReload += resetScore;
         TimeManager.Instance.OnTimeIsOut += gameOver;
 
-        ResetScore();
+        resetScore();
 
         if (Screen.orientation != ScreenOrientation.LandscapeRight)
             Screen.orientation = ScreenOrientation.LandscapeRight;
@@ -56,13 +66,19 @@ public class GameManager : MonoBehaviour
         Character.OnCharacterDestroyed -= updateScoreByCharacterType;
         Obstacle.OnObstacleDestroy -= updateScoreByObstacle;
         AffiliationTrigger.OnAffiliationTriggerHit -= affiliationChangedThisLevel;
-        LevelManager.Instance.OnGameReload -= ResetScore;
+        LevelManager.Instance.OnLoadLevel -= gameManager_onLoadLevel;
+        LevelManager.Instance.OnGameReload -= resetScore;
         TimeManager.Instance.OnTimeIsOut -= gameOver;
+    }
+
+    private void gameManager_onLoadLevel(int level)
+    {
+        resetAffiliationChanged();
     }
 
     private void updateScoreByObstacle(Obstacle obstacle)
     {
-        UpdateScore(_fragileObstHit);
+        updateScore(_fragileObstHit);
     }
 
     private void updateScoreByCharacterType(Character character)
@@ -71,7 +87,7 @@ public class GameManager : MonoBehaviour
         {
             case CharacterType.Positive:
                 if (!_affiliationChangedThisLevel)
-                    UpdateScore(_posCharHit);
+                    updateScore(_posCharHit);
                 else
                 {
                     gameOver();
@@ -79,21 +95,21 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case CharacterType.Negative:
-                UpdateScore(_negCharHit);
+                updateScore(_negCharHit);
                 break;
             default:
-                UpdateScore(0);
+                updateScore(0);
                 break;
         }
     }
 
-    public void UpdateScore(int scoreIncrement)
+    private void updateScore(int scoreIncrement)
     {
         _score += scoreIncrement;
         OnScoreUpdate?.Invoke(_score);
     }
 
-    public void ResetScore()
+    private void resetScore()
     {
         _score = 0;
         OnScoreUpdate?.Invoke(_score);
@@ -122,6 +138,11 @@ public class GameManager : MonoBehaviour
     private void affiliationChangedThisLevel()
     {
         _affiliationChangedThisLevel = true;
+    }
+
+    private void resetAffiliationChanged()
+    {
+        _affiliationChangedThisLevel = false;
     }
 
     public void QuitToMainMenu()

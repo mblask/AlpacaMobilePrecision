@@ -9,6 +9,7 @@ public class GameOverUI : MonoBehaviour
 
     private Transform _gameOverContainer;
     private TextMeshProUGUI _gameOverText;
+    private TextMeshProUGUI _finalScoreText;
 
     [TextArea]
     [SerializeField] private List<string> _gameOverMessages;
@@ -17,6 +18,7 @@ public class GameOverUI : MonoBehaviour
     {
         _gameOverContainer = transform.Find("Container");
         _gameOverText = _gameOverContainer.Find("GameOverText").GetComponent<TextMeshProUGUI>();
+        _finalScoreText = _gameOverContainer.Find("FinalScoreText").GetComponent<TextMeshProUGUI>();
     }
 
     private void Start()
@@ -24,7 +26,7 @@ public class GameOverUI : MonoBehaviour
         deactivateGameOverScreen();
         GameManager.Instance.OnGameOver += activateGameOverScreen;
         GameManager.Instance.OnWorldDestruction += changeGameOverTextOnWorldDestruction;
-        LevelManager.Instance.OnQuitToMainMenu += deactivateGameOverScreen;
+        GameManager.Instance.OnQuitToMainMenu += deactivateGameOverScreen;
     }
 
 
@@ -32,7 +34,7 @@ public class GameOverUI : MonoBehaviour
     {
         GameManager.Instance.OnGameOver -= activateGameOverScreen;
         GameManager.Instance.OnWorldDestruction -= changeGameOverTextOnWorldDestruction;
-        LevelManager.Instance.OnQuitToMainMenu -= deactivateGameOverScreen;
+        GameManager.Instance.OnQuitToMainMenu -= deactivateGameOverScreen;
     }
 
     private void changeGameOverTextOnWorldDestruction()
@@ -49,5 +51,10 @@ public class GameOverUI : MonoBehaviour
     private void deactivateGameOverScreen()
     {
         _gameOverContainer.gameObject.SetActive(false);
+    }
+
+    private void updateFinalScore(float score)
+    {
+        _finalScoreText.SetText("Score: " + score.ToString("F0"));
     }
 }

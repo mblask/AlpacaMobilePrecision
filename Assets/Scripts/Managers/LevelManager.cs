@@ -29,7 +29,6 @@ public class LevelManager : MonoBehaviour
     public Action<float> OnActivateTimer;
     public Action<float> OnActivateAccuracy;
     public Action OnGrabPlayerAccuracy;
-    public Action OnQuitToMainMenu;
 
     private Camera _mainCamera;
 
@@ -82,6 +81,7 @@ public class LevelManager : MonoBehaviour
         CharacterSpawning.OnCharacterSpawn += addCharacterToList;
         HitManager.Instance.OnSendPlayerAccuracy += getPlayerAccuracy;
         GameManager.Instance.OnQuitToMainMenu += ClearGame;
+        GameManager.Instance.OnGameOver += resetGameSettings;
 
         _mainCamera = Camera.main;
         _gameAssets = GameAssets.Instance;
@@ -107,6 +107,7 @@ public class LevelManager : MonoBehaviour
         CharacterSpawning.OnCharacterSpawn -= addCharacterToList;
         HitManager.Instance.OnSendPlayerAccuracy -= getPlayerAccuracy;
         GameManager.Instance.OnQuitToMainMenu += ClearGame;
+        GameManager.Instance.OnGameOver -= resetGameSettings;
     }
 
     private void Update()
@@ -127,33 +128,26 @@ public class LevelManager : MonoBehaviour
         _charactersList.Add(characterToAdd);
     }
 
+    //public void ClearGame()
+    //{
+    //    foreach (Transform transform in _charactersList)
+    //    {
+    //        Destroy(transform.gameObject);
+    //    }
+    //
+    //    foreach (Transform transform in _obstaclesList)
+    //    {
+    //        Destroy(transform.gameObject);
+    //    }
+    //
+    //    _charactersList.Clear();
+    //    _obstaclesList.Clear();
+    //}
+
     public void ClearGame()
     {
-        foreach (Transform transform in _charactersList)
-        {
-            Destroy(transform.gameObject);
-        }
-
-        foreach (Transform transform in _obstaclesList)
-        {
-            Destroy(transform.gameObject);
-        }
-
-        _charactersList.Clear();
-        _obstaclesList.Clear();
-    }
-
-    public void InitializeGame()
-    {
-        initializePlayground();
-        InvokeRepeating(nameof(fadeCharacter), UnityEngine.Random.Range(0.5f, 2.0f), UnityEngine.Random.Range(0.5f, 1.0f));
-        OnInitializeGame?.Invoke();
-    }
-
-    private void initializePlayground()
-    {
         //cleaning the lists and destroying existing objects
-        foreach(ObjectListType objectList in System.Enum.GetValues(typeof(ObjectListType)))
+        foreach (ObjectListType objectList in System.Enum.GetValues(typeof(ObjectListType)))
         {
             if (GetObjectList(objectList) != null)
             {
@@ -168,6 +162,25 @@ public class LevelManager : MonoBehaviour
 
         if (_affiliationTransform != null)
             Destroy(_affiliationTransform.gameObject);
+    }
+
+    private void resetGameSettings()
+    {
+        _levelNumber = 1;
+        _numOfCharacters = _initialNumOfCharacters;
+        _numOfObstacles = _initialNumOfObstacles;
+    }
+
+    public void InitializeGame()
+    {
+        initializePlayground();
+        InvokeRepeating(nameof(fadeCharacter), UnityEngine.Random.Range(0.5f, 2.0f), UnityEngine.Random.Range(0.5f, 1.0f));
+        OnInitializeGame?.Invoke();
+    }
+
+    private void initializePlayground()
+    {
+        ClearGame();
 
         //initializing new objects
         initializeObjects(_gameAssets.ObstacleObject, _numOfObstacles, _obstacleLayerMask, _obstaclesList);
