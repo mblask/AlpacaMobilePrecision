@@ -76,13 +76,13 @@ public class BackgroundObject : MonoBehaviour
 
     private void randomizeBackgroundColor()
     {
-        float r = Random.Range(0.0f, 1.0f);
-        float g = Random.Range(0.0f, 1.0f);
-        float b = Random.Range(0.0f, 1.0f);
+        Vector3 newColor = new Vector3();
 
-        Color newColor = new Color(r, g, b);
+        newColor.x = Random.Range(0.0f, 1.0f);
+        newColor.y = Random.Range(0.0f, 1.0f);
+        newColor.z = Random.Range(0.0f, 1.0f);
 
-        _backgroundRenderer.color = newColor;
+        _backgroundRenderer.color = new Color(newColor.x, newColor.y, newColor.z);
     }
 
     private void activateRandomStartColor(bool value)

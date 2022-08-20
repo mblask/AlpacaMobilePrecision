@@ -23,12 +23,19 @@ public class TimeKeeperUI: MonoBehaviour
 
         TimeManager.Instance.OnActivateTime += showTimeUI;
         TimeManager.Instance.OnUpdateTime += updateTime;
+        LevelManager.Instance.OnGameReload += levelManager_onGameReload;
     }
 
     private void OnDestroy()
     {
         TimeManager.Instance.OnActivateTime -= showTimeUI;
         TimeManager.Instance.OnUpdateTime -= updateTime;
+        LevelManager.Instance.OnGameReload -= levelManager_onGameReload;
+    }
+
+    private void levelManager_onGameReload()
+    {
+        showTimeUI(false);
     }
 
     private void updateTime(float timeValue)

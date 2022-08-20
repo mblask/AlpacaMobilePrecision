@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class FinalScore
+public class TotalScore
 {
     public int Score;
     public int Level;
@@ -15,7 +15,8 @@ public class GameManager : MonoBehaviour
 {
     public event Action<int> OnScoreUpdate;
     public event Action OnGameOver;
-    public event Action<FinalScore> OnGameOverSendFinalScore;
+    public event Action<float> OnGameOverSendFinalScore;
+    public event Action OnGameOverOnTime;
     public event Action<bool> OnGamePaused;
     public event Action OnQuitToMainMenu;
     public event Action OnWorldDestruction;
@@ -53,7 +54,7 @@ public class GameManager : MonoBehaviour
         AffiliationTrigger.OnAffiliationTriggerHit += affiliationChangedThisLevel;
         LevelManager.Instance.OnLoadLevel += gameManager_onLoadLevel;
         LevelManager.Instance.OnGameReload += resetScore;
-        TimeManager.Instance.OnTimeIsOut += gameOver;
+        TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
 
         resetScore();
 
@@ -68,7 +69,13 @@ public class GameManager : MonoBehaviour
         AffiliationTrigger.OnAffiliationTriggerHit -= affiliationChangedThisLevel;
         LevelManager.Instance.OnLoadLevel -= gameManager_onLoadLevel;
         LevelManager.Instance.OnGameReload -= resetScore;
-        TimeManager.Instance.OnTimeIsOut -= gameOver;
+        TimeManager.Instance.OnTimeIsOut -= gameOverOnTime;
+    }
+
+    private void gameOverOnTime()
+    {
+        gameOver();
+        OnGameOverOnTime?.Invoke();
     }
 
     private void gameManager_onLoadLevel(int level)
@@ -118,8 +125,28 @@ public class GameManager : MonoBehaviour
     private void gameOver()
     {
         Debug.LogError("Game Over");
-        Debug.Log("Activate game over screen and disable the touch feature.");
+        //get level number, current score, accuracy, time remaining
+        TotalScore totalScore = new TotalScore { Level = LevelManager.GrabLevel(), Accuracy = HitManager.GrabPlayerAccuracy(), Score = _score, TimeRemaining = TimeManager.GrabTimerValue() };
+        Debug.Log(totalScore.Level);
+        Debug.Log(totalScore.Accuracy);
+        Debug.Log(totalScore.Score);
+        Debug.Log(totalScore.TimeRemaining);
+
+        //calculate final score
+        float finalScore = calculateFinalScore(totalScore);
+
+        //send final score to the GameOverUI
         OnGameOver?.Invoke();
+        OnGameOverSendFinalScore?.Invoke(finalScore);
+    }
+
+    private float calculateFinalScore(TotalScore totalScore)
+    {
+        float finalScore = totalScore.Level * (totalScore.Score + totalScore.Accuracy);
+        if (totalScore.TimeRemaining > 0.0f)
+            finalScore += totalScore.Level * totalScore.TimeRemaining;
+
+        return finalScore;
     }
 
     private void destroyWorld()
@@ -147,13 +174,13 @@ public class GameManager : MonoBehaviour
 
     public void QuitToMainMenu()
     {
-        ActivatePauseGame();
+        PauseGame(true);
         OnQuitToMainMenu?.Invoke();
     }
 
-    public void ActivatePauseGame()
+    public void PauseGame(bool value)
     {
-        _gamePaused = !_gamePaused;
+        _gamePaused = value;
 
         Time.timeScale = _gamePaused ? 0.0f : 1.0f;
         OnGamePaused?.Invoke(_gamePaused);

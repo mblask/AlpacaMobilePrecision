@@ -11,8 +11,8 @@ public class GameOverUI : MonoBehaviour
     private TextMeshProUGUI _gameOverText;
     private TextMeshProUGUI _finalScoreText;
 
-    [TextArea]
-    [SerializeField] private List<string> _gameOverMessages;
+    [TextArea] [SerializeField] private List<string> _gameOverMessages;
+    [TextArea] [SerializeField] private List<string> _gameOverOnTimeMessages;
 
     private void Awake()
     {
@@ -25,16 +25,24 @@ public class GameOverUI : MonoBehaviour
     {
         deactivateGameOverScreen();
         GameManager.Instance.OnGameOver += activateGameOverScreen;
+        GameManager.Instance.OnGameOverOnTime += gameOverOnTime;
+        GameManager.Instance.OnGameOverSendFinalScore += updateFinalScore;
         GameManager.Instance.OnWorldDestruction += changeGameOverTextOnWorldDestruction;
         GameManager.Instance.OnQuitToMainMenu += deactivateGameOverScreen;
     }
 
-
     private void OnDestroy()
     {
         GameManager.Instance.OnGameOver -= activateGameOverScreen;
+        GameManager.Instance.OnGameOverOnTime += gameOverOnTime;
+        GameManager.Instance.OnGameOverSendFinalScore -= updateFinalScore;
         GameManager.Instance.OnWorldDestruction -= changeGameOverTextOnWorldDestruction;
         GameManager.Instance.OnQuitToMainMenu -= deactivateGameOverScreen;
+    }
+
+    private void gameOverOnTime()
+    {
+        _gameOverText.SetText(_gameOverOnTimeMessages[Random.Range(0, _gameOverOnTimeMessages.Count)]);
     }
 
     private void changeGameOverTextOnWorldDestruction()

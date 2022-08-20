@@ -42,7 +42,7 @@ public class PlayerTouchManager : MonoBehaviour
 
     private void onGamePaused(bool value)
     {
-        _inputActive = !_inputActive;
+        _inputActive = !value;
 
         if (_inputActive)
             activateInput();

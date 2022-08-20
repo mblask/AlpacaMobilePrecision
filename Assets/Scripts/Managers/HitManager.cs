@@ -110,7 +110,10 @@ public class HitManager : MonoBehaviour
                     if (affiliationTrigger != null)
                         affiliationTrigger.TriggerAffiliationSwitch();
 
-                    _playerHit++;
+                    Character character = firstCollider.GetComponent<Character>();
+                    if (character != null && character.GetCharacterType().Equals(CharacterType.Negative))
+                        _playerHit++;
+
                     damagable.DamageThis();
                 }
             }
@@ -119,15 +122,15 @@ public class HitManager : MonoBehaviour
 
     private void sendPlayerAccuracy()
     {
-        OnSendPlayerAccuracy?.Invoke(getPlayerAccuracy());
+        OnSendPlayerAccuracy?.Invoke(GetPlayerAccuracy());
     }
 
     public static float GrabPlayerAccuracy()
     {
-        return _instance.getPlayerAccuracy();
+        return _instance.GetPlayerAccuracy();
     }
 
-    private float getPlayerAccuracy()
+    public float GetPlayerAccuracy()
     {
         if (_playerTouchNumber == 0)
             return 0.0f;
