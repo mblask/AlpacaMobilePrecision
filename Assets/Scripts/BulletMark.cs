@@ -15,8 +15,10 @@ public class BulletMark : MonoBehaviour
 
     private void Start()
     {
-        
         Invoke(nameof(removeMark), _fadeAfter);
+        
+        ParticleSystem bulletPS = Instantiate(GameAssets.Instance.BulletMarkPS, transform.position, Quaternion.identity, null).GetComponent<ParticleSystem>();
+        bulletPS.Play();
     }
 
     private void removeMark()

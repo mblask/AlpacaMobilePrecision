@@ -39,8 +39,17 @@ public class Obstacle : MonoBehaviour, IDamagable
         if (_obstacleHitPoint <= 0 && _obstacleType.Equals(ObstacleType.Fragile))
         {
             OnObstacleDestroy?.Invoke(this);
+            instantiatePS();
             Destroy(gameObject);
         }
+    }
+
+    private void instantiatePS()
+    {
+        ParticleSystem destroyObjectPS = Instantiate(GameAssets.Instance.DestroyObjectPS, transform.position, Quaternion.identity, null).GetComponent<ParticleSystem>();
+        ParticleSystem.MainModule mainPSModule = destroyObjectPS.main;
+        mainPSModule.startColor = getObstacleColor(_obstacleType);
+        destroyObjectPS.Play();
     }
 
     private int getObstacleHitPoints(ObstacleType type)
@@ -75,6 +84,4 @@ public class Obstacle : MonoBehaviour, IDamagable
 
         return (ObstacleType)UnityEngine.Random.Range(0, numOfObstacles);
     }
-
-
 }

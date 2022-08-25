@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Score Points")]
     [SerializeField] private int _score = 0;
+    private float _currentHighscore;
 
     [Header("Points On Destroy")]
     [SerializeField] private int _posCharHit = -10;
@@ -127,17 +128,27 @@ public class GameManager : MonoBehaviour
         Debug.LogError("Game Over");
         //get level number, current score, accuracy, time remaining
         TotalScore totalScore = new TotalScore { Level = LevelManager.GrabLevel(), Accuracy = HitManager.GrabPlayerAccuracy(), Score = _score, TimeRemaining = TimeManager.GrabTimerValue() };
-        Debug.Log(totalScore.Level);
-        Debug.Log(totalScore.Accuracy);
-        Debug.Log(totalScore.Score);
-        Debug.Log(totalScore.TimeRemaining);
 
         //calculate final score
         float finalScore = calculateFinalScore(totalScore);
 
         //send final score to the GameOverUI
         OnGameOver?.Invoke();
-        OnGameOverSendFinalScore?.Invoke(finalScore);
+        evaluateNewHighscore(finalScore);
+    }
+
+    private void evaluateNewHighscore(float highscore)
+    {
+        if (_currentHighscore < highscore)
+        {
+            _currentHighscore = highscore;
+            OnGameOverSendFinalScore?.Invoke(highscore);
+        }
+    }
+
+    public float GetCurrentHighscore()
+    {
+        return _currentHighscore;
     }
 
     private float calculateFinalScore(TotalScore totalScore)

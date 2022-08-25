@@ -3,7 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class AchievementTooltipUI : MonoBehaviour
+public class TooltipParameters
+{
+    public Vector2 Position;
+    public string Title;
+    public string Description;
+}
+
+public class TooltipUI : MonoBehaviour
 {
     private Transform _tooltipContainer;
     private RectTransform _rectTransform;
@@ -21,11 +28,13 @@ public class AchievementTooltipUI : MonoBehaviour
     private void Start()
     {
         AchievementUI.OnButtonClick += setupTooltip;
+        WantedCharacterUI.OnButtonClick += setupTooltip;
     }
 
     private void OnDestroy()
     {
         AchievementUI.OnButtonClick -= setupTooltip;
+        WantedCharacterUI.OnButtonClick -= setupTooltip;
     }
 
     public void OnTooltipButtonClick()
@@ -33,13 +42,13 @@ public class AchievementTooltipUI : MonoBehaviour
         deactivateTooltip();
     }
 
-    private void setupTooltip(AchievementUI achievement)
+    private void setupTooltip(TooltipParameters parameters)
     {
-        Vector2 newPosition = achievement.transform.position;
+        Vector2 newPosition = parameters.Position;
         _rectTransform.position = newPosition;
 
-        _achievementTitle.SetText(achievement.GetAchievementName());
-        _achivementDescription.SetText(achievement.GetAchievementDescription());
+        _achievementTitle.SetText(parameters.Title);
+        _achivementDescription.SetText(parameters.Description);
 
         activateTooltip();
     }

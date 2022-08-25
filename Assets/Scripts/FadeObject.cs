@@ -19,6 +19,9 @@ public class FadeObject : MonoBehaviour
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        if (_spriteRenderer == null)
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         _spriteRenderer.sharedMaterial = new Material(_spriteRenderer.sharedMaterial);
     }
 

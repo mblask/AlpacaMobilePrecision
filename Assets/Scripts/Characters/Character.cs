@@ -31,6 +31,9 @@ public class Character : MonoBehaviour, IDamagable
         LevelManager.Instance.OnCharacterLevelUp += levelUpCharacter;
 
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        if (_spriteRenderer == null)
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         _characterType = AssignRandomCharacterType();
         _spriteRenderer.color = getCharacterColor(_characterType);
 

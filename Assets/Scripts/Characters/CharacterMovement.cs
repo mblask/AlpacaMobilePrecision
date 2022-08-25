@@ -37,11 +37,6 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
 
     private LevelManager _levelManager;
 
-    private void Awake()
-    {
-        //LevelManager.Instance.OnCharacterLevelUp += levelUpCharacter;
-    }
-
     private void Start()
     {
         _levelManager = LevelManager.Instance;
@@ -55,11 +50,6 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
     private void LateUpdate()
     {
         characterMovement();
-    }
-
-    private void OnDestroy()
-    {
-        //LevelManager.Instance.OnCharacterLevelUp -= levelUpCharacter;
     }
 
     public void MoveTo(Vector2 position, Action funcToPerform = null)

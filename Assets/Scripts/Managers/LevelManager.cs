@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
     public Action<int> OnLoadLevel;
     public Action OnGameReload;
     public Action<CharacterLevelUpProperties> OnCharacterLevelUp;
+    public Action<int> OnCharacterDestroyedAtLevel;
     public Action<float> OnActivateTimer;
     public Action<float> OnActivateAccuracy;
     public Action OnGrabPlayerAccuracy;
@@ -433,6 +434,9 @@ public class LevelManager : MonoBehaviour
         {
             _charactersList.Remove(characterDestroyed.transform);
             checkAmountOfGoodBadChars(characterDestroyed);
+
+            if (characterDestroyed.GetCharacterType().Equals(CharacterType.Negative))
+                OnCharacterDestroyedAtLevel?.Invoke(_levelNumber);
         }
     }
 

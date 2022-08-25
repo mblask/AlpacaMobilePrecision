@@ -7,7 +7,7 @@ using TMPro;
 
 public class AchievementUI : MonoBehaviour
 {
-    public static Action<AchievementUI> OnButtonClick;
+    public static Action<TooltipParameters> OnButtonClick;
 
     [SerializeField] private bool _isLocked = true;
 
@@ -34,7 +34,7 @@ public class AchievementUI : MonoBehaviour
 
     public void OnAchievementButtonClick()
     {
-        OnButtonClick?.Invoke(this);
+        OnButtonClick?.Invoke(new TooltipParameters { Position = transform.position, Title = _achievementName, Description = _achievementDescription});
     }
 
     public string GetAchievementName()
@@ -52,9 +52,25 @@ public class AchievementUI : MonoBehaviour
         return _achievementType;
     }
 
+    public void SetupUI(Achievement achievement)
+    {
+        _achievementName = achievement.AchievementName;
+        _achievementDescription = achievement.AchievementDescription;
+        _achievementSprite = achievement.AchievementSprite;
+        _achievementType = achievement.AchievementType;
+
+        setButtonText();
+        SetLocked(true);
+    }
+
     private void setButtonText()
     {
         _achievementButtonText.SetText(_achievementName);
+    }
+
+    private void setButtonText(string text)
+    {
+        _achievementButtonText.SetText(text);
     }
 
     public bool IsLocked()
@@ -65,5 +81,6 @@ public class AchievementUI : MonoBehaviour
     public void SetLocked(bool value)
     {
         _isLocked = value;
+        _isLockedPanel.ActivatePanel(!value);
     }
 }

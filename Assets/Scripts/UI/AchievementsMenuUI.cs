@@ -6,6 +6,7 @@ using TMPro;
 public class AchievementsMenuUI : MonoBehaviour
 {
     private Transform _achievementsUIContainer;
+
     private TextMeshProUGUI _highscoreNumberText;
     private TextMeshProUGUI _highscoreDateText;
 
@@ -21,38 +22,38 @@ public class AchievementsMenuUI : MonoBehaviour
         updateAchievements();
     }
 
-    private void Start()
-    {
-        updateHighscoreNumber(0.0f);
-    }
-
     private void updateAchievements()
     {
-        List<AchievementType> achievementsUnlocked = AchievementsManager.Instance?.GetAchievementsUnlocked();
+        updateHighscoreNumber(GameManager.Instance.GetCurrentHighscore());
 
-        if (achievementsUnlocked == null || achievementsUnlocked.Count == 0)
-            return;
-
-        AchievementUI[] achievementsArray = _achievementsUIContainer.GetComponentsInChildren<AchievementUI>();
-
-        if (achievementsArray == null)
-            return;
-
-        foreach (AchievementUI achievement in achievementsArray)
+        if (_achievementsUIContainer.childCount != 0)
         {
-            foreach (AchievementType type in achievementsUnlocked)
-            {
-                if (achievement.GetAchievementType().Equals(type))
-                    if (achievement.IsLocked())
-                        achievement.SetLocked(false);
-            }
+            for (int i = 0; i < _achievementsUIContainer.childCount; i++)
+                Destroy(_achievementsUIContainer.GetChild(i).gameObject);
+        }
+
+        List<Achievement> achievementsList = AchievementsManager.Instance?.GetAchievementsList();
+        List<AchievementType> unlockedAchievements = AchievementsManager.Instance?.GetAchievementsUnlocked();
+
+        if (achievementsList == null || achievementsList.Count == 0)
+            return;
+
+        for (int i = 0; i < achievementsList.Count; i++)
+        {
+            AchievementUI achievementUI = Instantiate(GameAssets.Instance.AchievementUI, _achievementsUIContainer).GetComponent<AchievementUI>();
+            achievementUI.SetupUI(achievementsList[i]);
+
+            if (unlockedAchievements == null || unlockedAchievements.Count == 0)
+                continue;
+
+            if (achievementUI.IsLocked())
+                achievementUI.SetLocked(!unlockedAchievements.Contains(achievementUI.GetAchievementType()));
         }
     }
 
     private void updateHighscoreNumber(float highscore)
     {
         _highscoreNumberText.SetText(highscore.ToString("F0"));
-
         updateHighscoreDate(highscore);
     }
 
@@ -64,7 +65,7 @@ public class AchievementsMenuUI : MonoBehaviour
         else
         {
             System.DateTime dateTime = System.DateTime.Now;
-            dateString = "On " + dateTime.Date + " " + dateTime.Month + " " + dateTime.Year;
+            dateString = "On " + dateTime.Day + " " + AlpacaUtils.GetMonthName(dateTime.Month) + " " + dateTime.Year;
         }
 
         _highscoreDateText.SetText(dateString);

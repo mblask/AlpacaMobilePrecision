@@ -19,6 +19,15 @@ public enum AchievementType
     Have100AccuracyAllGame,
 }
 
+[Serializable]
+public class Achievement
+{
+    public string AchievementName;
+    [TextArea] public string AchievementDescription;
+    public Sprite AchievementSprite;
+    public AchievementType AchievementType;
+}
+
 public class AchievementsManager : MonoBehaviour
 {
     private static AchievementsManager _instance;
@@ -31,6 +40,8 @@ public class AchievementsManager : MonoBehaviour
         }
     }
 
+    public Action<string> OnAchievementScored;
+
     private int _negativeCharactersKilled = 0;
     private float _gameLevelStopwatch = 0.0f;
     private List<float> _accuracyPerAccuracyLevel = new List<float>();
@@ -38,7 +49,8 @@ public class AchievementsManager : MonoBehaviour
     private bool _affiliationSwitched = false;
     private int _numOfAffiliationSwitchesSurvived = 0;
     
-    [SerializeField] private List<AchievementType> _achievementsUnlocked;
+    [SerializeField] private List<Achievement> _possibleAchievements;
+    private List<AchievementType> _achievementsUnlocked;
 
     private void Awake()
     {
@@ -51,6 +63,7 @@ public class AchievementsManager : MonoBehaviour
         Character.OnCharacterDestroyed += trackCharactersKilled;
         LevelManager.Instance.OnBeforeLoadLevel += trackAccuracyLevels;
         LevelManager.Instance.OnGameReload += resetTrackers;
+        GameManager.Instance.OnGameOver += resetTrackers;
     }
 
     private void Update()
@@ -64,6 +77,7 @@ public class AchievementsManager : MonoBehaviour
         Character.OnCharacterDestroyed -= trackCharactersKilled;
         LevelManager.Instance.OnBeforeLoadLevel -= trackAccuracyLevels;
         LevelManager.Instance.OnGameReload -= resetTrackers;
+        GameManager.Instance.OnGameOver -= resetTrackers;
     }
 
     private void resetTrackers()
@@ -86,6 +100,35 @@ public class AchievementsManager : MonoBehaviour
         return _achievementsUnlocked;
     }
 
+    public List<Achievement> GetAchievementsList()
+    {
+        return _possibleAchievements;
+    }
+
+    private void achievementUnlocked(AchievementType achievementType)
+    {
+        if (_achievementsUnlocked == null)
+            _achievementsUnlocked = new List<AchievementType>();
+
+        if (!_achievementsUnlocked.Contains(achievementType))
+        {
+            _achievementsUnlocked.Add(achievementType);
+            OnAchievementScored?.Invoke(getAchievementName(achievementType));
+        }
+    }
+
+    private string getAchievementName(AchievementType achievementType)
+    {
+        foreach (Achievement achievement in _possibleAchievements)
+        {
+            if (achievement.AchievementType.Equals(achievementType)){
+                return achievement.AchievementName;
+            }
+        }
+
+        return "";
+    }
+
     private void trackAffiliationSwitches()
     {
         if (_affiliationSwitched)
@@ -100,11 +143,11 @@ public class AchievementsManager : MonoBehaviour
             {
                 case 1:
                     //Debug.Log("Achievement scored! Survive an affiliation switch.");
-                    _achievementsUnlocked.Add(AchievementType.SurviveAffSwitch);
+                    achievementUnlocked(AchievementType.SurviveAffSwitch);
                     break;
                 case 3:
                     //Debug.Log("Achievement scored! Survive three affiliation switches.");
-                    _achievementsUnlocked.Add(AchievementType.Survive3AffSwtiches);
+                    achievementUnlocked(AchievementType.Survive3AffSwtiches);
                     break;
                 default:
                     break;
@@ -124,20 +167,20 @@ public class AchievementsManager : MonoBehaviour
                 if (_accuracyPerAccuracyLevel.TrueForAll(x => x >= 0.8f && x < 1.0f))
                 {
                     //Debug.Log("Achievement scored! Have 3 levels in a row accuracy higher than 80%.");
-                    _achievementsUnlocked.Add(AchievementType.Have80Accuracy3Levels);
+                    achievementUnlocked(AchievementType.Have80Accuracy3Levels);
                 }
 
                 if (_accuracyPerAccuracyLevel.TrueForAll(x => x == 1.0f))
                 {
                     //Debug.Log("Achievement scored! Have 3 levels in a row accuracy of 100%.");
-                    _achievementsUnlocked.Add(AchievementType.Have100Accuracy3Levels);
+                    achievementUnlocked(AchievementType.Have100Accuracy3Levels);
                 }
                 break;
             case 15:
                 if (_accuracyPerAccuracyLevel.TrueForAll(x => x == 1.0f))
                 {
                     //Debug.Log("Achievement scored! In all levels have 100% accuracy.");
-                    _achievementsUnlocked.Add(AchievementType.Have100AccuracyAllGame);
+                    achievementUnlocked(AchievementType.Have100AccuracyAllGame);
                 }
                 break;
             default:
@@ -153,28 +196,28 @@ public class AchievementsManager : MonoBehaviour
                 if (_gameLevelStopwatch <= 5.0f)
                 {
                     //Debug.Log("Achievement scored! Reach level 4 within 5 seconds.");
-                    _achievementsUnlocked.Add(AchievementType.Reach4);
+                    achievementUnlocked(AchievementType.Reach4);
                 }
                 break;
             case 10:
-                if (_gameLevelStopwatch <= 30.0f)
+                if (_gameLevelStopwatch <= 60.0f)
                 {
-                    //Debug.Log("Achievement scored! Reach level 10 within 30 seconds.");
-                    _achievementsUnlocked.Add(AchievementType.Reach10);
+                    //Debug.Log("Achievement scored! Reach level 10 within 60 seconds.");
+                    achievementUnlocked(AchievementType.Reach10);
                 }
                 break;
             case 20:
-                if (_gameLevelStopwatch <= 60.0f)
+                if (_gameLevelStopwatch <= 180.0f)
                 {
-                    //Debug.Log("Achievement scored! Reach level 20 within 1 minute.");
-                    _achievementsUnlocked.Add(AchievementType.Reach20);
+                    //Debug.Log("Achievement scored! Reach level 20 within 3 minutes.");
+                    achievementUnlocked(AchievementType.Reach20);
                 }
                 break;
             case 35:
-                if (_gameLevelStopwatch <= 180.0f)
+                if (_gameLevelStopwatch <= 300.0f)
                 {
-                    //Debug.Log("Achievement scored! Reach last level within 3 minutes.");
-                    _achievementsUnlocked.Add(AchievementType.Reach35);
+                    //Debug.Log("Achievement scored! Reach last level within 5 minutes.");
+                    achievementUnlocked(AchievementType.Reach35);
                 }
                 break;
             default:
@@ -195,15 +238,15 @@ public class AchievementsManager : MonoBehaviour
                 {
                     case 15:
                         //Debug.Log("Achievement scored! Kill 15 negative characters in a row.");
-                        _achievementsUnlocked.Add(AchievementType.Smash15);
+                        achievementUnlocked(AchievementType.Smash15);
                         break;
                     case 30:
                         //Debug.Log("Achievement scored! Kill 30 negative characters in a row.");
-                        _achievementsUnlocked.Add(AchievementType.Smash30);
+                        achievementUnlocked(AchievementType.Smash30);
                         break;
                     case 50:
                         //Debug.Log("Achievement scored! Kill 50 negative characters in a row.");
-                        _achievementsUnlocked.Add(AchievementType.Smash50);
+                        achievementUnlocked(AchievementType.Smash50);
                         break;
                     default:
                         break;

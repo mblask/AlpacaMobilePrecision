@@ -19,7 +19,12 @@ public class GameAssets : MonoBehaviour
     public Transform CharacterObject;
     public Transform ObstacleObject;
 
+    [Header("UI Elements")]
+    public RectTransform WantedCharacterUI;
+    public RectTransform AchievementUI;
+
     [Header("Particle Systems")]
+    public Transform BulletMarkPS;
     public Transform DestroyObjectPS;
     public Transform GlobalDestructionPS;
 

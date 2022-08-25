@@ -6,14 +6,14 @@ public class MessageObject : MonoBehaviour
 {
     public bool DisplayMessages = true;
 
-    [TextArea]
-    public List<string> Messages;
+    [TextArea] public List<string> Urgents;
+    [TextArea] public List<string> NonUrgents;
 
     private void Start()
     {
         if (DisplayMessages)
         {
-            foreach (string message in Messages)
+            foreach (string message in Urgents)
                 Debug.LogError(message);
         }
     }
