@@ -54,8 +54,8 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
 
         OnCharacterSpawn?.Invoke(newCharacterTransform);
 
-        //Character character = newCharacterTransform.GetComponent<Character>();
-        //character.AssignCharacterType(characterType);
+        CharacterAnimation animation = newCharacterTransform.GetComponent<CharacterAnimation>();
+        animation.PlayAnimation(AnimationType.ContractRelease);
 
         CharacterGrowth growth = newCharacterTransform.GetComponent<CharacterGrowth>();
         growth.SetCharacterScale(0.3f);

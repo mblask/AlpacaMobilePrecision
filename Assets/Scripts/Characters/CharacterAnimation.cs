@@ -2,79 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CharacterAnimations
+public enum AnimationType
 {
-    Spawn,
+    ContractRelease,
 }
 
-public class CharacterAnimation : MonoBehaviour
+public class CharacterAnimation : MonoBehaviour, ICharacterAnimation
 {
     private Animator _animator;
 
-    private bool _animationRunning = false;
+    private string _contractReleaseTrigger = "ContractRelease";
 
     private void Awake()
     {
-        _animator = GetComponentInParent<Animator>();
+        _animator = GetComponent<Animator>();
     }
 
-    private void Start()
+    public void PlayAnimation(AnimationType animationType)
     {
-        //InvokeRepeating(nameof(TestAnimation), 2.0f, 1.0f);
+        switch (animationType)
+        {
+            case AnimationType.ContractRelease:
+                playContractRelease();
+                break;
+            default:
+                break;
+        }
     }
 
-    public void TestAnimation()
+    private void playContractRelease()
     {
-        string triggerString = "SpawnCharacter";
-        _animator.ResetTrigger(triggerString);
-        _animator.SetTrigger(triggerString);
-    }
-
-    private void LateUpdate()
-    {
-        if (_animationRunning)
-            spawnAnimation();
-    }
-
-    public void ActivateAnimation(float duration = 1.0f)
-    {
-        if (_animationRunning)
-            return;
-
-        _animationRunning = true;
-
-        Invoke(nameof(deactivateAnimation), duration);
-    }
-
-    private void deactivateAnimation()
-    {
-        _animationRunning = false;
-    }
-
-    private void spawnAnimation()
-    {
-        float localScale = getLocalScale();
-        float amplitude = 0.1f;
-
-        float pi = Mathf.PI;
-        float onePeriodPerSecond = 2 * pi;
-
-        float change = amplitude * Mathf.Sin(onePeriodPerSecond * Time.time);
-
-        localScale += change;
-
-        Vector3 localScaleVector = new Vector3(localScale, localScale, transform.localScale.z);
-        transform.localScale = localScaleVector;
-    }
-
-    private float getLocalScale()
-    {
-        return transform.localScale.x;
-    }
-
-    private void setLocalScale(float scale)
-    {
-        Vector3 localScale = new Vector3(scale, scale, transform.localScale.z);
-        transform.localScale = localScale;
+        _animator.SetTrigger(_contractReleaseTrigger);
     }
 }

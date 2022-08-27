@@ -21,6 +21,7 @@ public class HitManager : MonoBehaviour
 
     [Header("Hit effect")]
     [SerializeField][Range(0.0f, 2.0f)] private float _nearbyHitRadius = 1.0f;
+    [SerializeField] private float _obstacleDestroyerRadius = 3.0f;
 
     private int _playerTouchNumber = 0;
     private int _playerHit = 0;
@@ -35,6 +36,7 @@ public class HitManager : MonoBehaviour
         PlayerTouchManager.Instance.OnPlayerTouchPosition += playerTouchManager_OnPlayerTouch;
         LevelManager.Instance.OnLoadLevel += levelManager_onLoadLevel;
         LevelManager.Instance.OnGrabPlayerAccuracy += sendPlayerAccuracy;
+        ObstacleDestroyer.OnObstacleDestroyerAreaHit += destroyObstaclesInArea;
 
         _gameAssets = GameAssets.Instance;
     }
@@ -44,6 +46,7 @@ public class HitManager : MonoBehaviour
         PlayerTouchManager.Instance.OnPlayerTouchPosition -= playerTouchManager_OnPlayerTouch;
         LevelManager.Instance.OnLoadLevel += levelManager_onLoadLevel;
         LevelManager.Instance.OnGrabPlayerAccuracy -= sendPlayerAccuracy;
+        ObstacleDestroyer.OnObstacleDestroyerAreaHit -= destroyObstaclesInArea;
     }
 
     private void levelManager_onLoadLevel(int levelNumber)
@@ -55,10 +58,25 @@ public class HitManager : MonoBehaviour
     {
         _playerTouchNumber++;
 
+        Instantiate(_gameAssets.BulletMark, worldPosition, Quaternion.identity, null);
         detectCharacterHit(worldPosition);
         detectAreaEffectHits(worldPosition);
-        Instantiate(_gameAssets.BulletMark, worldPosition, Quaternion.identity, null);
         sendPlayerAccuracy();
+    }
+
+    private void destroyObstaclesInArea(Vector3 worldPosition)
+    {
+        Collider2D[] hitInfo = Physics2D.OverlapCircleAll(worldPosition, _obstacleDestroyerRadius);
+
+        if (hitInfo.Length != 0)
+        {
+            foreach (Collider2D collider in hitInfo)
+            {
+                Obstacle obstacle = collider.GetComponent<Obstacle>();
+                if (obstacle != null)
+                    obstacle.DestroyObstacle();
+            }
+        }
     }
 
     private void detectAreaEffectHits(Vector3 worldPosition)
@@ -76,6 +94,11 @@ public class HitManager : MonoBehaviour
                     characterMovement.ActivateRotation();
                     characterMovement.NearbyHitDetectedAt(worldPosition);
                 }
+
+                ICharacterAnimation characterAnimation = hit.GetComponent<ICharacterAnimation>();
+
+                if (characterAnimation != null)
+                    characterAnimation.PlayAnimation(AnimationType.ContractRelease);
             }
         }
     }
@@ -106,9 +129,13 @@ public class HitManager : MonoBehaviour
 
                 if (damagable != null)
                 {
-                    IAffiliationTrigger affiliationTrigger = firstCollider.GetComponent<IAffiliationTrigger>();
-                    if (affiliationTrigger != null)
-                        affiliationTrigger.TriggerAffiliationSwitch();
+                    //IAffiliationTrigger affiliationTrigger = firstCollider.GetComponent<IAffiliationTrigger>();
+                    //if (affiliationTrigger != null)
+                    //    affiliationTrigger.TriggerAffiliationSwitch();
+
+                    ISpecialCharacter specialCharacter = firstCollider.GetComponent<ISpecialCharacter>();
+                    if (specialCharacter != null)
+                        specialCharacter.TriggerSpecialCharacter();
 
                     Character character = firstCollider.GetComponent<Character>();
                     if (character != null && character.GetCharacterType().Equals(CharacterType.Negative))

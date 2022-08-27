@@ -54,7 +54,9 @@ public class LevelManager : MonoBehaviour
     private List<Transform> _charactersList = new List<Transform>();
 
     private bool _initializeAffiliationTrigger = false;
+    private bool _initializeObstacleDestroyer = false;
     private Transform _affiliationTransform;
+    private Transform _obstacleDestroyerTransform;
 
     private GameAssets _gameAssets;
 
@@ -145,6 +147,9 @@ public class LevelManager : MonoBehaviour
 
         if (_affiliationTransform != null)
             Destroy(_affiliationTransform.gameObject);
+
+        if (_obstacleDestroyerTransform != null)
+            Destroy(_obstacleDestroyerTransform.gameObject);
     }
 
     private void resetGameSettings()
@@ -153,6 +158,7 @@ public class LevelManager : MonoBehaviour
         _numOfCharacters = _initialNumOfCharacters;
         _numOfObstacles = _initialNumOfObstacles;
         _initializeAffiliationTrigger = false;
+        _initializeObstacleDestroyer = false;
     }
 
     public void InitializeGame()
@@ -177,6 +183,9 @@ public class LevelManager : MonoBehaviour
 
         if (AlpacaUtils.ChanceFunc(90) && _initializeAffiliationTrigger)
             _affiliationTransform = spawnObject(_gameAssets.AffiliationTrigger);
+
+        if (AlpacaUtils.ChanceFunc(75) && _initializeObstacleDestroyer)
+            _obstacleDestroyerTransform = spawnObject(_gameAssets.ObstacleDestroyer);
 
         //Testing purposes
         if (_spawnAffiliationTrigger)
@@ -280,26 +289,6 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    //private void loadNewLevel()
-    //{
-    //    _levelNumber++;
-    //    OnLoadLevel?.Invoke(_levelNumber);
-    //
-    //    //increase the number of obstacles and characters
-    //    //alterLevelObstaclesAndCharactersPerLevel(_levelNumber);
-    //    alterLevelObstacleCharacterSettings(_levelNumber);
-    //
-    //    //re-initialize level
-    //    initializePlayground();
-    //
-    //    float timer = 0.0f;
-    //    _accuracyRequiredToPassLevel = 0.0f;
-    //    OnActivateTimer?.Invoke(timer);
-    //    OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
-    //
-    //    changeLevelSettings(_levelNumber);
-    //}
-
     private void loadNewLevel()
     {
         _levelNumber++;
@@ -312,7 +301,6 @@ public class LevelManager : MonoBehaviour
         OnLoadLevel?.Invoke(levelNumber);
 
         //increase the number of obstacles and characters
-        //alterLevelObstaclesAndCharactersPerLevel(_levelNumber);
         alterLevelObstacleCharacterSettings(levelNumber);
 
         //re-initialize level
@@ -365,72 +353,90 @@ public class LevelManager : MonoBehaviour
 
     private void changeLevelSettings(int levelNumber)
     {
-        if (levelNumber >= 3 && levelNumber < 5)
+        //INSERT OBSTACLE DESTROYER SOMEWHERE!!!
+
+        if (levelNumber >= 2 && levelNumber < 5)
         {
-            //Debug.Log("Increase the characters' speed");
-            _fadeCharacters = false;
+            //SPEED, ACCURACY
+            changeSettings(false, false, false);
             _accuracyRequiredToPassLevel = (levelNumber - 1) / 10.0f;
             OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 30, SpeedDistanceDependance = SpeedDistanceDependance.Medium });
         }
         else if (levelNumber >= 5 && levelNumber < 7)
         {
-            //Debug.Log("Activate fading option on characters");
-            _fadeCharacters = true;
+            //FADING, DESTROYER
+            changeSettings(true, false, true);
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None });
         }
         else if (levelNumber >= 7 && levelNumber < 9)
         {
-            //Debug.Log("Activate fading and release the affiliation trigger");
-            _initializeAffiliationTrigger = true;
-            _fadeCharacters = true;
+            //FADING, AFFILIATION, TIMER
+            changeSettings(true, true, false);
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None });
         }
         else if (levelNumber >= 9 && levelNumber < 12)
         {
-            //Debug.Log("Increase the speed and activate fading option");
-            _initializeAffiliationTrigger = false;
-            _fadeCharacters = true;
+            //SPEED, FADING, DESTROYER
+            changeSettings(true, false, true);
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 40, SpeedDistanceDependance = SpeedDistanceDependance.Medium });
         }
         else if (levelNumber >= 12 && levelNumber < 15)
         {
-            //Debug.Log("Increase the speed, activate fading and release the affiliation trigger");
-            _initializeAffiliationTrigger = true;
-            _fadeCharacters = true;
+            //SPEED, FADING, AFFILIATION, TIMER
+            changeSettings(true, true, false);
+            float timerValue = 15.0f - (levelNumber - 12) * 2.0f;
+            OnActivateTimer?.Invoke(timerValue);
             OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 50, SpeedDistanceDependance = SpeedDistanceDependance.High });
         }
         else if (levelNumber >= 15 && levelNumber < 18)
         {
-            //Debug.Log("Increase the speed, activate fading, affiliation trigger and run time");
-            float timerValue = 15.0f - (levelNumber - 15) * 3.0f;
-            OnActivateTimer?.Invoke(timerValue);
-            OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 70, SpeedDistanceDependance = SpeedDistanceDependance.Medium });
+            //SPEED, FADING, AFFILIATION, DESTROYER, SPAWNING
+            changeSettings(true, true, true);
+            OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 70, SpeedDistanceDependance = SpeedDistanceDependance.Medium, CharactersSpawnNewCharacters = true });
         }
-        else if (levelNumber >= 18 && levelNumber <= 35)
+        else if (levelNumber >= 18 && levelNumber < 22)
         {
-            //Debug.Log("Increase the speed, activate fading, affiliation trigger, run time and spawn new characters");
-            if (levelNumber >= 22)
-            {
-                _accuracyRequiredToPassLevel = levelNumber * 2.0f / 100.0f;
-                OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
-            }
+            //SPEED, FADING, AFFILIATION, DESTROYER, TIMER, SPAWNING
+            changeSettings(true, true, true);
 
-            float timerValue = Mathf.Floor(30.0f - (levelNumber - 18) * levelNumber / 25.0f);
+            float timerValue = Mathf.Floor(20.0f - (levelNumber - 18) * levelNumber / 25.0f);
             OnActivateTimer?.Invoke(timerValue);
             OnCharacterLevelUp?.Invoke(
-                new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(25 * levelNumber/10.0f), SpeedDistanceDependance = SpeedDistanceDependance.High, CharactersSpawnNewCharacters = true }
+                new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(25 * levelNumber / 10.0f), SpeedDistanceDependance = SpeedDistanceDependance.High, CharactersSpawnNewCharacters = true }
+                );
+        }
+        else if (levelNumber >= 22 && levelNumber <= 35)
+        {
+            //SPEED, FADING, AFFILIATION, DESTROYER, TIMER, SPAWNING, ACCURACY
+            changeSettings(true, true, true);
+
+            _accuracyRequiredToPassLevel = levelNumber * 2.0f / 100.0f;
+            OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
+
+            float timerValue = Mathf.Floor(15.0f - (levelNumber - 22) * levelNumber / 25.0f);
+            OnActivateTimer?.Invoke(timerValue);
+            OnCharacterLevelUp?.Invoke(
+                new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(25 * levelNumber / 10.0f), SpeedDistanceDependance = SpeedDistanceDependance.High, CharactersSpawnNewCharacters = true }
                 );
         }
         else
             return;
     }
 
+    private void changeSettings(bool fadeCharacters = false, bool initializeAffiliationTrigger = false, bool initializeObstacleCharacter = false)
+    {
+        _fadeCharacters = fadeCharacters;
+        _initializeAffiliationTrigger = initializeAffiliationTrigger;
+        _initializeObstacleDestroyer = initializeObstacleCharacter;
+    }
+
     private void checkLevelCompletion(Character characterDestroyed)
     {
         AffiliationTrigger afiiliationTrigger = characterDestroyed.GetComponent<AffiliationTrigger>();
+        ObstacleDestroyer obstacleDestroyer = characterDestroyed.GetComponent<ObstacleDestroyer>();
 
-        if (afiiliationTrigger == null)
+        if (afiiliationTrigger == null && obstacleDestroyer == null)
         {
             _charactersList.Remove(characterDestroyed.transform);
             checkAmountOfGoodBadChars(characterDestroyed);

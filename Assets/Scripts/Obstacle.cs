@@ -12,6 +12,7 @@ public enum ObstacleType
 public class Obstacle : MonoBehaviour, IDamagable
 {
     public static Action<Obstacle> OnObstacleDestroy;
+    public static Action<PSProperties> OnParticleSystemToSpawn;
 
     private int _solidHitPoint = 9999;
 
@@ -37,19 +38,14 @@ public class Obstacle : MonoBehaviour, IDamagable
         _obstacleHitPoint--;
 
         if (_obstacleHitPoint <= 0 && _obstacleType.Equals(ObstacleType.Fragile))
-        {
-            OnObstacleDestroy?.Invoke(this);
-            instantiatePS();
-            Destroy(gameObject);
-        }
+            DestroyObstacle();
     }
 
-    private void instantiatePS()
+    public void DestroyObstacle()
     {
-        ParticleSystem destroyObjectPS = Instantiate(GameAssets.Instance.DestroyObjectPS, transform.position, Quaternion.identity, null).GetComponent<ParticleSystem>();
-        ParticleSystem.MainModule mainPSModule = destroyObjectPS.main;
-        mainPSModule.startColor = getObstacleColor(_obstacleType);
-        destroyObjectPS.Play();
+        OnObstacleDestroy?.Invoke(this);
+        OnParticleSystemToSpawn?.Invoke(new PSProperties { PSposition = transform.position, PSType = PSType.Destroy, PSColor = getObstacleColor(_obstacleType) });
+        Destroy(gameObject);
     }
 
     private int getObstacleHitPoints(ObstacleType type)

@@ -12,12 +12,14 @@ public class ParticleSystemSpawner : MonoBehaviour
     private void Awake()
     {
         Character.OnParticleSystemToSpawn += SpawnParticleSystem;
+        Obstacle.OnParticleSystemToSpawn += SpawnParticleSystem;
         AffiliationTrigger.OnParticleSystemToSpawn += SpawnParticleSystem;
     }
 
     private void OnDestroy()
     {
         Character.OnParticleSystemToSpawn -= SpawnParticleSystem;
+        Obstacle.OnParticleSystemToSpawn -= SpawnParticleSystem;
         AffiliationTrigger.OnParticleSystemToSpawn -= SpawnParticleSystem;
     }
 

@@ -7,7 +7,8 @@ public enum CharacterType
 {
     Positive,
     Negative,
-    Neutral,
+    AffiliationTrigger,
+    ObstacleDestroyer,
 }
 
 public class Character : MonoBehaviour, IDamagable
@@ -20,25 +21,29 @@ public class Character : MonoBehaviour, IDamagable
 
     private Color _positiveColor = Color.red;
     private Color _negativeColor = Color.green;
-    private Color _neutralColor = Color.yellow;
+    private Color _affiliationTriggerColor = Color.yellow;
+    private Color _obstacleDestroyerColor = new Color(1.0f, 0.0f, 0.7f);
 
     private ICharacterMove _characterMove;
     private ISpawnCharacters _characterSpawning;
 
     private void Awake()
     {
-        AffiliationTrigger.OnAffiliationTriggerHit += switchAffiliation;
-        LevelManager.Instance.OnCharacterLevelUp += levelUpCharacter;
-
         _spriteRenderer = GetComponent<SpriteRenderer>();
         if (_spriteRenderer == null)
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         _characterType = AssignRandomCharacterType();
-        _spriteRenderer.color = getCharacterColor(_characterType);
+        _spriteRenderer.color = assingCharacterColor(_characterType);
 
         _characterMove = GetComponent<ICharacterMove>();
         _characterSpawning = GetComponent<ISpawnCharacters>();
+    }
+
+    private void Start()
+    {
+        AffiliationTrigger.OnAffiliationTriggerHit += switchAffiliation;
+        LevelManager.Instance.OnCharacterLevelUp += levelUpCharacter;
     }
 
     private void OnDestroy()
@@ -55,14 +60,14 @@ public class Character : MonoBehaviour, IDamagable
         _characterSpawning?.ActivateSpawning(properties.CharactersSpawnNewCharacters);
     }
 
-    public void DamageThis()
+    public virtual void DamageThis()
     {
-        OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = _spriteRenderer.color });
+        OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = getCharacterColor() });
         OnCharacterDestroyed?.Invoke(this);
         Destroy(gameObject);
     }
 
-    private Color getCharacterColor(CharacterType type)
+    private Color assingCharacterColor(CharacterType type)
     {
         switch (type)
         {
@@ -70,11 +75,18 @@ public class Character : MonoBehaviour, IDamagable
                 return _positiveColor;
             case CharacterType.Negative:
                 return _negativeColor;
-            case CharacterType.Neutral:
-                return _neutralColor;
+            case CharacterType.AffiliationTrigger:
+                return _affiliationTriggerColor;
+            case CharacterType.ObstacleDestroyer:
+                return _obstacleDestroyerColor;
             default:
                 return Color.black;
         }
+    }
+
+    private Color getCharacterColor()
+    {
+        return _spriteRenderer.color;
     }
 
     public CharacterType AssignRandomCharacterType()
@@ -88,7 +100,7 @@ public class Character : MonoBehaviour, IDamagable
     public void AssignCharacterType(CharacterType type)
     {
         _characterType = type;
-        _spriteRenderer.color = getCharacterColor(_characterType);
+        _spriteRenderer.color = assingCharacterColor(_characterType);
     }
 
     public CharacterType GetCharacterType()

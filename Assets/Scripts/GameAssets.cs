@@ -18,6 +18,8 @@ public class GameAssets : MonoBehaviour
     public Transform AffiliationTrigger;
     public Transform CharacterObject;
     public Transform ObstacleObject;
+    public Transform ObstacleDestroyer;
+    public Transform DestructionArea;
 
     [Header("UI Elements")]
     public RectTransform WantedCharacterUI;

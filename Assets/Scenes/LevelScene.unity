@@ -1616,7 +1616,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -150}
+  m_AnchoredPosition: {x: 0, y: -200}
   m_SizeDelta: {x: 800, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &138343109
@@ -2806,7 +2806,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &353390682
 GameObject:
@@ -3923,8 +3923,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayMessages: 1
   Urgents:
-  - CharacterObject v2 created, works good for now, animations are set. Write the
-    functions for running the animations!
+  - Review level rules and settings!!
   NonUrgents:
   - Try lights on the characters
 --- !u!4 &502288634
@@ -4191,7 +4190,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &519420033
 MonoBehaviour:
@@ -6345,6 +6344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nearbyHitRadius: 1
+  _obstacleDestroyerRadius: 3
 --- !u!4 &927431352
 Transform:
   m_ObjectHideFlags: 0
@@ -6879,7 +6879,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.6981132, g: 0.5439504, b: 0.18770024, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -9036,6 +9036,10 @@ MonoBehaviour:
     type: 3}
   ObstacleObject: {fileID: 3360535773746258495, guid: b17095fc51c4ce64e9aec19b38c87abe,
     type: 3}
+  ObstacleDestroyer: {fileID: 2532073248851909070, guid: 3e5c56450fd4a1c49bc32d868e6bcd75,
+    type: 3}
+  DestructionArea: {fileID: 4919671982406009828, guid: b2c69603470892d418332cfa159be020,
+    type: 3}
   WantedCharacterUI: {fileID: 1003979447621054587, guid: d8cfec69aba34434dae66a57dc89da5c,
     type: 3}
   AchievementUI: {fileID: 6842623321435528591, guid: a8988c2e3af89554ca3c3f65e5b60e9c,
@@ -9058,7 +9062,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1658543440
 GameObject:
@@ -9111,7 +9115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -9901,7 +9905,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1858697104
 GameObject:
@@ -10128,7 +10132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -11131,7 +11135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.6981132, g: 0.5439504, b: 0.18770024, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

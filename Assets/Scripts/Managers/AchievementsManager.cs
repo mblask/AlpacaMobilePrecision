@@ -252,7 +252,7 @@ public class AchievementsManager : MonoBehaviour
                         break;
                 }
                 break;
-            case CharacterType.Neutral:
+            case CharacterType.AffiliationTrigger:
                 _affiliationSwitched = true;
                 break;
             default:
