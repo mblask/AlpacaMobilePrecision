@@ -48,6 +48,8 @@ public class TimeManager : MonoBehaviour
 
     private void activateTimer(float timeValue)
     {
+        setTimer(0.0f);
+
         if (timeValue > 0.0f)
         {
             OnActivateTime?.Invoke(true);
@@ -60,8 +62,7 @@ public class TimeManager : MonoBehaviour
 
     private void deactivateTimer()
     {
-        OnActivateTime?.Invoke(false);
-        setTimer(0.0f);
+        //OnActivateTime?.Invoke(false);
         runTimer(false);
     }
 

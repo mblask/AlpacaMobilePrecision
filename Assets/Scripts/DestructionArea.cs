@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DestructionArea : MonoBehaviour
 {
-    private float _destructionSpeed = 60.0f;
+    private float _destructionSpeed = 50.0f;
     private float _destructionRadius = 6.0f;
 
     private void Update()
@@ -27,8 +27,9 @@ public class DestructionArea : MonoBehaviour
     {
         List<Obstacle> obstaclesInArea = getObjectsInDestructionArea<Obstacle>();
 
-        foreach (Obstacle obstacle in obstaclesInArea)
-            obstacle.DestroyObstacle();
+        if (obstaclesInArea.Count != 0)
+            foreach (Obstacle obstacle in obstaclesInArea)
+                obstacle.DestroyObstacle();
     }
 
     private List<T> getObjectsInDestructionArea<T>()

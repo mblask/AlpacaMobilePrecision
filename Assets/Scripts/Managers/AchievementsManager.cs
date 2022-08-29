@@ -200,9 +200,9 @@ public class AchievementsManager : MonoBehaviour
                 }
                 break;
             case 10:
-                if (_gameLevelStopwatch <= 60.0f)
+                if (_gameLevelStopwatch <= 40.0f)
                 {
-                    //Debug.Log("Achievement scored! Reach level 10 within 60 seconds.");
+                    //Debug.Log("Achievement scored! Reach level 10 within 40 seconds.");
                     achievementUnlocked(AchievementType.Reach10);
                 }
                 break;
@@ -240,11 +240,11 @@ public class AchievementsManager : MonoBehaviour
                         //Debug.Log("Achievement scored! Kill 15 negative characters in a row.");
                         achievementUnlocked(AchievementType.Smash15);
                         break;
-                    case 30:
+                    case 40:
                         //Debug.Log("Achievement scored! Kill 30 negative characters in a row.");
                         achievementUnlocked(AchievementType.Smash30);
                         break;
-                    case 50:
+                    case 70:
                         //Debug.Log("Achievement scored! Kill 50 negative characters in a row.");
                         achievementUnlocked(AchievementType.Smash50);
                         break;

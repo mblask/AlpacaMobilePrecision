@@ -23,19 +23,16 @@ public class TimeKeeperUI: MonoBehaviour
 
         TimeManager.Instance.OnActivateTime += showTimeUI;
         TimeManager.Instance.OnUpdateTime += updateTime;
-        LevelManager.Instance.OnGameReload += levelManager_onGameReload;
+        LevelManager.Instance.OnInitializeGame += showTimeUI;
+        LevelManager.Instance.OnGameReload += hideTimeUI;
     }
 
     private void OnDestroy()
     {
         TimeManager.Instance.OnActivateTime -= showTimeUI;
         TimeManager.Instance.OnUpdateTime -= updateTime;
-        LevelManager.Instance.OnGameReload -= levelManager_onGameReload;
-    }
-
-    private void levelManager_onGameReload()
-    {
-        showTimeUI(false);
+        LevelManager.Instance.OnInitializeGame += showTimeUI;
+        LevelManager.Instance.OnGameReload -= hideTimeUI;
     }
 
     private void updateTime(float timeValue)
@@ -49,5 +46,15 @@ public class TimeKeeperUI: MonoBehaviour
     {
         _timeTextTransform.gameObject.SetActive(value);
         _timeNumberTransform.gameObject.SetActive(value);
+    }
+
+    private void showTimeUI()
+    {
+        showTimeUI(true);
+    }
+
+    private void hideTimeUI()
+    {
+        showTimeUI(false);
     }
 }

@@ -40,7 +40,7 @@ public class Character : MonoBehaviour, IDamagable
         _characterSpawning = GetComponent<ISpawnCharacters>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         AffiliationTrigger.OnAffiliationTriggerHit += switchAffiliation;
         LevelManager.Instance.OnCharacterLevelUp += levelUpCharacter;
@@ -54,6 +54,9 @@ public class Character : MonoBehaviour, IDamagable
 
     private void levelUpCharacter(CharacterLevelUpProperties properties)
     {
+        if (properties == null)
+            return;
+
         _characterMove?.SetCharacterSpeedPerc(properties.PercentageSpeedIncrease);
         _characterMove?.SetDistanceDependance(properties.SpeedDistanceDependance);
 

@@ -3244,7 +3244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _randomStartingColor: 1
-  _colorsFlow: 0
+  _colorsFlow: 1
 --- !u!4 &438377006
 Transform:
   m_ObjectHideFlags: 0
@@ -3923,9 +3923,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayMessages: 1
   Urgents:
-  - Review level rules and settings!!
+  - Game finished screen and messages.
+  - AudioManager, Sounds
   NonUrgents:
-  - Try lights on the characters
+  - Try lights on the characters.
 --- !u!4 &502288634
 Transform:
   m_ObjectHideFlags: 0
@@ -4917,10 +4918,10 @@ MonoBehaviour:
   _spawnSingleCharacter: 0
   _spawnAffiliationTrigger: 0
   _charactersSpawnNewCharacters: 0
-  _initializeLevelNumber: 1
+  _initializeLevelNumber: 15
   _levelNumber: 1
-  _initialNumOfObstacles: 1
-  _initialNumOfCharacters: 1
+  _numOfObstacles: 0
+  _numOfCharacters: 0
   _obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -11194,7 +11195,7 @@ MonoBehaviour:
     AchievementSprite: {fileID: 0}
     AchievementType: 0
   - AchievementName: Distance Runner
-    AchievementDescription: Reach level 10 within 1 minute.
+    AchievementDescription: Reach level 10 within 30 seconds.
     AchievementSprite: {fileID: 0}
     AchievementType: 1
   - AchievementName: Fast Boiii

@@ -5,6 +5,16 @@ using UnityEngine.UI;
 
 public class BackgroundObject : MonoBehaviour
 {
+    private static BackgroundObject _instance;
+
+    public static BackgroundObject Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+
     [Header("Settings")]
     [SerializeField] private bool _randomStartingColor = true;
     [SerializeField] private bool _colorsFlow = true;
@@ -18,6 +28,8 @@ public class BackgroundObject : MonoBehaviour
 
     private void Awake()
     {
+        _instance = this;
+
         _backgroundRenderer = transform.Find("Background").GetComponent<SpriteRenderer>();
     }
 
@@ -93,5 +105,15 @@ public class BackgroundObject : MonoBehaviour
     private void activateColorFlow(bool value)
     {
         _colorsFlow = value;
+    }
+
+    public Color GetBackgroundColor()
+    {
+        return _backgroundRenderer.color;
+    }
+
+    public static Color GrabBackgroundColor()
+    {
+        return _instance.GetBackgroundColor();
     }
 }

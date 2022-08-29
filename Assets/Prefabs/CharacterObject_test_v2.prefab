@@ -205,8 +205,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waypointsDependOnObstacles: 1
   _baseSpeed: 5
+  _characterSpeed: 4
   _equalSpeeds: 0
-  _distanceDependance: 0.07
+  _distanceDependance: 0.05
 --- !u!114 &4849055779707097384
 MonoBehaviour:
   m_ObjectHideFlags: 0

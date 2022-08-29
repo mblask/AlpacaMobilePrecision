@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
         AffiliationTrigger.OnAffiliationTriggerHit += affiliationChangedThisLevel;
         LevelManager.Instance.OnLoadLevel += gameManager_onLoadLevel;
         LevelManager.Instance.OnGameReload += resetScore;
+        LevelManager.Instance.OnGamePassed += gamePassed;
         TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
 
         resetScore();
@@ -70,6 +71,7 @@ public class GameManager : MonoBehaviour
         AffiliationTrigger.OnAffiliationTriggerHit -= affiliationChangedThisLevel;
         LevelManager.Instance.OnLoadLevel -= gameManager_onLoadLevel;
         LevelManager.Instance.OnGameReload -= resetScore;
+        LevelManager.Instance.OnGamePassed -= gamePassed;
         TimeManager.Instance.OnTimeIsOut -= gameOverOnTime;
     }
 
@@ -133,6 +135,19 @@ public class GameManager : MonoBehaviour
         float finalScore = calculateFinalScore(totalScore);
 
         //send final score to the GameOverUI
+        OnGameOver?.Invoke();
+        evaluateNewHighscore(finalScore);
+    }
+
+    private void gamePassed()
+    {
+        Debug.LogError("Victory!!");
+        //get level number, current score, accuracy, time remaining
+        TotalScore totalScore = new TotalScore { Level = LevelManager.GrabLevel(), Accuracy = HitManager.GrabPlayerAccuracy(), Score = _score, TimeRemaining = TimeManager.GrabTimerValue() };
+
+        //calculate final score
+        float finalScore = calculateFinalScore(totalScore);
+        
         OnGameOver?.Invoke();
         evaluateNewHighscore(finalScore);
     }

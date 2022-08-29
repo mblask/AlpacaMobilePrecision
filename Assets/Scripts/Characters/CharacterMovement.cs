@@ -28,19 +28,16 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
     private Vector3 _nearbyHit;
 
     [Header("Character Speed")]
-    [SerializeField]
-    [Range(4.0f, 8.0f)] private float _baseSpeed = 4.0f;
-    private float _characterSpeed = 4.0f;
+    [SerializeField] private float _baseSpeed = 4.0f;
+    [Header("Read-only")][SerializeField] private float _characterSpeed = 4.0f;
     [SerializeField] [Tooltip("Current speed is equal to base speed")] private bool _equalSpeeds;
     //if distance is great, the speed is greatly increased, if distance is short the speed is slightly increased
-    [SerializeField] [Tooltip("Speed depending on distance factor")] [Range(0.0f, 0.1f)] private float _distanceDependance = 0.07f;
+    [SerializeField] [Tooltip("Speed depending on distance factor")] private float _distanceDependance = 0.03f;
 
     private LevelManager _levelManager;
 
-    private void Start()
+    private void OnEnable()
     {
-        _levelManager = LevelManager.Instance;
-
         if (_equalSpeeds)
             _characterSpeed = _baseSpeed;
 
@@ -96,6 +93,9 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
 
     private void generateWaypoints()
     {
+        if (_levelManager == null)
+            _levelManager = LevelManager.Instance;
+
         List<Transform> obstaclesList = _levelManager.GetObjectList(ObjectListType.Obstacle);
 
         if (obstaclesList != null && _waypointsDependOnObstacles)
@@ -206,10 +206,10 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
                 _distanceDependance = 0.0f;
                 break;
             case SpeedDistanceDependance.Medium:
-                _distanceDependance = 0.05f;
+                _distanceDependance = 0.01f;
                 break;
             case SpeedDistanceDependance.High:
-                _distanceDependance = 0.1f;
+                _distanceDependance = 0.02f;
                 break;
             default:
                 break;
