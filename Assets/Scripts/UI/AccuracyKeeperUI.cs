@@ -11,11 +11,16 @@ public class AccuracyKeeperUI : MonoBehaviour
 
     private float _accuracyNeeded = 0;
 
+    private Animator _animator;
+    private string _accuracyChangedTrigger = "AccuracyChanged";
+
     private void Awake()
     {
         _accuracyNumberTransform = transform.Find("AccuracyCurrentNumber");
         _accuracyTextTransform = transform.Find("AccuracyCurrentText");
         _accuracyNumber = _accuracyNumberTransform.GetComponent<TextMeshProUGUI>();
+
+        _animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -45,6 +50,7 @@ public class AccuracyKeeperUI : MonoBehaviour
     {
         float accuracyValue = value * 100.0f;
         _accuracyNumber.SetText(accuracyValue.ToString("F0") + " / " + _accuracyNeeded.ToString("F0"));
+        _animator.SetTrigger(_accuracyChangedTrigger);
     }
 
     private void setAccuracyNeeded(float value)

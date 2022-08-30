@@ -365,7 +365,7 @@ public class LevelManager : MonoBehaviour
         {
             //SPEED, ACCURACY
             editLevelSettings(false, false, false);
-            _accuracyRequiredToPassLevel = (levelNumber - 1) / 10.0f;
+            _accuracyRequiredToPassLevel = (levelNumber + 1) / 10.0f;
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 10, SpeedDistanceDependance = SpeedDistanceDependance.None }, _accuracyRequiredToPassLevel, 0.0f);
 
             //OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);

@@ -242,6 +242,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 10124367}
+  - component: {fileID: 10124369}
   - component: {fileID: 10124368}
   m_Layer: 5
   m_Name: AccuracyCurrentUI
@@ -283,6 +284,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7280695930a1e45a0c16bd078f8206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &10124369
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10124366}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6048e87c4a6418348a9f00d0747b3d20, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &10433195
 GameObject:
   m_ObjectHideFlags: 0
@@ -860,6 +880,12 @@ MonoBehaviour:
   _gameOverOnTimeMessages:
   - Oh look, it's game over o'clock.
   - You couldn't even watch the time...
+  - The bomb would explode in every action movie, if you were to deactivate it...
+    dear Lord...
+  _gameVictoryMessages:
+  - What did expect? A medal for playing a game till the end?
+  - Bravo, you've finished a mobile game. What a life achievement... go tell your
+    parents.
 --- !u!1 &77425999
 GameObject:
   m_ObjectHideFlags: 0
@@ -975,11 +1001,11 @@ RectTransform:
   m_Father: {fileID: 1476817693}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
-  m_Pivot: {x: 0.5, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -40}
+  m_SizeDelta: {x: 0, y: 70}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &87748321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2957,11 +2983,11 @@ RectTransform:
   m_Father: {fileID: 933879527}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 20}
   m_SizeDelta: {x: 0, y: 50}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &367622679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3923,7 +3949,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayMessages: 1
   Urgents:
-  - Game finished screen and messages.
   - AudioManager, Sounds
   NonUrgents:
   - Try lights on the characters.
@@ -4593,11 +4618,11 @@ RectTransform:
   m_Father: {fileID: 2063934254}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
-  m_Pivot: {x: 0.5, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -45}
+  m_SizeDelta: {x: 0, y: 60}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &549353817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4918,7 +4943,7 @@ MonoBehaviour:
   _spawnSingleCharacter: 0
   _spawnAffiliationTrigger: 0
   _charactersSpawnNewCharacters: 0
-  _initializeLevelNumber: 15
+  _initializeLevelNumber: 1
   _levelNumber: 1
   _numOfObstacles: 0
   _numOfCharacters: 0
@@ -6369,6 +6394,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 933879527}
+  - component: {fileID: 933879529}
   - component: {fileID: 933879528}
   m_Layer: 5
   m_Name: LevelTextObject
@@ -6396,7 +6422,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -20, y: 20}
-  m_SizeDelta: {x: 200, y: 110}
+  m_SizeDelta: {x: 200, y: 140}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &933879528
 MonoBehaviour:
@@ -6410,6 +6436,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828c92ec03cb4184796e6c4df1004d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &933879529
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933879526}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b06131d3c46b881448f0c97038e80616, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &962059130
 GameObject:
   m_ObjectHideFlags: 0
@@ -8188,11 +8233,11 @@ RectTransform:
   m_Father: {fileID: 10124367}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -25}
   m_SizeDelta: {x: 0, y: 100}
-  m_Pivot: {x: 0.5, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1441697478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8372,6 +8417,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1476817693}
+  - component: {fileID: 1476817695}
   - component: {fileID: 1476817694}
   m_Layer: 5
   m_Name: TimeKeeperUI
@@ -8413,6 +8459,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2248c9a27c5a7054f8a70bfe58abc31f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &1476817695
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476817692}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8a6f835838002c94dad56adc116d8ab4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1549560174
 GameObject:
   m_ObjectHideFlags: 0
@@ -11044,6 +11109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2063934254}
+  - component: {fileID: 2063934256}
   - component: {fileID: 2063934255}
   m_Layer: 5
   m_Name: ScoreKeeperUI
@@ -11085,6 +11151,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15d0c326790629549992c62fa9ed264b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &2063934256
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2063934253}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5aad172c795a1e844ae7b006f124d2d9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2068871358
 GameObject:
   m_ObjectHideFlags: 0

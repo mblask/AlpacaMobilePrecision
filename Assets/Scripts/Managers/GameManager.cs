@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+public enum GameOverType
+{
+    Victory,
+    Failure,
+}
+
 public class TotalScore
 {
     public int Score;
@@ -77,7 +83,7 @@ public class GameManager : MonoBehaviour
 
     private void gameOverOnTime()
     {
-        gameOver();
+        gameOver(GameOverType.Failure);
         OnGameOverOnTime?.Invoke();
     }
 
@@ -100,7 +106,7 @@ public class GameManager : MonoBehaviour
                     updateScore(_posCharHit);
                 else
                 {
-                    gameOver();
+                    gameOver(GameOverType.Failure);
                     destroyWorld();
                 }
                 break;
@@ -125,9 +131,20 @@ public class GameManager : MonoBehaviour
         OnScoreUpdate?.Invoke(_score);
     }
 
-    private void gameOver()
+    private void gameOver(GameOverType gameOverType)
     {
-        Debug.LogError("Game Over");
+        switch (gameOverType)
+        {
+            case GameOverType.Victory:
+                Debug.LogError("Victory!!");
+                break;
+            case GameOverType.Failure:
+                Debug.LogError("Game Over");
+                break;
+            default:
+                break;
+        }
+
         //get level number, current score, accuracy, time remaining
         TotalScore totalScore = new TotalScore { Level = LevelManager.GrabLevel(), Accuracy = HitManager.GrabPlayerAccuracy(), Score = _score, TimeRemaining = TimeManager.GrabTimerValue() };
 
@@ -141,15 +158,7 @@ public class GameManager : MonoBehaviour
 
     private void gamePassed()
     {
-        Debug.LogError("Victory!!");
-        //get level number, current score, accuracy, time remaining
-        TotalScore totalScore = new TotalScore { Level = LevelManager.GrabLevel(), Accuracy = HitManager.GrabPlayerAccuracy(), Score = _score, TimeRemaining = TimeManager.GrabTimerValue() };
-
-        //calculate final score
-        float finalScore = calculateFinalScore(totalScore);
-        
-        OnGameOver?.Invoke();
-        evaluateNewHighscore(finalScore);
+        gameOver(GameOverType.Victory);
     }
 
     private void evaluateNewHighscore(float highscore)

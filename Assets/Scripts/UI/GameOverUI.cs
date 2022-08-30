@@ -13,6 +13,7 @@ public class GameOverUI : MonoBehaviour
 
     [TextArea] [SerializeField] private List<string> _gameOverMessages;
     [TextArea] [SerializeField] private List<string> _gameOverOnTimeMessages;
+    [TextArea] [SerializeField] private List<string> _gameVictoryMessages;
 
     private void Awake()
     {
@@ -24,11 +25,13 @@ public class GameOverUI : MonoBehaviour
     private void Start()
     {
         deactivateGameOverScreen();
+
         GameManager.Instance.OnGameOver += activateGameOverScreen;
         GameManager.Instance.OnGameOverOnTime += gameOverOnTime;
         GameManager.Instance.OnGameOverSendFinalScore += updateFinalScore;
         GameManager.Instance.OnWorldDestruction += changeGameOverTextOnWorldDestruction;
         GameManager.Instance.OnQuitToMainMenu += deactivateGameOverScreen;
+        LevelManager.Instance.OnGamePassed += changeGameOverTextOnVictory;
     }
 
     private void OnDestroy()
@@ -38,6 +41,7 @@ public class GameOverUI : MonoBehaviour
         GameManager.Instance.OnGameOverSendFinalScore -= updateFinalScore;
         GameManager.Instance.OnWorldDestruction -= changeGameOverTextOnWorldDestruction;
         GameManager.Instance.OnQuitToMainMenu -= deactivateGameOverScreen;
+        LevelManager.Instance.OnGamePassed -= changeGameOverTextOnVictory;
     }
 
     private void gameOverOnTime()
@@ -48,7 +52,25 @@ public class GameOverUI : MonoBehaviour
     private void changeGameOverTextOnWorldDestruction()
     {
         if (_randomGameOverText)
+        {
+            setTextColor(Color.red);
             _gameOverText.SetText(_gameOverMessages[Random.Range(0, _gameOverMessages.Count)]);
+        }
+    }
+
+    private void changeGameOverTextOnVictory()
+    {
+        if (_randomGameOverText)
+        {
+            setTextColor(Color.cyan);
+            _gameOverText.SetText(_gameVictoryMessages[Random.Range(0, _gameVictoryMessages.Count)]);
+        }
+    }
+
+    private void setTextColor(Color color)
+    {
+        _gameOverText.color = color;
+        _finalScoreText.color = color;
     }
 
     private void activateGameOverScreen()
