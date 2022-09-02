@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using AlpacaMyGames;
 
 public class WantedListManager : MonoBehaviour
 {
@@ -42,14 +43,14 @@ public class WantedListManager : MonoBehaviour
             _currentLevel = level;
 
         List<WantedCharacter> wantedPool = new List<WantedCharacter>();
-        if (AlpacaUtils.ChanceFunc(10))
+        if (Utilities.ChanceFunc(10))
         {
             wantedPool = createWantedPoolFromLevel(level);
 
             if (wantedPool.Count == 0)
                 return;
 
-            if (AlpacaUtils.ChanceFunc(70))
+            if (Utilities.ChanceFunc(70))
             {
                 WantedCharacter characterKilled = wantedPool[UnityEngine.Random.Range(0, wantedPool.Count)];
                 if (!_unlockedCharacters.Contains(characterKilled))

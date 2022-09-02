@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AlpacaMyGames;
 
 public class TriggerMask : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class TriggerMask : MonoBehaviour
         _triggerMaskTransform.localScale = maskScale;
 
         //assigning a color to the mask
-        _triggerMaskRenderer.color = AlpacaUtils.ChanceFunc(50) ? Color.green : Color.red;
+        _triggerMaskRenderer.color = Utilities.ChanceFunc(50) ? Color.green : Color.red;
     }
 
     private void maskTiming()
@@ -62,10 +63,10 @@ public class TriggerMask : MonoBehaviour
 
     private void maskActivation()
     {
-        if (AlpacaUtils.ChanceFunc(75) && _maskActivated == false)
+        if (Utilities.ChanceFunc(75) && _maskActivated == false)
         {
             _maskActivated = true;
-            _triggerMaskRenderer.color = AlpacaUtils.ChanceFunc(50) ? Color.green : Color.red;
+            _triggerMaskRenderer.color = Utilities.ChanceFunc(50) ? Color.green : Color.red;
         }
         else
             _maskActivated = false;

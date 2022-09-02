@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using AlpacaMyGames;
 
 public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
 {
@@ -41,7 +42,7 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
 
         if (_spawnTimer <= 0.0f)
         {
-            if (AlpacaUtils.ChanceFunc(10))
+            if (Utilities.ChanceFunc(10))
                 SpawnNewCharacter(_character.GetCharacterType());
 
             _spawnTimer = UnityEngine.Random.Range(_minSpawnTime, _maxSpawnTime);

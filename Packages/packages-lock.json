@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.alpacamygames.utilities": {
+      "version": "file:D:/UnityProjects/Utilities",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.2d.animation": {
       "version": "5.0.5",
       "depth": 0,

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using AlpacaMyGames;
 
 public enum GameOverType
 {
@@ -190,7 +191,7 @@ public class GameManager : MonoBehaviour
         int numOfExplosions = 4;
         for (int i = 0; i < numOfExplosions; i++)
         {
-            Instantiate(GameAssets.Instance.GlobalDestructionPS, AlpacaUtils.GetRandomWorldPosition(), Quaternion.identity, null);
+            Instantiate(GameAssets.Instance.GlobalDestructionPS, Utilities.GetRandomWorldPosition(), Quaternion.identity, null);
         }
 
         //shake camera

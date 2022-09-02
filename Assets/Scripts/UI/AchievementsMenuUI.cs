@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AlpacaMyGames;
 using TMPro;
 
 public class AchievementsMenuUI : MonoBehaviour
@@ -65,7 +66,7 @@ public class AchievementsMenuUI : MonoBehaviour
         else
         {
             System.DateTime dateTime = System.DateTime.Now;
-            dateString = "On " + dateTime.Day + " " + AlpacaUtils.GetMonthName(dateTime.Month) + " " + dateTime.Year;
+            dateString = "On " + dateTime.Day + " " + Utilities.GetMonthName(dateTime.Month) + " " + dateTime.Year;
         }
 
         _highscoreDateText.SetText(dateString);

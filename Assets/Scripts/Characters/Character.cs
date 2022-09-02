@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AlpacaMyGames;
 using System;
 
 public enum CharacterType
@@ -94,7 +95,7 @@ public class Character : MonoBehaviour, IDamagable
 
     public CharacterType AssignRandomCharacterType()
     {
-        if (AlpacaUtils.ChanceFunc(50))
+        if (Utilities.ChanceFunc(50))
             return CharacterType.Positive;
         else
             return CharacterType.Negative;

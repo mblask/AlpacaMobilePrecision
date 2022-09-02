@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using AlpacaMyGames;
 
 public class BackgroundObject : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class BackgroundObject : MonoBehaviour
 
     private void Start()
     {
-        Vector2 localScale = AlpacaUtils.GetWorldOrthographicCameraSize();
+        Vector2 localScale = Utilities.GetWorldOrthographicCameraSize();
         _backgroundRenderer.transform.localScale = localScale * 2.0f;
 
         if (_randomStartingColor)

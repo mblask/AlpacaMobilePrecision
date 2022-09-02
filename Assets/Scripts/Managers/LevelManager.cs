@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using AlpacaMyGames;
 
 public enum ObjectListType
 {
@@ -183,10 +184,10 @@ public class LevelManager : MonoBehaviour
         initializeObjects(_gameAssets.ObstacleObject, _numOfObstacles, _obstacleLayerMask, _obstaclesList);
         initializeObjects(_gameAssets.CharacterObject, _numOfCharacters, _characterLayerMask, _charactersList);
 
-        if (AlpacaUtils.ChanceFunc(90) && _initializeAffiliationTrigger)
+        if (Utilities.ChanceFunc(90) && _initializeAffiliationTrigger)
             _affiliationTransform = spawnObject(_gameAssets.AffiliationTrigger);
 
-        if (AlpacaUtils.ChanceFunc(75) && _initializeObstacleDestroyer)
+        if (Utilities.ChanceFunc(75) && _initializeObstacleDestroyer)
             _obstacleDestroyerTransform = spawnObject(_gameAssets.ObstacleDestroyer);
 
         //Testing purposes
@@ -229,7 +230,7 @@ public class LevelManager : MonoBehaviour
 
     private Transform spawnObject(Transform objectTransform)
     {
-        Vector2 position = _mainCamera.ScreenToWorldPoint(AlpacaUtils.GetRandomScreenPosition(_borderScaling));
+        Vector2 position = _mainCamera.ScreenToWorldPoint(Utilities.GetRandomScreenPosition(_borderScaling));
         return Instantiate(objectTransform, position, Quaternion.identity);
     }
 

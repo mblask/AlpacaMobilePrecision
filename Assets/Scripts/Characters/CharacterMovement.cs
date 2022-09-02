@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using AlpacaMyGames;
 
 public enum SpeedDistanceDependance
 {
@@ -100,19 +101,19 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
 
         if (obstaclesList != null && _waypointsDependOnObstacles)
         {
-            if (AlpacaUtils.ChanceFunc(50))
+            if (Utilities.ChanceFunc(50))
             {
                 _waypointPositions.Add(obstaclesList[UnityEngine.Random.Range(0, obstaclesList.Count)].position);
             }
             else
             {
-                Vector2 randomPosition = AlpacaUtils.GetRandomWorldPosition(2);
+                Vector2 randomPosition = Utilities.GetRandomWorldPosition(2);
                 _waypointPositions.Add(randomPosition);
             }
         }
         else
         {
-            Vector2 randomPosition = AlpacaUtils.GetRandomWorldPosition(2);
+            Vector2 randomPosition = Utilities.GetRandomWorldPosition(2);
             _waypointPositions.Add(randomPosition);
         }
     }
@@ -129,7 +130,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
         _waypointPositions.Clear();
 
         //check how far the nearest edge is
-        Vector2 distanceToNearestEdges = AlpacaUtils.GetDistanceToNearestWorldEdges(transform.position);
+        Vector2 distanceToNearestEdges = Utilities.GetDistanceToNearestWorldEdges(transform.position);
 
         //create new waypoint
         float minDistanceToEdges = Mathf.Min(distanceToNearestEdges.x, distanceToNearestEdges.y);
@@ -231,7 +232,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
         float minRotSpeed = 300.0f;
         float maxRotSpeed = 500.0f;
 
-        _rotationDirection = AlpacaUtils.ChanceFunc(50) ? 1 : -1;
+        _rotationDirection = Utilities.ChanceFunc(50) ? 1 : -1;
         _rotationSpeed = UnityEngine.Random.Range(minRotSpeed, maxRotSpeed);
 
         Invoke(nameof(deactivateRotation), 1.0f);
