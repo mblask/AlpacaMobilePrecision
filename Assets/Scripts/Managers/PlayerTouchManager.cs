@@ -6,6 +6,7 @@ using System;
 public class PlayerTouchManager : MonoBehaviour
 {
     public Action<Vector2> OnPlayerTouchPosition;
+    public Action OnDoubleTouch;
 
     private static PlayerTouchManager _instance;
 
@@ -68,28 +69,53 @@ public class PlayerTouchManager : MonoBehaviour
 
             Vector2 worldTouchPosition = _mainCamera.ScreenToWorldPoint(touch.position);
 
-            switch (touch.phase)
+            switch (touch.tapCount)
             {
-                case TouchPhase.Began:
-                    OnPlayerTouchPosition?.Invoke(worldTouchPosition);
+                case 2:
+                    switch (touch.phase)
+                    {
+                        case TouchPhase.Began:
+                            //Reload game
+                            OnDoubleTouch?.Invoke();
+                            break;
+                        case TouchPhase.Moved:
+                            break;
+                        case TouchPhase.Stationary:
+                            break;
+                        case TouchPhase.Ended:
+                            break;
+                        case TouchPhase.Canceled:
+                            break;
+                        default:
+                            break;
+                    }
                     break;
 
-                case TouchPhase.Moved:
-                    break;
+                case 1:
 
-                case TouchPhase.Stationary:
-                    _touchTime += Time.deltaTime;
+                    switch (touch.phase)
+                    {
+                        case TouchPhase.Began:
+                            OnPlayerTouchPosition?.Invoke(worldTouchPosition);
+                            break;
+                        case TouchPhase.Moved:
+                            break;
+                        case TouchPhase.Stationary:
+                            _touchTime += Time.deltaTime;
 
-                    if (_touchTime >= 5.0f)
-                        Debug.Log("Stop touching me!");
-                    break;
+                            if (_touchTime >= 5.0f)
+                                Debug.Log("Stop touching me!");
+                            break;
 
-                case TouchPhase.Ended:
-                    //Debug.Log("Touch time: " + _touchTime);
-                    _touchTime = 0.0f;
-                    break;
-
-                case TouchPhase.Canceled:
+                        case TouchPhase.Ended:
+                            //Debug.Log("Touch time: " + _touchTime);
+                            _touchTime = 0.0f;
+                            break;
+                        case TouchPhase.Canceled:
+                            break;
+                        default:
+                            break;
+                    }
                     break;
 
                 default:

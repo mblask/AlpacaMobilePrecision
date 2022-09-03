@@ -35,7 +35,6 @@ public class HitManager : MonoBehaviour
     {
         PlayerTouchManager.Instance.OnPlayerTouchPosition += playerTouchManager_OnPlayerTouch;
         LevelManager.Instance.OnLoadLevel += levelManager_onLoadLevel;
-        LevelManager.Instance.OnGrabPlayerAccuracy += sendPlayerAccuracy;
         ObstacleDestroyer.OnObstacleDestroyerAreaHit += destroyObstaclesInArea;
 
         _gameAssets = GameAssets.Instance;
@@ -45,7 +44,6 @@ public class HitManager : MonoBehaviour
     {
         PlayerTouchManager.Instance.OnPlayerTouchPosition -= playerTouchManager_OnPlayerTouch;
         LevelManager.Instance.OnLoadLevel += levelManager_onLoadLevel;
-        LevelManager.Instance.OnGrabPlayerAccuracy -= sendPlayerAccuracy;
         ObstacleDestroyer.OnObstacleDestroyerAreaHit -= destroyObstaclesInArea;
     }
 
@@ -61,7 +59,7 @@ public class HitManager : MonoBehaviour
         Instantiate(_gameAssets.BulletMark, worldPosition, Quaternion.identity, null);
         detectCharacterHit(worldPosition);
         detectAreaEffectHits(worldPosition);
-        sendPlayerAccuracy();
+        OnSendPlayerAccuracy?.Invoke(GetPlayerAccuracy());
     }
 
     private void destroyObstaclesInArea(Vector3 worldPosition)
@@ -129,10 +127,6 @@ public class HitManager : MonoBehaviour
 
                 if (damagable != null)
                 {
-                    //IAffiliationTrigger affiliationTrigger = firstCollider.GetComponent<IAffiliationTrigger>();
-                    //if (affiliationTrigger != null)
-                    //    affiliationTrigger.TriggerAffiliationSwitch();
-
                     ISpecialCharacter specialCharacter = firstCollider.GetComponent<ISpecialCharacter>();
                     if (specialCharacter != null)
                         specialCharacter.TriggerSpecialCharacter();
@@ -145,11 +139,6 @@ public class HitManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void sendPlayerAccuracy()
-    {
-        OnSendPlayerAccuracy?.Invoke(GetPlayerAccuracy());
     }
 
     public static float GrabPlayerAccuracy()

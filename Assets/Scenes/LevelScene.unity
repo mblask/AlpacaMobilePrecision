@@ -3950,6 +3950,8 @@ MonoBehaviour:
   DisplayMessages: 1
   Urgents:
   - AudioManager, Sounds
+  - Reset UI more elegantly in Level Manager and Game Manager!! Try dividing resetGameSettings
+    into resetGameSettings and resetUI!
   NonUrgents:
   - Try lights on the characters.
 --- !u!4 &502288634
@@ -4947,12 +4949,6 @@ MonoBehaviour:
   _levelNumber: 1
   _numOfObstacles: 0
   _numOfCharacters: 0
-  _obstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  _characterLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!4 &625671165
 Transform:
   m_ObjectHideFlags: 0

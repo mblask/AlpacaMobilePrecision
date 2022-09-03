@@ -27,6 +27,7 @@ public class LevelManager : MonoBehaviour
     public Action<int> OnLoadLevel;
     public Action OnGameReload;
     public Action OnGamePassed;
+    public Action OnGameRestart;
     public Action<CharacterLevelUpProperties> OnCharacterLevelUp;
     public Action<int> OnCharacterDestroyedAtLevel;
     public Action<float> OnActivateTimer;
@@ -42,13 +43,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private bool _charactersSpawnNewCharacters = false;
     [SerializeField] private int _initializeLevelNumber = 1;
 
-    [Header("Initial game settings")]
-    [SerializeField] private int _levelNumber = 1;
-
     private int _initialNumOfObstacles = 1;
     private int _initialNumOfCharacters = 1;
 
     [Header("Read-only")]
+    [SerializeField] private int _levelNumber = 1;
     [SerializeField] private int _numOfObstacles;
     [SerializeField] private int _numOfCharacters;
 
@@ -62,9 +61,8 @@ public class LevelManager : MonoBehaviour
 
     private GameAssets _gameAssets;
 
-    [Space]
-    [SerializeField] private LayerMask _obstacleLayerMask;
-    [SerializeField] private LayerMask _characterLayerMask;
+    private string _obstacleLayerMaskName = "Obstacle";
+    private string _characterLayerMaskName = "Character";
 
     private float _borderScaling = 0.95f;
     private float _objectMinDistance = 1.0f;
@@ -85,9 +83,9 @@ public class LevelManager : MonoBehaviour
         Character.OnCharacterDestroyed += checkLevelCompletion;
         Obstacle.OnObstacleDestroy += removeObstacleFromList;
         CharacterSpawning.OnCharacterSpawn += addCharacterToList;
-        HitManager.Instance.OnSendPlayerAccuracy += getPlayerAccuracy;
         GameManager.Instance.OnQuitToMainMenu += ClearGame;
         GameManager.Instance.OnGameOver += resetGameSettings;
+        PlayerTouchManager.Instance.OnDoubleTouch += reloadGame;
 
         _mainCamera = Camera.main;
         _gameAssets = GameAssets.Instance;
@@ -100,7 +98,7 @@ public class LevelManager : MonoBehaviour
 
         //Testing purposes
         if (_spawnSingleCharacter)
-            initializeObjects(_gameAssets.CharacterObject, 1, _characterLayerMask);
+            initializeObjects(_gameAssets.CharacterObject, 1, getLayerMask(_characterLayerMaskName));
     }
 
     private void OnDestroy()
@@ -108,9 +106,9 @@ public class LevelManager : MonoBehaviour
         Character.OnCharacterDestroyed -= checkLevelCompletion;
         Obstacle.OnObstacleDestroy -= removeObstacleFromList;
         CharacterSpawning.OnCharacterSpawn -= addCharacterToList;
-        HitManager.Instance.OnSendPlayerAccuracy -= getPlayerAccuracy;
         GameManager.Instance.OnQuitToMainMenu -= ClearGame;
         GameManager.Instance.OnGameOver -= resetGameSettings;
+        PlayerTouchManager.Instance.OnDoubleTouch -= reloadGame;
     }
 
     private void Update()
@@ -161,6 +159,8 @@ public class LevelManager : MonoBehaviour
         _numOfObstacles = _initialNumOfObstacles;
         _initializeAffiliationTrigger = false;
         _initializeObstacleDestroyer = false;
+        OnActivateTimer?.Invoke(0.0f);
+        OnActivateAccuracy?.Invoke(0.0f);
     }
 
     public void InitializeGame()
@@ -169,6 +169,12 @@ public class LevelManager : MonoBehaviour
             loadLevel(_initializeLevelNumber);
         else
         {
+            if (_levelNumber == 1)
+            {
+                resetGameSettings();
+                OnGameRestart?.Invoke();
+            }
+
             initializePlayground();
             InvokeRepeating(nameof(fadeCharacter), UnityEngine.Random.Range(0.5f, 2.0f), UnityEngine.Random.Range(0.5f, 1.0f));
         }
@@ -181,8 +187,8 @@ public class LevelManager : MonoBehaviour
         ClearGame();
 
         //initializing new objects
-        initializeObjects(_gameAssets.ObstacleObject, _numOfObstacles, _obstacleLayerMask, _obstaclesList);
-        initializeObjects(_gameAssets.CharacterObject, _numOfCharacters, _characterLayerMask, _charactersList);
+        initializeObjects(_gameAssets.ObstacleObject, _numOfObstacles, getLayerMask(_obstacleLayerMaskName), _obstaclesList);
+        initializeObjects(_gameAssets.CharacterObject, _numOfCharacters, getLayerMask(_characterLayerMaskName), _charactersList);
 
         if (Utilities.ChanceFunc(90) && _initializeAffiliationTrigger)
             _affiliationTransform = spawnObject(_gameAssets.AffiliationTrigger);
@@ -344,6 +350,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    //UPDATE THE PROCEDURE
     private void alterLevelObstacleCharacterSettings(int levelNumber)
     {
         if (levelNumber <= 10)
@@ -511,7 +518,7 @@ public class LevelManager : MonoBehaviour
     {
         if (accuracyRequired > 0.0f)
         {
-            requestPlayerAccuracy();
+            _currentAccuracy = HitManager.GrabPlayerAccuracy();
             if (_currentAccuracy >= accuracyRequired)
             {
                 beforeLoadNewLevel();
@@ -527,16 +534,6 @@ public class LevelManager : MonoBehaviour
         }
 
         _currentAccuracy = 0.0f;
-    }
-
-    private void requestPlayerAccuracy()
-    {
-        OnGrabPlayerAccuracy?.Invoke();
-    }
-
-    private void getPlayerAccuracy(float value)
-    {
-        _currentAccuracy = value;
     }
 
     private int getCharacterTypeAmount(CharacterType type)
@@ -577,6 +574,11 @@ public class LevelManager : MonoBehaviour
             if (fadeObject != null)
                 fadeObject.ActivateFade(!fadeObject.IsInvisible());
         }
+    }
+
+    private LayerMask getLayerMask(string layerName)
+    {
+        return LayerMask.NameToLayer(layerName);
     }
 
     public bool IsGameRunning()

@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
         AffiliationTrigger.OnAffiliationTriggerHit += affiliationChangedThisLevel;
         LevelManager.Instance.OnLoadLevel += gameManager_onLoadLevel;
         LevelManager.Instance.OnGameReload += resetScore;
+        LevelManager.Instance.OnGameRestart += resetScore;
         LevelManager.Instance.OnGamePassed += gamePassed;
         TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
 
@@ -78,6 +79,7 @@ public class GameManager : MonoBehaviour
         AffiliationTrigger.OnAffiliationTriggerHit -= affiliationChangedThisLevel;
         LevelManager.Instance.OnLoadLevel -= gameManager_onLoadLevel;
         LevelManager.Instance.OnGameReload -= resetScore;
+        LevelManager.Instance.OnGameRestart -= resetScore;
         LevelManager.Instance.OnGamePassed -= gamePassed;
         TimeManager.Instance.OnTimeIsOut -= gameOverOnTime;
     }
@@ -108,6 +110,7 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     gameOver(GameOverType.Failure);
+                    _score = 0;
                     destroyWorld();
                 }
                 break;
