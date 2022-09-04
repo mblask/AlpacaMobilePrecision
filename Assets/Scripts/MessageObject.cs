@@ -15,21 +15,17 @@ public class MessageObject : MonoBehaviour
         {
             if (Urgents.Count != 0)
             {
-                Debug.Log("Urgents:");
                 foreach (string message in Urgents)
                     Debug.LogError(message);
             }
 
             if (NonUrgents.Count != 0)
             {
-                Debug.Log("Non-urgents:");
                 foreach (string message in NonUrgents)
                 {
                     Debug.Log(message);
                 }
             }
-
-            Debug.Log("****MESSAGES END****");
         }
     }
 }

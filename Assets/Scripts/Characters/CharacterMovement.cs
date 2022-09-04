@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using AlpacaMyGames;
 
 public enum SpeedDistanceDependance
@@ -16,6 +15,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
     [Header("Waypoints")]
     [SerializeField] private bool _waypointsDependOnObstacles = false;
     private List<Vector3> _waypointPositions = new List<Vector3>();
+    private Vector2 _waypointOriginPoint = new Vector2();
 
     private bool _isRotating = false;
     private int _rotationDirection = 1;
@@ -50,12 +50,6 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
         characterMovement();
     }
 
-    public void MoveTo(Vector2 position, Action funcToPerform = null)
-    {
-        Debug.Log("Move to: " + position + ", then do an action.");
-        funcToPerform?.Invoke();
-    }
-
     private void levelUpCharacter(CharacterLevelUpProperties properties)
     {
         SetCharacterSpeedPerc(properties.PercentageSpeedIncrease);
@@ -84,7 +78,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
             generateWaypointOppositeOfCharacterMovement();
 
         if (_waypointPositions.Count == 0)
-            generateWaypoints();
+            generateWaypoints(_waypointOriginPoint);
         else
             move();
 
@@ -92,13 +86,14 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
             rotateCharacter();
     }
 
-    private void generateWaypoints()
+    private void generateWaypoints(Vector2 origin = new Vector2())
     {
         if (_levelManager == null)
             _levelManager = LevelManager.Instance;
 
         List<Transform> obstaclesList = _levelManager.GetObjectList(ObjectListType.Obstacle);
 
+        float borderScaling = 1.2f;
         if (obstaclesList != null && _waypointsDependOnObstacles)
         {
             if (Utilities.ChanceFunc(50))
@@ -107,13 +102,13 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
             }
             else
             {
-                Vector2 randomPosition = Utilities.GetRandomWorldPosition(2);
+                Vector2 randomPosition = Utilities.GetRandomWorldPosition(borderScaling, origin);
                 _waypointPositions.Add(randomPosition);
             }
         }
         else
         {
-            Vector2 randomPosition = Utilities.GetRandomWorldPosition(2);
+            Vector2 randomPosition = Utilities.GetRandomWorldPosition(borderScaling, origin);
             _waypointPositions.Add(randomPosition);
         }
     }
@@ -253,5 +248,15 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
     public void NearbyHitDetectedAt(Vector3 position)
     {
         _nearbyHit = position;
+    }
+
+    public void SetWaypointOrigin(Vector2 origin)
+    {
+        _waypointOriginPoint = origin;
+    }
+
+    public Vector2 GetWaypointOrigin()
+    {
+        return _waypointOriginPoint;
     }
 }

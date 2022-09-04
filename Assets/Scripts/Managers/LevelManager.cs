@@ -27,7 +27,7 @@ public class LevelManager : MonoBehaviour
     public Action<int> OnLoadLevel;
     public Action OnGameReload;
     public Action OnGamePassed;
-    public Action OnGameRestart;
+    public Action OnResetUI;
     public Action<CharacterLevelUpProperties> OnCharacterLevelUp;
     public Action<int> OnCharacterDestroyedAtLevel;
     public Action<float> OnActivateTimer;
@@ -81,8 +81,8 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         Character.OnCharacterDestroyed += checkLevelCompletion;
-        Obstacle.OnObstacleDestroy += removeObstacleFromList;
         CharacterSpawning.OnCharacterSpawn += addCharacterToList;
+        Obstacle.OnObstacleDestroy += removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu += ClearGame;
         GameManager.Instance.OnGameOver += resetGameSettings;
         PlayerTouchManager.Instance.OnDoubleTouch += reloadGame;
@@ -104,8 +104,8 @@ public class LevelManager : MonoBehaviour
     private void OnDestroy()
     {
         Character.OnCharacterDestroyed -= checkLevelCompletion;
-        Obstacle.OnObstacleDestroy -= removeObstacleFromList;
         CharacterSpawning.OnCharacterSpawn -= addCharacterToList;
+        Obstacle.OnObstacleDestroy -= removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu -= ClearGame;
         GameManager.Instance.OnGameOver -= resetGameSettings;
         PlayerTouchManager.Instance.OnDoubleTouch -= reloadGame;
@@ -172,7 +172,7 @@ public class LevelManager : MonoBehaviour
             if (_levelNumber == 1)
             {
                 resetGameSettings();
-                OnGameRestart?.Invoke();
+                OnResetUI?.Invoke();
             }
 
             initializePlayground();
@@ -215,7 +215,7 @@ public class LevelManager : MonoBehaviour
             if (listToStoreObjects != null)
                 listToStoreObjects.Add(objectToSpawn);
 
-            if (checkObjectEnvironment(objectToSpawn, _objectMinDistance, layerToAvoid))
+            if (Utilities.CheckObjectEnvironment(objectToSpawn, _objectMinDistance, layerToAvoid))
             {
                 if (listToStoreObjects != null)
                     listToStoreObjects.Remove(objectToSpawn);

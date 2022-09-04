@@ -23,6 +23,8 @@ public class HitManager : MonoBehaviour
     [SerializeField][Range(0.0f, 2.0f)] private float _nearbyHitRadius = 1.0f;
     [SerializeField] private float _obstacleDestroyerRadius = 3.0f;
 
+    private List<Transform> _bulletMarksList = new List<Transform>();
+
     private int _playerTouchNumber = 0;
     private int _playerHit = 0;
 
@@ -50,13 +52,14 @@ public class HitManager : MonoBehaviour
     private void levelManager_onLoadLevel(int levelNumber)
     {
         resetAccuracyCount();
+        clearBulletMarks();
     }
 
     private void playerTouchManager_OnPlayerTouch(Vector2 worldPosition)
     {
         _playerTouchNumber++;
 
-        Instantiate(_gameAssets.BulletMark, worldPosition, Quaternion.identity, null);
+        _bulletMarksList.Add(Instantiate(_gameAssets.BulletMark, worldPosition, Quaternion.identity, null));
         detectCharacterHit(worldPosition);
         detectAreaEffectHits(worldPosition);
         OnSendPlayerAccuracy?.Invoke(GetPlayerAccuracy());
@@ -139,6 +142,16 @@ public class HitManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void clearBulletMarks()
+    {
+        foreach (Transform bulletMark in _bulletMarksList)
+        {
+            if (bulletMark != null)
+                Destroy(bulletMark.gameObject);
+        }
+        _bulletMarksList.Clear();
     }
 
     public static float GrabPlayerAccuracy()

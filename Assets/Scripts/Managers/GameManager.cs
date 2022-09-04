@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         AffiliationTrigger.OnAffiliationTriggerHit += affiliationChangedThisLevel;
         LevelManager.Instance.OnLoadLevel += gameManager_onLoadLevel;
         LevelManager.Instance.OnGameReload += resetScore;
-        LevelManager.Instance.OnGameRestart += resetScore;
+        LevelManager.Instance.OnResetUI += resetScore;
         LevelManager.Instance.OnGamePassed += gamePassed;
         TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
 
@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
         AffiliationTrigger.OnAffiliationTriggerHit -= affiliationChangedThisLevel;
         LevelManager.Instance.OnLoadLevel -= gameManager_onLoadLevel;
         LevelManager.Instance.OnGameReload -= resetScore;
-        LevelManager.Instance.OnGameRestart -= resetScore;
+        LevelManager.Instance.OnResetUI -= resetScore;
         LevelManager.Instance.OnGamePassed -= gamePassed;
         TimeManager.Instance.OnTimeIsOut -= gameOverOnTime;
     }
@@ -213,7 +213,7 @@ public class GameManager : MonoBehaviour
 
     public void QuitToMainMenu()
     {
-        PauseGame(true);
+        PauseGame(false);
         OnQuitToMainMenu?.Invoke();
     }
 
@@ -222,6 +222,5 @@ public class GameManager : MonoBehaviour
         _gamePaused = value;
 
         Time.timeScale = _gamePaused ? 0.0f : 1.0f;
-        OnGamePaused?.Invoke(_gamePaused);
     }
 }

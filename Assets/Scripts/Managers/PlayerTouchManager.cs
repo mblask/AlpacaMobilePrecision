@@ -34,11 +34,16 @@ public class PlayerTouchManager : MonoBehaviour
     {
         LevelManager.Instance.OnInitializeGame += activateInput;
         GameManager.Instance.OnGameOver += deactivateInput;
-        GameManager.Instance.OnGamePaused += onGamePaused;
+        GameManager.Instance.OnQuitToMainMenu += deactivateInput;
 
         _mainCamera = Camera.main;
 
         _touchTime = 0.0f;
+    }
+
+    private void gameManager_OnQuitToMainMenu()
+    {
+        deactivateInput();
     }
 
     private void onGamePaused(bool value)
@@ -128,7 +133,7 @@ public class PlayerTouchManager : MonoBehaviour
     {
         LevelManager.Instance.OnInitializeGame -= activateInput;
         GameManager.Instance.OnGameOver -= deactivateInput;
-        GameManager.Instance.OnGamePaused -= onGamePaused;
+        GameManager.Instance.OnQuitToMainMenu -= deactivateInput;
     }
 
     private void activateInput()

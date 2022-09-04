@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2532073248851909070}
-  - component: {fileID: 2532073248851909068}
+  - component: {fileID: 5930882452951385675}
   - component: {fileID: 2532073248851909057}
   - component: {fileID: 2532073248851909056}
   - component: {fileID: 2532073248851909071}
@@ -118,8 +118,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &2532073248851909068
-PolygonCollider2D:
+--- !u!58 &5930882452951385675
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -128,37 +128,12 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 1
-  m_Points:
-    m_Paths:
-    - - {x: 0.20657516, y: -0.50256336}
-      - {x: 0.0026670694, y: -0.70030355}
-      - {x: -0.20711982, y: -0.4966234}
-      - {x: -0.5, y: -0.5}
-      - {x: -0.4912057, y: -0.21857436}
-      - {x: -0.70030355, y: -0.0046365894}
-      - {x: -0.49751246, y: 0.19786602}
-      - {x: -0.5, y: 0.5}
-      - {x: -0.20642781, y: 0.51218086}
-      - {x: 0.0026670694, y: 0.70030373}
-      - {x: 0.20448661, y: 0.5057776}
-      - {x: 0.5, y: 0.5}
-      - {x: 0.4971484, y: 0.21210605}
-      - {x: 0.706195, y: -0.004636593}
-      - {x: 0.49913442, y: -0.21197595}
-      - {x: 0.5, y: -0.5}
+  serializedVersion: 2
+  m_Radius: 0.7
 --- !u!95 &2532073248851909057
 Animator:
   serializedVersion: 3
@@ -205,6 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waypointsDependOnObstacles: 0
   _baseSpeed: 6
+  _characterSpeed: 4
   _equalSpeeds: 0
   _distanceDependance: 0.07
 --- !u!1 &2532073248855477267

@@ -19,14 +19,14 @@ public class LevelTextObject : MonoBehaviour
     {
         LevelManager.Instance.OnLoadLevel += updateLevelNumberText;
         LevelManager.Instance.OnGameReload += resetLevelNumberText;
-        LevelManager.Instance.OnGameRestart += resetLevelNumberText;
+        LevelManager.Instance.OnResetUI += resetLevelNumberText;
     }
 
     private void OnDestroy()
     {
         LevelManager.Instance.OnLoadLevel -= updateLevelNumberText;
         LevelManager.Instance.OnGameReload += resetLevelNumberText;
-        LevelManager.Instance.OnGameRestart -= resetLevelNumberText;
+        LevelManager.Instance.OnResetUI -= resetLevelNumberText;
     }
 
     private void updateLevelNumberText(int levelNumber)
