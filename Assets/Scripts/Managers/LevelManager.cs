@@ -152,16 +152,6 @@ public class LevelManager : MonoBehaviour
             Destroy(_obstacleDestroyerTransform.gameObject);
     }
 
-    private void resetGameSettings()
-    {
-        _levelNumber = 1;
-        _numOfCharacters = _initialNumOfCharacters;
-        _numOfObstacles = _initialNumOfObstacles;
-        _initializeAffiliationTrigger = false;
-        _initializeObstacleDestroyer = false;
-        OnActivateTimer?.Invoke(0.0f);
-        OnActivateAccuracy?.Invoke(0.0f);
-    }
 
     public void InitializeGame()
     {
@@ -271,10 +261,24 @@ public class LevelManager : MonoBehaviour
         return null;
     }
 
+    private void resetGameSettings()
+    {
+        _levelNumber = 1;
+        editLevelSettings(false, false, false);
+
+        float timer = 0.0f;
+        _accuracyRequiredToPassLevel = 0.0f;
+        
+        OnActivateTimer?.Invoke(timer);
+        OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
+
+        _numOfCharacters = _initialNumOfCharacters;
+        _numOfObstacles = _initialNumOfObstacles;
+    }
+
     private void reloadGame()
     {
         _levelNumber = 1;
-        //_fadeCharacters = false;
         editLevelSettings(false, false, false);
 
         float timer = 0.0f;
@@ -283,10 +287,10 @@ public class LevelManager : MonoBehaviour
         OnActivateTimer?.Invoke(timer);
         OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
 
-        OnGameReload?.Invoke();
-
         _numOfCharacters = _initialNumOfCharacters;
         _numOfObstacles = _initialNumOfObstacles;
+
+        OnGameReload?.Invoke();
 
         initializePlayground();
     }

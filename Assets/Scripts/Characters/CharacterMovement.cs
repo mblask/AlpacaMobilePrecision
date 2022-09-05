@@ -186,6 +186,11 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
         }
     }
 
+    public void SetCharacterSpeed(float value)
+    {
+        _characterSpeed = value;
+    }
+
     public void SetCharacterSpeedPerc(int value)
     {
         if (value != 0)
@@ -258,5 +263,10 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
     public Vector2 GetWaypointOrigin()
     {
         return _waypointOriginPoint;
+    }
+
+    public float GetCharacterSpeed()
+    {
+        return _characterSpeed;
     }
 }

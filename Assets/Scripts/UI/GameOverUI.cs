@@ -28,19 +28,19 @@ public class GameOverUI : MonoBehaviour
 
         GameManager.Instance.OnGameOver += activateGameOverScreen;
         GameManager.Instance.OnGameOverOnTime += gameOverOnTime;
+        GameManager.Instance.OnQuitToMainMenu += deactivateGameOverScreen;
         GameManager.Instance.OnGameOverSendFinalScore += updateFinalScore;
         GameManager.Instance.OnWorldDestruction += changeGameOverTextOnWorldDestruction;
-        GameManager.Instance.OnQuitToMainMenu += deactivateGameOverScreen;
         LevelManager.Instance.OnGamePassed += changeGameOverTextOnVictory;
     }
 
     private void OnDestroy()
     {
         GameManager.Instance.OnGameOver -= activateGameOverScreen;
-        GameManager.Instance.OnGameOverOnTime += gameOverOnTime;
+        GameManager.Instance.OnGameOverOnTime -= gameOverOnTime;
+        GameManager.Instance.OnQuitToMainMenu -= deactivateGameOverScreen;
         GameManager.Instance.OnGameOverSendFinalScore -= updateFinalScore;
         GameManager.Instance.OnWorldDestruction -= changeGameOverTextOnWorldDestruction;
-        GameManager.Instance.OnQuitToMainMenu -= deactivateGameOverScreen;
         LevelManager.Instance.OnGamePassed -= changeGameOverTextOnVictory;
     }
 

@@ -10,6 +10,7 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
 
     private GameAssets _gameAssets;
     private Character _character;
+    private CharacterMovement _characterMovement;
 
     private float _spawnTimer;
     private float _minSpawnTime = 5.0f;
@@ -20,6 +21,7 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
     private void Awake()
     {
         _character = GetComponent<Character>();
+        _characterMovement = GetComponent<CharacterMovement>();
     }
 
     private void Start()
@@ -43,17 +45,21 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
         if (_spawnTimer <= 0.0f)
         {
             if (Utilities.ChanceFunc(10))
-                SpawnNewCharacter(_character.GetCharacterType());
+                spawnNewCharacter();
 
             _spawnTimer = UnityEngine.Random.Range(_minSpawnTime, _maxSpawnTime);
         }
     }
 
-    public void SpawnNewCharacter(CharacterType characterType)
+    private void spawnNewCharacter()
     {
         Transform newCharacterTransform = Instantiate(_gameAssets.CharacterObject, transform.position, Quaternion.identity, null);
-
+        
         OnCharacterSpawn?.Invoke(newCharacterTransform);
+
+        Character spawnedCharacter = newCharacterTransform.GetComponent<Character>();
+        if (_character.IsAffiliationSwitched())
+            spawnedCharacter.RedoAffiliation();
 
         CharacterAnimation animation = newCharacterTransform.GetComponent<CharacterAnimation>();
         animation.PlayAnimation(AnimationType.ContractRelease);
@@ -62,6 +68,7 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
         growth.SetCharacterScale(0.3f);
 
         CharacterMovement movement = newCharacterTransform.GetComponent<CharacterMovement>();
+        movement.SetCharacterSpeed(_characterMovement.GetCharacterSpeed());
         movement.ActivateRotation();
     }
 

@@ -28,6 +28,8 @@ public class Character : MonoBehaviour, IDamagable
     private ICharacterMove _characterMove;
     private ISpawnCharacters _characterSpawning;
 
+    private bool _affiliationSwitched;
+
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -35,7 +37,7 @@ public class Character : MonoBehaviour, IDamagable
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         _characterType = AssignRandomCharacterType();
-        _spriteRenderer.color = assingCharacterColor(_characterType);
+        _spriteRenderer.color = assignCharacterColor(_characterType);
 
         _characterMove = GetComponent<ICharacterMove>();
         _characterSpawning = GetComponent<ISpawnCharacters>();
@@ -71,7 +73,7 @@ public class Character : MonoBehaviour, IDamagable
         Destroy(gameObject);
     }
 
-    private Color assingCharacterColor(CharacterType type)
+    private Color assignCharacterColor(CharacterType type)
     {
         switch (type)
         {
@@ -104,7 +106,7 @@ public class Character : MonoBehaviour, IDamagable
     public void AssignCharacterType(CharacterType type)
     {
         _characterType = type;
-        _spriteRenderer.color = assingCharacterColor(_characterType);
+        _spriteRenderer.color = assignCharacterColor(_characterType);
     }
 
     public CharacterType GetCharacterType()
@@ -114,6 +116,8 @@ public class Character : MonoBehaviour, IDamagable
 
     private void switchAffiliation()
     {
+        _affiliationSwitched = true;
+
         switch (_characterType)
         {
             case CharacterType.Positive:
@@ -125,5 +129,15 @@ public class Character : MonoBehaviour, IDamagable
             default:
                 break;
         }
+    }
+
+    public void RedoAffiliation()
+    {
+        switchAffiliation();
+    }
+
+    public bool IsAffiliationSwitched()
+    {
+        return _affiliationSwitched;
     }
 }

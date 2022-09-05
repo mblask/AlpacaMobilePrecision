@@ -14,7 +14,7 @@ public class AffiliationTrigger : Character, IAffiliationTrigger, ISpecialCharac
 
     public void TriggerAffiliationSwitch()
     {
-        OnAffiliationTriggerHit?.Invoke();
+        //OnAffiliationTriggerHit?.Invoke();
     }
 
     public void TriggerSpecialCharacter()

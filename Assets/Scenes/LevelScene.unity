@@ -2101,7 +2101,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 30, y: 0}
+  m_SizeDelta: {x: 50, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &176613217
 MonoBehaviour:
@@ -3993,6 +3993,7 @@ MonoBehaviour:
   DisplayMessages: 1
   Urgents:
   - AudioManager, Sounds
+  - 'Bug: after game over sometimes game starts from level 2'
   - Reset UI more elegantly in Level Manager and Game Manager!! Try dividing resetGameSettings
     into resetGameSettings and resetUI!
   NonUrgents:
@@ -6651,7 +6652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7075472, g: 0.44388574, b: 0.44388574, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     private bool _affiliationChangedThisLevel = false;
 
     private bool _gamePaused = false;
+    private bool _updateScore = true;
 
     private void Awake()
     {
@@ -102,6 +103,9 @@ public class GameManager : MonoBehaviour
 
     private void updateScoreByCharacterType(Character character)
     {
+        if (!_updateScore)
+            return;
+
         switch (character.GetCharacterType())
         {
             case CharacterType.Positive:
@@ -123,8 +127,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool GetUpdateScore()
+    {
+        return _updateScore;
+    }
+
+    public void SetUpdateScore(bool value)
+    {
+        _updateScore = value;
+    }
+
     private void updateScore(int scoreIncrement)
     {
+        if (!_updateScore)
+            return;
+
         _score += scoreIncrement;
         OnScoreUpdate?.Invoke(_score);
     }

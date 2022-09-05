@@ -21,6 +21,8 @@ public class PlayerTouchManager : MonoBehaviour
     private Camera _mainCamera;
 
     private float _touchTime;
+    private bool _mouseClicked;
+    private float _mouseTimer = 0.0f;
 
     [Header("For Testing")]
     [SerializeField] private bool _inputActive = false;
@@ -41,25 +43,12 @@ public class PlayerTouchManager : MonoBehaviour
         _touchTime = 0.0f;
     }
 
-    private void gameManager_OnQuitToMainMenu()
-    {
-        deactivateInput();
-    }
-
-    private void onGamePaused(bool value)
-    {
-        _inputActive = !value;
-
-        if (_inputActive)
-            activateInput();
-        else
-            deactivateInput();
-    }
-
     private void Update()
     {
         if (!_inputActive)
             return;
+
+        mouseDoubleClick();
 
         //FOR TESTING, REMOVE LATER
         if (Input.GetMouseButtonDown(0))
@@ -82,14 +71,6 @@ public class PlayerTouchManager : MonoBehaviour
                         case TouchPhase.Began:
                             //Reload game
                             OnDoubleTouch?.Invoke();
-                            break;
-                        case TouchPhase.Moved:
-                            break;
-                        case TouchPhase.Stationary:
-                            break;
-                        case TouchPhase.Ended:
-                            break;
-                        case TouchPhase.Canceled:
                             break;
                         default:
                             break;
@@ -134,6 +115,23 @@ public class PlayerTouchManager : MonoBehaviour
         LevelManager.Instance.OnInitializeGame -= activateInput;
         GameManager.Instance.OnGameOver -= deactivateInput;
         GameManager.Instance.OnQuitToMainMenu -= deactivateInput;
+    }
+
+    private void mouseDoubleClick()
+    {
+        int mouseButton = 0;
+        float clickInterval = 0.2f;
+
+        _mouseTimer += Time.deltaTime;
+
+        if (Input.GetMouseButtonDown(mouseButton))
+        {
+            if (_mouseTimer < clickInterval)
+            {
+                OnDoubleTouch?.Invoke();
+            }
+            _mouseTimer = 0.0f;
+        }
     }
 
     private void activateInput()
