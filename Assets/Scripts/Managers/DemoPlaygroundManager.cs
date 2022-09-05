@@ -10,6 +10,7 @@ public class DemoPlaygroundManager : MonoBehaviour
 
     private GameAssets _gameAssets;
     private GameManager _gameManager;
+    private LevelManager _levelManager;
 
     private List<Transform> _characterList = new List<Transform>();
     private List<Transform> _obstacleList = new List<Transform>();
@@ -27,6 +28,7 @@ public class DemoPlaygroundManager : MonoBehaviour
     {
         _gameAssets = GameAssets.Instance;
         _gameManager = GameManager.Instance;
+        _levelManager = LevelManager.Instance;
 
         LevelManager.Instance.OnInitializeGame += stopPlayground;
         GameManager.Instance.OnQuitToMainMenu += runPlayground;
@@ -117,7 +119,8 @@ public class DemoPlaygroundManager : MonoBehaviour
     private void createDemoPlayground()
     {
         clearPlayground();
-        _gameManager.SetUpdateScore(false);
+        _gameManager?.SetUpdateScore(false);
+        _levelManager?.SetCheckLevelCompletion(false);
 
         instantiateObjects(_gameAssets.CharacterObject, _demoCharactersNumber, _characterList);
         instantiateObjects(_gameAssets.ObstacleObject, _demoObstaclesNumber, _obstacleList);
@@ -131,7 +134,8 @@ public class DemoPlaygroundManager : MonoBehaviour
 
     private void clearPlayground()
     {
-        _gameManager.SetUpdateScore(true);
+        _gameManager?.SetUpdateScore(true);
+        _levelManager?.SetCheckLevelCompletion(true);
 
         foreach (Transform character in _characterList)
         {

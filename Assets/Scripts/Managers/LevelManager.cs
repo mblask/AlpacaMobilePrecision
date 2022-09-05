@@ -72,6 +72,7 @@ public class LevelManager : MonoBehaviour
     private float _currentAccuracy = 0.0f;
 
     private bool _gameRunning = true;
+    private bool _checkLevelCompletion = true;
 
     private void Awake()
     {
@@ -278,17 +279,19 @@ public class LevelManager : MonoBehaviour
 
     private void reloadGame()
     {
-        _levelNumber = 1;
-        editLevelSettings(false, false, false);
+        resetGameSettings();
 
-        float timer = 0.0f;
-        _accuracyRequiredToPassLevel = 0.0f;
-
-        OnActivateTimer?.Invoke(timer);
-        OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
-
-        _numOfCharacters = _initialNumOfCharacters;
-        _numOfObstacles = _initialNumOfObstacles;
+        //_levelNumber = 1;
+        //editLevelSettings(false, false, false);
+        //
+        //float timer = 0.0f;
+        //_accuracyRequiredToPassLevel = 0.0f;
+        //
+        //OnActivateTimer?.Invoke(timer);
+        //OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
+        //
+        //_numOfCharacters = _initialNumOfCharacters;
+        //_numOfObstacles = _initialNumOfObstacles;
 
         OnGameReload?.Invoke();
 
@@ -471,6 +474,9 @@ public class LevelManager : MonoBehaviour
 
     private void checkLevelCompletion(Character characterDestroyed)
     {
+        if (!_checkLevelCompletion)
+            return;
+
         AffiliationTrigger affiliationTrigger = characterDestroyed.GetComponent<AffiliationTrigger>();
         ObstacleDestroyer obstacleDestroyer = characterDestroyed.GetComponent<ObstacleDestroyer>();
 
@@ -490,6 +496,16 @@ public class LevelManager : MonoBehaviour
             if (characterDestroyed.GetCharacterType().Equals(CharacterType.Negative))
                 OnCharacterDestroyedAtLevel?.Invoke(_levelNumber);
         }
+    }
+
+    public bool GetCheckLevelCompletion()
+    {
+        return _checkLevelCompletion;
+    }
+
+    public void SetCheckLevelCompletion(bool value)
+    {
+        _checkLevelCompletion = value;
     }
 
     private void checkAmountOfGoodBadChars(Character lastCharacterDestroyed)

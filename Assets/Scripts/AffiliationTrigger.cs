@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class AffiliationTrigger : Character, IAffiliationTrigger, ISpecialCharacter
+public class AffiliationTrigger : Character, ISpecialCharacter
 {
     public static Action OnAffiliationTriggerHit;
 
     private void Start()
     {
         AssignCharacterType(CharacterType.AffiliationTrigger);
-    }
-
-    public void TriggerAffiliationSwitch()
-    {
-        //OnAffiliationTriggerHit?.Invoke();
     }
 
     public void TriggerSpecialCharacter()

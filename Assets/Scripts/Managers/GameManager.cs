@@ -48,8 +48,9 @@ public class GameManager : MonoBehaviour
 
     private bool _affiliationChangedThisLevel = false;
 
+    [Header("Read-only")]
+    [SerializeField] private bool _updateScore = true;
     private bool _gamePaused = false;
-    private bool _updateScore = true;
 
     private void Awake()
     {

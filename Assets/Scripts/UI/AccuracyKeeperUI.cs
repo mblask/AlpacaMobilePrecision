@@ -16,8 +16,8 @@ public class AccuracyKeeperUI : MonoBehaviour
 
     private void Awake()
     {
-        _accuracyNumberTransform = transform.Find("AccuracyCurrentNumber");
-        _accuracyTextTransform = transform.Find("AccuracyCurrentText");
+        _accuracyNumberTransform = transform.Find("AccuracyNumber");
+        _accuracyTextTransform = transform.Find("AccuracyText");
         _accuracyNumber = _accuracyNumberTransform.GetComponent<TextMeshProUGUI>();
 
         _animator = GetComponent<Animator>();
