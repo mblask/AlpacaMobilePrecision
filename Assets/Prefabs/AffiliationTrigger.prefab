@@ -151,7 +151,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 70e387b055a791e4ebc4dbee50a05828, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -227,6 +227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waypointsDependOnObstacles: 0
   _baseSpeed: 6
+  _characterSpeed: 4
   _equalSpeeds: 1
   _distanceDependance: 0.07
 --- !u!114 &6362030466328192900
@@ -241,4 +242,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9674674e73a98a45bb401f5ea603dce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterType: 0

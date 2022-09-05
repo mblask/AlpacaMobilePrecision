@@ -281,18 +281,6 @@ public class LevelManager : MonoBehaviour
     {
         resetGameSettings();
 
-        //_levelNumber = 1;
-        //editLevelSettings(false, false, false);
-        //
-        //float timer = 0.0f;
-        //_accuracyRequiredToPassLevel = 0.0f;
-        //
-        //OnActivateTimer?.Invoke(timer);
-        //OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
-        //
-        //_numOfCharacters = _initialNumOfCharacters;
-        //_numOfObstacles = _initialNumOfObstacles;
-
         OnGameReload?.Invoke();
 
         initializePlayground();

@@ -52,6 +52,8 @@ public class AchievementsManager : MonoBehaviour
     [SerializeField] private List<Achievement> _possibleAchievements;
     private List<AchievementType> _achievementsUnlocked;
 
+    private bool _trackCharacters = true;
+
     private void Awake()
     {
         _instance = this;
@@ -82,8 +84,8 @@ public class AchievementsManager : MonoBehaviour
 
     private void resetTrackers()
     {
-        _negativeCharactersKilled = 0;
         _gameLevelStopwatch = 0.0f;
+        _negativeCharactersKilled = 0;
         _accuracyLevelsComplete = 0;
         _accuracyPerAccuracyLevel.Clear();
         _affiliationSwitched = false;
@@ -227,6 +229,9 @@ public class AchievementsManager : MonoBehaviour
 
     private void trackCharactersKilled(Character characterKilled)
     {
+        if (!_trackCharacters)
+            return;
+
         switch (characterKilled.GetCharacterType())
         {
             case CharacterType.Positive:
@@ -258,5 +263,15 @@ public class AchievementsManager : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public bool GetTrackCharacters()
+    {
+        return _trackCharacters;
+    }
+
+    public void SetTrackCharacters(bool value)
+    {
+        _trackCharacters = value;
     }
 }

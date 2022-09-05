@@ -11,16 +11,18 @@ public class ScoreKeeperUI : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.Instance.OnScoreUpdate += UpdateScoreText;
-        
         _scoreText = transform.Find("ScoreNumber").GetComponent<TextMeshProUGUI>();
         _animator = GetComponent<Animator>();
     }
 
+    private void Start()
+    {
+        GameManager.Instance.OnScoreUpdate += UpdateScoreText;
+    }
+
     private void OnDestroy()
     {
-        if (GameManager.Instance != null)
-            GameManager.Instance.OnScoreUpdate -= UpdateScoreText;
+        GameManager.Instance.OnScoreUpdate -= UpdateScoreText;
     }
 
     public void UpdateScoreText(int score)

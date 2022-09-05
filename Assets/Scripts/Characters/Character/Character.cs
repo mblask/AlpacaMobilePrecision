@@ -29,6 +29,7 @@ public class Character : MonoBehaviour, IDamagable
     private ISpawnCharacters _characterSpawning;
 
     private bool _affiliationSwitched;
+    private bool _trackCharactersKilled = true;
 
     private void Awake()
     {
@@ -68,9 +69,20 @@ public class Character : MonoBehaviour, IDamagable
 
     public virtual void DamageThis()
     {
-        OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = getCharacterColor() });
-        OnCharacterDestroyed?.Invoke(this);
+        OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = GetCharacterColor() });
+        if (_trackCharactersKilled)
+            OnCharacterDestroyed?.Invoke(this);
         Destroy(gameObject);
+    }
+
+    public void SetTrackCharactersKilled(bool value)
+    {
+        _trackCharactersKilled = value;
+    }
+
+    public bool GetTrackCharactersKilled()
+    {
+        return _trackCharactersKilled;
     }
 
     private Color assignCharacterColor(CharacterType type)
@@ -90,7 +102,7 @@ public class Character : MonoBehaviour, IDamagable
         }
     }
 
-    private Color getCharacterColor()
+    public Color GetCharacterColor()
     {
         return _spriteRenderer.color;
     }

@@ -10,6 +10,12 @@ public enum GameOverType
     Failure,
 }
 
+public enum Difficulty
+{
+    Normal,
+    Ridiculous,
+}
+
 public class TotalScore
 {
     public int Score;
@@ -24,7 +30,6 @@ public class GameManager : MonoBehaviour
     public event Action OnGameOver;
     public event Action<float> OnGameOverSendFinalScore;
     public event Action OnGameOverOnTime;
-    public event Action<bool> OnGamePaused;
     public event Action OnQuitToMainMenu;
     public event Action OnWorldDestruction;
 
@@ -52,6 +57,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool _updateScore = true;
     private bool _gamePaused = false;
 
+    [SerializeField] private Difficulty _difficulty;
+    public Action<float> OnSetDifficulty;
+
     private void Awake()
     {
         _instance = this;
@@ -67,11 +75,33 @@ public class GameManager : MonoBehaviour
         LevelManager.Instance.OnResetUI += resetScore;
         LevelManager.Instance.OnGamePassed += gamePassed;
         TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
+        DifficultyUI.OnDifficultyChanged += setDifficulty;
 
         resetScore();
 
         if (Screen.orientation != ScreenOrientation.LandscapeRight)
             Screen.orientation = ScreenOrientation.LandscapeRight;
+    }
+
+    private void setDifficulty(Difficulty difficulty)
+    {
+        _difficulty = difficulty;
+
+        float lightIntensity;
+        switch (difficulty)
+        {
+            case Difficulty.Normal:
+                lightIntensity = 1.0f;
+                break;
+            case Difficulty.Ridiculous:
+                lightIntensity = 0.2f;
+                break;
+            default:
+                lightIntensity = 1.0f;
+                break;
+        }
+
+        OnSetDifficulty?.Invoke(lightIntensity);
     }
 
     private void OnDestroy()
@@ -84,6 +114,7 @@ public class GameManager : MonoBehaviour
         LevelManager.Instance.OnResetUI -= resetScore;
         LevelManager.Instance.OnGamePassed -= gamePassed;
         TimeManager.Instance.OnTimeIsOut -= gameOverOnTime;
+        DifficultyUI.OnDifficultyChanged -= setDifficulty;
     }
 
     private void gameOverOnTime()

@@ -11,12 +11,13 @@ public class DemoPlaygroundManager : MonoBehaviour
     private GameAssets _gameAssets;
     private GameManager _gameManager;
     private LevelManager _levelManager;
+    private AchievementsManager _achievementsManager;
 
     private List<Transform> _characterList = new List<Transform>();
     private List<Transform> _obstacleList = new List<Transform>();
     private List<Transform> _bulletMarksList = new List<Transform>();
-    private Transform _affiliationTrigger;
-    private Transform _obstacleDestroyer;
+    private Transform _affiliationTriggerTransform;
+    private Transform _obstacleDestroyerTransform;
 
     private float _borderScaling = 0.95f;
 
@@ -29,6 +30,7 @@ public class DemoPlaygroundManager : MonoBehaviour
         _gameAssets = GameAssets.Instance;
         _gameManager = GameManager.Instance;
         _levelManager = LevelManager.Instance;
+        _achievementsManager = AchievementsManager.Instance;
 
         LevelManager.Instance.OnInitializeGame += stopPlayground;
         GameManager.Instance.OnQuitToMainMenu += runPlayground;
@@ -108,34 +110,39 @@ public class DemoPlaygroundManager : MonoBehaviour
             //destroy one special character
 
             if (Utilities.ChanceFunc(50))
-                if (_affiliationTrigger != null)
-                    _affiliationTrigger.GetComponent<Character>().DamageThis();
+                if (_affiliationTriggerTransform != null)
+                    _affiliationTriggerTransform.GetComponent<Character>().DamageThis();
             else
-                if (_obstacleDestroyer != null)
-                    _obstacleDestroyer.GetComponent<ObstacleDestroyer>().DamageThis();
+                if (_obstacleDestroyerTransform != null)
+                    _obstacleDestroyerTransform.GetComponent<ObstacleDestroyer>().DamageThis();
         }
+    }
+
+    private void editManagerSettings(bool gameManagerUpdateScore, bool levelManagerCheckLevelCompletion, bool achievementsManagerTrackCharacters)
+    {
+        _gameManager?.SetUpdateScore(gameManagerUpdateScore);
+        _levelManager?.SetCheckLevelCompletion(levelManagerCheckLevelCompletion);
+        _achievementsManager?.SetTrackCharacters(achievementsManagerTrackCharacters);
     }
 
     private void createDemoPlayground()
     {
         clearPlayground();
-        _gameManager?.SetUpdateScore(false);
-        _levelManager?.SetCheckLevelCompletion(false);
+        editManagerSettings(false, false, false);
 
         instantiateObjects(_gameAssets.CharacterObject, _demoCharactersNumber, _characterList);
         instantiateObjects(_gameAssets.ObstacleObject, _demoObstaclesNumber, _obstacleList);
 
         if (Utilities.ChanceFunc(50))
-            _affiliationTrigger = spawnObject(_gameAssets.AffiliationTrigger);
+            _affiliationTriggerTransform = spawnObject(_gameAssets.AffiliationTrigger);
 
         if (Utilities.ChanceFunc(50))
-            _obstacleDestroyer = spawnObject(_gameAssets.ObstacleDestroyer);
+            _obstacleDestroyerTransform = spawnObject(_gameAssets.ObstacleDestroyer);
     }
 
     private void clearPlayground()
     {
-        _gameManager?.SetUpdateScore(true);
-        _levelManager?.SetCheckLevelCompletion(true);
+        editManagerSettings(true, true, true);
 
         foreach (Transform character in _characterList)
         {
@@ -159,11 +166,11 @@ public class DemoPlaygroundManager : MonoBehaviour
         _obstacleList.Clear();
         _bulletMarksList.Clear();
 
-        if (_affiliationTrigger != null)
-            Destroy(_affiliationTrigger.gameObject);
+        if (_affiliationTriggerTransform != null)
+            Destroy(_affiliationTriggerTransform.gameObject);
 
-        if (_obstacleDestroyer != null)
-            Destroy(_obstacleDestroyer.gameObject);
+        if (_obstacleDestroyerTransform != null)
+            Destroy(_obstacleDestroyerTransform.gameObject);
     }
 
     private void instantiateObjects(Transform objectTransform, int numberOfObjects, List<Transform> storingList = null)
