@@ -50,7 +50,7 @@ public class AchievementsManager : MonoBehaviour
     private int _numOfAffiliationSwitchesSurvived = 0;
     
     [SerializeField] private List<Achievement> _possibleAchievements;
-    private List<AchievementType> _achievementsUnlocked;
+    private List<AchievementType> _achievementsUnlocked = new List<AchievementType>();
 
     private bool _trackCharacters = true;
 
@@ -263,6 +263,15 @@ public class AchievementsManager : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void LoadAchievements(List<AchievementType> achievements)
+    {
+        if (_achievementsUnlocked == null)
+            _achievementsUnlocked = new List<AchievementType>();
+
+        foreach (AchievementType achievement in achievements)
+            _achievementsUnlocked.Add(achievement);
     }
 
     public bool GetTrackCharacters()

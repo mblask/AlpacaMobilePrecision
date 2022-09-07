@@ -29,7 +29,7 @@ public class GameOverUI : MonoBehaviour
         GameManager.Instance.OnGameOver += activateGameOverScreen;
         GameManager.Instance.OnGameOverOnTime += gameOverOnTime;
         GameManager.Instance.OnQuitToMainMenu += deactivateGameOverScreen;
-        GameManager.Instance.OnGameOverSendFinalScore += updateFinalScore;
+        GameManager.Instance.OnGameOverSendFinalScore += updateHighsoreValue;
         GameManager.Instance.OnWorldDestruction += changeGameOverTextOnWorldDestruction;
         LevelManager.Instance.OnGamePassed += changeGameOverTextOnVictory;
     }
@@ -39,9 +39,14 @@ public class GameOverUI : MonoBehaviour
         GameManager.Instance.OnGameOver -= activateGameOverScreen;
         GameManager.Instance.OnGameOverOnTime -= gameOverOnTime;
         GameManager.Instance.OnQuitToMainMenu -= deactivateGameOverScreen;
-        GameManager.Instance.OnGameOverSendFinalScore -= updateFinalScore;
+        GameManager.Instance.OnGameOverSendFinalScore -= updateHighsoreValue;
         GameManager.Instance.OnWorldDestruction -= changeGameOverTextOnWorldDestruction;
         LevelManager.Instance.OnGamePassed -= changeGameOverTextOnVictory;
+    }
+
+    private void updateHighsoreValue(Highscore highscore)
+    {
+        updateFinalScore(highscore.Score);
     }
 
     private void gameOverOnTime()

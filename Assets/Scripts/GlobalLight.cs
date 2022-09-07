@@ -12,12 +12,12 @@ public class GlobalLight : MonoBehaviour
         _globalLight = GetComponent<Light2D>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         GameManager.Instance.OnSetDifficulty += setGlobalLight;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         GameManager.Instance.OnSetDifficulty -= setGlobalLight;
     }

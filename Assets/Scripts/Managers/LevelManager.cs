@@ -166,7 +166,7 @@ public class LevelManager : MonoBehaviour
                 OnResetUI?.Invoke();
             }
 
-            initializePlayground();
+            loadLevel(_levelNumber);
             InvokeRepeating(nameof(fadeCharacter), UnityEngine.Random.Range(0.5f, 2.0f), UnityEngine.Random.Range(0.5f, 1.0f));
         }
         
@@ -599,6 +599,10 @@ public class LevelManager : MonoBehaviour
         return _instance.GetLevel();
     }
 
+    public void SetLevel(int level)
+    {
+        _levelNumber = level;
+    }
     public int GetLevel()
     {
         return _levelNumber;

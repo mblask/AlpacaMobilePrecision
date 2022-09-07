@@ -16,6 +16,13 @@ public enum Difficulty
     Ridiculous,
 }
 
+[Serializable]
+public class Highscore
+{
+    public float Score = 0.0f;
+    public string Date = "";
+}
+
 public class TotalScore
 {
     public int Score;
@@ -28,10 +35,12 @@ public class GameManager : MonoBehaviour
 {
     public event Action<int> OnScoreUpdate;
     public event Action OnGameOver;
-    public event Action<float> OnGameOverSendFinalScore;
+    public event Action<Highscore> OnGameOverSendFinalScore;
     public event Action OnGameOverOnTime;
     public event Action OnQuitToMainMenu;
     public event Action OnWorldDestruction;
+    public event Action<float> OnSetDifficulty;
+    public event Action<bool> OnGamePaused;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -44,21 +53,17 @@ public class GameManager : MonoBehaviour
 
     [Header("Score Points")]
     [SerializeField] private int _score = 0;
-    private float _currentHighscore;
+    private Highscore _currentHighscore = new Highscore();
 
-    [Header("Points On Destroy")]
-    [SerializeField] private int _posCharHit = -10;
-    [SerializeField] private int _negCharHit = 15;
-    [SerializeField] private int _fragileObstHit = -2;
+    private int _posCharHit = -3;
+    private int _negCharHit = 4;
+    private int _fragileObstHit = -1;
 
     private bool _affiliationChangedThisLevel = false;
 
     [Header("Read-only")]
     [SerializeField] private bool _updateScore = true;
     private bool _gamePaused = false;
-
-    [SerializeField] private Difficulty _difficulty;
-    public Action<float> OnSetDifficulty;
 
     private void Awake()
     {
@@ -81,12 +86,13 @@ public class GameManager : MonoBehaviour
 
         if (Screen.orientation != ScreenOrientation.LandscapeRight)
             Screen.orientation = ScreenOrientation.LandscapeRight;
+
+        SaveManager.LoadProgress();
     }
 
+    //DIFFICULTY IS STILL POSSIBLE TO CHANGE OR REMOVE
     private void setDifficulty(Difficulty difficulty)
-    {
-        _difficulty = difficulty;
-
+    {    
         float lightIntensity;
         switch (difficulty)
         {
@@ -94,14 +100,30 @@ public class GameManager : MonoBehaviour
                 lightIntensity = 1.0f;
                 break;
             case Difficulty.Ridiculous:
-                lightIntensity = 0.2f;
+                lightIntensity = 0.15f;
                 break;
             default:
                 lightIntensity = 1.0f;
                 break;
         }
-
+    
         OnSetDifficulty?.Invoke(lightIntensity);
+    }
+
+    private float getCurrentLightIntensity()
+    {
+        int hour = DateTime.Now.Hour;
+        float maxIntensity = 1.0f;
+        float minIntensity = 0.15f;
+
+        float slope = (maxIntensity - minIntensity) / 12;
+        float intensity;
+        if (hour >= 0 && hour < 12)
+            intensity = minIntensity + slope * hour;
+        else
+            intensity = maxIntensity - slope * Mathf.Abs(12 - hour);
+
+        return intensity;
     }
 
     private void OnDestroy()
@@ -206,7 +228,7 @@ public class GameManager : MonoBehaviour
 
         //send final score to the GameOverUI
         OnGameOver?.Invoke();
-        evaluateNewHighscore(finalScore);
+        EvaluateNewHighscore(finalScore);
     }
 
     private void gamePassed()
@@ -214,16 +236,33 @@ public class GameManager : MonoBehaviour
         gameOver(GameOverType.Victory);
     }
 
-    private void evaluateNewHighscore(float highscore)
+    public void EvaluateNewHighscore(float highscore)
     {
-        if (_currentHighscore < highscore)
+        if (_currentHighscore.Score < highscore)
         {
-            _currentHighscore = highscore;
-            OnGameOverSendFinalScore?.Invoke(highscore);
+            _currentHighscore.Score = highscore;
+
+            string dateString;
+            if (highscore == 0.0f)
+                dateString = "On 1 January 2000";
+            else
+            {
+                System.DateTime dateTime = System.DateTime.Now;
+                dateString = "On " + dateTime.Day + " " + Utilities.GetMonthName(dateTime.Month) + " " + dateTime.Year;
+            }
+            _currentHighscore.Date = dateString;
         }
+
+        OnGameOverSendFinalScore?.Invoke(_currentHighscore);
     }
 
-    public float GetCurrentHighscore()
+    public void LoadCurrentHighscore(Highscore highscore)
+    {
+        _currentHighscore.Score = highscore.Score;
+        _currentHighscore.Date = highscore.Date;
+    }
+
+    public Highscore GetCurrentHighscore()
     {
         return _currentHighscore;
     }
@@ -271,5 +310,6 @@ public class GameManager : MonoBehaviour
         _gamePaused = value;
 
         Time.timeScale = _gamePaused ? 0.0f : 1.0f;
+        OnGamePaused?.Invoke(value);
     }
 }

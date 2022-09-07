@@ -75,6 +75,17 @@ public class WantedListManager : MonoBehaviour
         return wantedPool;
     }
 
+    public void LoadWantedList(List<WantedCharacter> wantedCharacters)
+    {
+        if (_unlockedCharacters == null)
+            _unlockedCharacters = new List<WantedCharacter>();
+
+        foreach (WantedCharacter wantedCharacter in wantedCharacters)
+        {
+            _unlockedCharacters.Add(wantedCharacter);
+        }
+    }
+
     public List<WantedCharacter> GetWantedCharactersList()
     {
         return _wantedList;

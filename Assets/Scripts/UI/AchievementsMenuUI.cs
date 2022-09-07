@@ -11,6 +11,8 @@ public class AchievementsMenuUI : MonoBehaviour
     private TextMeshProUGUI _highscoreNumberText;
     private TextMeshProUGUI _highscoreDateText;
 
+    private GameManager _gameManager;
+
     private void Awake()
     {
         _achievementsUIContainer = transform.Find("Container").Find("Achievements").Find("AchievementsContainer");
@@ -20,12 +22,13 @@ public class AchievementsMenuUI : MonoBehaviour
 
     void OnEnable()
     {
+        _gameManager = GameManager.Instance;
         updateAchievements();
     }
 
     private void updateAchievements()
     {
-        updateHighscoreNumber(GameManager.Instance.GetCurrentHighscore());
+        updateHighscoreNumber(_gameManager.GetCurrentHighscore());
 
         if (_achievementsUIContainer.childCount != 0)
         {
@@ -52,23 +55,12 @@ public class AchievementsMenuUI : MonoBehaviour
         }
     }
 
-    private void updateHighscoreNumber(float highscore)
+    private void updateHighscoreNumber(Highscore highscore)
     {
-        _highscoreNumberText.SetText(highscore.ToString("F0"));
-        updateHighscoreDate(highscore);
-    }
+        if (highscore == null)
+            return;
 
-    private void updateHighscoreDate(float highscore = 0.0f)
-    {
-        string dateString;
-        if (highscore == 0.0f)
-            dateString = "On 1 January 2000";
-        else
-        {
-            System.DateTime dateTime = System.DateTime.Now;
-            dateString = "On " + dateTime.Day + " " + Utilities.GetMonthName(dateTime.Month) + " " + dateTime.Year;
-        }
-
-        _highscoreDateText.SetText(dateString);
+        _highscoreNumberText.SetText(highscore.Score.ToString("F0"));
+        _highscoreDateText.SetText(highscore.Date);
     }
 }

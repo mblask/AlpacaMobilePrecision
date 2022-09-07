@@ -29,12 +29,14 @@ public class TooltipUI : MonoBehaviour
     {
         AchievementUI.OnButtonClick += setupTooltip;
         WantedCharacterUI.OnButtonClick += setupTooltip;
+        DifficultyUI.OnButtonClick += setupTooltip;
     }
 
     private void OnDestroy()
     {
         AchievementUI.OnButtonClick -= setupTooltip;
         WantedCharacterUI.OnButtonClick -= setupTooltip;
+        DifficultyUI.OnButtonClick -= setupTooltip;
     }
 
     public void OnTooltipButtonClick()

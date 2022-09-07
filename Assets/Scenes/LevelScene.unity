@@ -1139,6 +1139,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1858697104}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &98855064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1927,11 +1939,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _score: 0
-  _posCharHit: -3
-  _negCharHit: 4
-  _fragileObstHit: -1
   _updateScore: 1
-  _difficulty: 0
 --- !u!4 &172930423
 Transform:
   m_ObjectHideFlags: 0
@@ -3320,6 +3328,7 @@ GameObject:
   - component: {fileID: 445054402}
   - component: {fileID: 445054401}
   - component: {fileID: 445054400}
+  - component: {fileID: 445054403}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -3441,6 +3450,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 445054398}
   m_CullTransparentMesh: 1
+--- !u!114 &445054403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445054398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401c21547d00ea9418b7456f18bb2ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &455589492
 GameObject:
   m_ObjectHideFlags: 0
@@ -4078,10 +4099,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayMessages: 1
   Urgents:
-  - Review character, obstacle changes through levels!
-  - Review level settings!
+  - When obstacle hit but now destroyed - animate, contract release!!
   - AudioManager, Sounds
-  - SaveManager -> last step
+  - Review level settings!
+  - Review character, obstacle changes through levels!
+  - UnityAds -> last step
   NonUrgents:
   - Try lights on the characters.
   - Reset UI more elegantly in Level Manager and Game Manager!! Try dividing resetGameSettings
@@ -5551,6 +5573,7 @@ GameObject:
   - component: {fileID: 699874563}
   - component: {fileID: 699874565}
   - component: {fileID: 699874564}
+  - component: {fileID: 699874566}
   m_Layer: 5
   m_Name: DifficultyText
   m_TagString: Untagged
@@ -5617,6 +5640,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699874562}
   m_CullTransparentMesh: 1
+--- !u!114 &699874566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699874562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 699874564}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &704913623
 GameObject:
   m_ObjectHideFlags: 0

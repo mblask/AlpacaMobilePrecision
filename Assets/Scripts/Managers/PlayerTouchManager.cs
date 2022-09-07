@@ -37,6 +37,7 @@ public class PlayerTouchManager : MonoBehaviour
         LevelManager.Instance.OnInitializeGame += activateInput;
         GameManager.Instance.OnGameOver += deactivateInput;
         GameManager.Instance.OnQuitToMainMenu += deactivateInput;
+        GameManager.Instance.OnGamePaused += inputOnGamePaused;
 
         _mainCamera = Camera.main;
 
@@ -115,6 +116,7 @@ public class PlayerTouchManager : MonoBehaviour
         LevelManager.Instance.OnInitializeGame -= activateInput;
         GameManager.Instance.OnGameOver -= deactivateInput;
         GameManager.Instance.OnQuitToMainMenu -= deactivateInput;
+        GameManager.Instance.OnGamePaused -= inputOnGamePaused;
     }
 
     private void mouseDoubleClick()
@@ -134,13 +136,23 @@ public class PlayerTouchManager : MonoBehaviour
         }
     }
 
+    private void setInputActive(bool value)
+    {
+        _inputActive = value;
+    }
+
+    private void inputOnGamePaused(bool value)
+    {
+        setInputActive(!value);
+    }
+
     private void activateInput()
     {
-        _inputActive = true;
+        setInputActive(true);
     }
 
     private void deactivateInput()
     {
-        _inputActive = false;
+        setInputActive(false);
     }
 }

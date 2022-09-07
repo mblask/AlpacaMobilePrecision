@@ -61,7 +61,7 @@ public class DemoPlaygroundManager : MonoBehaviour
             else
                 destroyRandomCharacter();
 
-            _timer = Random.Range(0.3f, 1.5f);
+            _timer = UnityEngine.Random.Range(0.3f, 1.5f);
         }
     }
 
@@ -88,7 +88,7 @@ public class DemoPlaygroundManager : MonoBehaviour
             Transform randomCharacter;
             if (_characterList.Count > 1)
             {
-                int randomIndex = Random.Range(0, _characterList.Count - 1);
+                int randomIndex = UnityEngine.Random.Range(0, _characterList.Count - 1);
                 randomCharacter = _characterList[randomIndex];
             }
             else
