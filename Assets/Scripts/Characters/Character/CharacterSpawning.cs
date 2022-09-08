@@ -61,7 +61,7 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
         if (_character.IsAffiliationSwitched())
             spawnedCharacter.RedoAffiliation();
 
-        CharacterAnimation animation = newCharacterTransform.GetComponent<CharacterAnimation>();
+        ObjectAnimation animation = newCharacterTransform.GetComponent<ObjectAnimation>();
         animation.PlayAnimation(AnimationType.ContractRelease);
 
         CharacterGrowth growth = newCharacterTransform.GetComponent<CharacterGrowth>();

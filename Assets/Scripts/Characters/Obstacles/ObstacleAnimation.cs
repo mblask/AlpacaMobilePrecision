@@ -2,12 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum AnimationType
-{
-    ContractRelease,
-}
-
-public class CharacterAnimation : MonoBehaviour, ICharacterAnimation
+public class ObstacleAnimation : MonoBehaviour, ICharacterAnimation
 {
     private Animator _animator;
 
@@ -32,6 +27,6 @@ public class CharacterAnimation : MonoBehaviour, ICharacterAnimation
 
     private void playContractRelease()
     {
-        _animator.SetTrigger(_contractReleaseTrigger);
+        _animator?.SetTrigger(_contractReleaseTrigger);
     }
 }

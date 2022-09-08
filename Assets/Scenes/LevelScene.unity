@@ -4099,15 +4099,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayMessages: 1
   Urgents:
-  - When obstacle hit but now destroyed - animate, contract release!!
   - AudioManager, Sounds
   - Review level settings!
   - Review character, obstacle changes through levels!
   - UnityAds -> last step
   NonUrgents:
   - Try lights on the characters.
-  - Reset UI more elegantly in Level Manager and Game Manager!! Try dividing resetGameSettings
-    into resetGameSettings and resetUI!
 --- !u!4 &502288634
 Transform:
   m_ObjectHideFlags: 0

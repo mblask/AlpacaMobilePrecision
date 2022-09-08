@@ -19,11 +19,14 @@ public class Obstacle : MonoBehaviour, IDamagable
     private ObstacleType _obstacleType;
     private SpriteRenderer _spriteRenderer;
 
+    private ObjectAnimation _obstacleAnimation;
+
     private int _obstacleHitPoint;
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = transform.Find("ObstacleBody").GetComponent<SpriteRenderer>();
+        _obstacleAnimation = GetComponent<ObjectAnimation>();
     }
 
     private void Start()
@@ -36,6 +39,7 @@ public class Obstacle : MonoBehaviour, IDamagable
     public void DamageThis()
     {
         _obstacleHitPoint--;
+        _obstacleAnimation.PlayAnimation(AnimationType.ContractRelease);
 
         if (_obstacleHitPoint <= 0 && _obstacleType.Equals(ObstacleType.Fragile))
             DestroyObstacle();

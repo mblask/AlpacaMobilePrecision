@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 3574220324504316257}
   - component: {fileID: 4849055779707097384}
   - component: {fileID: -4202583082312058338}
-  - component: {fileID: -4552004940299874061}
+  - component: {fileID: 6694128465594795341}
   m_Layer: 7
   m_Name: CharacterObject
   m_TagString: Untagged
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isSpawning: 0
---- !u!114 &-4552004940299874061
+--- !u!114 &6694128465594795341
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
