@@ -20,6 +20,8 @@ public class Character : MonoBehaviour, IDamagable
     [SerializeField] private CharacterType _characterType;
     private SpriteRenderer _spriteRenderer;
 
+    private AudioManager _audioManager;
+
     private Color _positiveColor = Color.red;
     private Color _negativeColor = Color.green;
     private Color _affiliationTriggerColor = Color.yellow;
@@ -29,7 +31,6 @@ public class Character : MonoBehaviour, IDamagable
     private ISpawnCharacters _characterSpawning;
 
     private bool _affiliationSwitched;
-    private bool _trackCharactersKilled = true;
 
     private void Awake()
     {
@@ -48,6 +49,11 @@ public class Character : MonoBehaviour, IDamagable
     {
         AffiliationTrigger.OnAffiliationTriggerHit += switchAffiliation;
         LevelManager.Instance.OnCharacterLevelUp += levelUpCharacter;
+    }
+
+    private void Start()
+    {
+        _audioManager = AudioManager.Instance;
     }
 
     private void OnDestroy()
@@ -70,19 +76,9 @@ public class Character : MonoBehaviour, IDamagable
     public virtual void DamageThis()
     {
         OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = GetCharacterColor() });
-        if (_trackCharactersKilled)
-            OnCharacterDestroyed?.Invoke(this);
+        OnCharacterDestroyed?.Invoke(this);
+        _audioManager?.PlaySFXClip(AudioType.CharacterKilled);
         Destroy(gameObject);
-    }
-
-    public void SetTrackCharactersKilled(bool value)
-    {
-        _trackCharactersKilled = value;
-    }
-
-    public bool GetTrackCharactersKilled()
-    {
-        return _trackCharactersKilled;
     }
 
     private Color assignCharacterColor(CharacterType type)

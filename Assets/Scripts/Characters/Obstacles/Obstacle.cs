@@ -14,6 +14,8 @@ public class Obstacle : MonoBehaviour, IDamagable
     public static Action<Obstacle> OnObstacleDestroy;
     public static Action<PSProperties> OnParticleSystemToSpawn;
 
+    private AudioManager _audioManager;
+
     private int _solidHitPoint = 9999;
 
     private ObstacleType _obstacleType;
@@ -34,12 +36,15 @@ public class Obstacle : MonoBehaviour, IDamagable
         _obstacleType = getObstacleType();
         _spriteRenderer.color = getObstacleColor(_obstacleType);
         _obstacleHitPoint = getObstacleHitPoints(_obstacleType);
+
+        _audioManager = AudioManager.Instance;
     }
 
     public void DamageThis()
     {
         _obstacleHitPoint--;
         _obstacleAnimation.PlayAnimation(AnimationType.ContractRelease);
+        _audioManager?.PlaySFXClip(AudioType.ObstacleHit);
 
         if (_obstacleHitPoint <= 0 && _obstacleType.Equals(ObstacleType.Fragile))
             DestroyObstacle();
@@ -49,6 +54,7 @@ public class Obstacle : MonoBehaviour, IDamagable
     {
         OnObstacleDestroy?.Invoke(this);
         OnParticleSystemToSpawn?.Invoke(new PSProperties { PSposition = transform.position, PSType = PSType.Destroy, PSColor = getObstacleColor(_obstacleType) });
+        _audioManager?.PlaySFXClip(AudioType.ObstacleSmashed);
         Destroy(gameObject);
     }
 

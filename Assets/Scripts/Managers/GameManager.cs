@@ -20,7 +20,7 @@ public enum Difficulty
 public class Highscore
 {
     public float Score = 0.0f;
-    public string Date = "";
+    public string Date = "On 1 January 2000";
 }
 
 public class TotalScore
@@ -50,6 +50,11 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
+
+    private AudioManager _audioManager;
+
+    private ScreenOrientation _screenOrientationRight = ScreenOrientation.LandscapeRight;
+    private ScreenOrientation _screenOrientationLeft = ScreenOrientation.LandscapeLeft;
 
     [Header("Score Points")]
     [SerializeField] private int _score = 0;
@@ -82,28 +87,37 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
         DifficultyUI.OnDifficultyChanged += setDifficulty;
 
+        _audioManager = AudioManager.Instance;
         resetScore();
-
-        if (Screen.orientation != ScreenOrientation.LandscapeRight)
-            Screen.orientation = ScreenOrientation.LandscapeRight;
 
         SaveManager.LoadProgress();
     }
 
+    private void LateUpdate()
+    {
+        if (Screen.orientation != _screenOrientationRight)
+            Screen.orientation = _screenOrientationRight;
+        else
+            Screen.orientation = _screenOrientationLeft;
+    }
+
     //DIFFICULTY IS STILL POSSIBLE TO CHANGE OR REMOVE
     private void setDifficulty(Difficulty difficulty)
-    {    
+    {
+        float normalIntensity = 1.0f;
+        float ridiculousINtensity = 0.15f;
+
         float lightIntensity;
         switch (difficulty)
         {
             case Difficulty.Normal:
-                lightIntensity = 1.0f;
+                lightIntensity = normalIntensity;
                 break;
             case Difficulty.Ridiculous:
-                lightIntensity = 0.15f;
+                lightIntensity = ridiculousINtensity;
                 break;
             default:
-                lightIntensity = 1.0f;
+                lightIntensity = normalIntensity;
                 break;
         }
     
@@ -211,9 +225,11 @@ public class GameManager : MonoBehaviour
         switch (gameOverType)
         {
             case GameOverType.Victory:
+                _audioManager?.PlaySFXClip(AudioType.Victory);
                 Debug.LogError("Victory!!");
                 break;
             case GameOverType.Failure:
+                _audioManager?.PlaySFXClip(AudioType.Failure);
                 Debug.LogError("Game Over");
                 break;
             default:

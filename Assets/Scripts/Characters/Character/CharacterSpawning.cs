@@ -11,6 +11,7 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
     private GameAssets _gameAssets;
     private Character _character;
     private CharacterMovement _characterMovement;
+    private AudioManager _audioManager;
 
     private float _spawnTimer;
     private float _minSpawnTime = 5.0f;
@@ -27,6 +28,7 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
     private void Start()
     {
         _gameAssets = GameAssets.Instance;
+        _audioManager = AudioManager.Instance;
         _spawnTimer = UnityEngine.Random.Range(_minSpawnTime, _maxSpawnTime);
     }
 
@@ -70,6 +72,8 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
         CharacterMovement movement = newCharacterTransform.GetComponent<CharacterMovement>();
         movement.SetCharacterSpeed(_characterMovement.GetCharacterSpeed());
         movement.ActivateRotation();
+
+        _audioManager?.PlaySFXClip(AudioType.Spawning);
     }
 
     public void ActivateSpawning(bool value)

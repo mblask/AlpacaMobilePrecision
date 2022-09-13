@@ -26,8 +26,8 @@ public static class SaveManager
         string gameProgressString = JsonUtility.ToJson(newGameProgress);
         //Debug.Log(gameProgressString);
 
-        string persistentDataPath = Application.dataPath;
-        //string persistentDataPath = Application.persistentDataPath;
+        //string persistentDataPath = Application.dataPath;
+        string persistentDataPath = Application.persistentDataPath;
         string savePath = persistentDataPath + "/mobileprecgam.agsf";
 
         File.WriteAllText(savePath, gameProgressString);
@@ -37,8 +37,8 @@ public static class SaveManager
     {
         //Debug.Log("Load progress");
 
-        string persistentDataPath = Application.dataPath;
-        //string persistentDataPath = Application.persistentDataPath;
+        //string persistentDataPath = Application.dataPath;
+        string persistentDataPath = Application.persistentDataPath;
         string savePath = persistentDataPath + "/mobileprecgam.agsf";
 
         if (File.Exists(savePath))

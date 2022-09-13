@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using AlpacaMyGames;
 
 public class PlayerTouchManager : MonoBehaviour
 {
@@ -20,8 +21,9 @@ public class PlayerTouchManager : MonoBehaviour
 
     private Camera _mainCamera;
 
+    private AudioManager _audioManager;
+
     private float _touchTime;
-    private bool _mouseClicked;
     private float _mouseTimer = 0.0f;
 
     [Header("For Testing")]
@@ -40,6 +42,7 @@ public class PlayerTouchManager : MonoBehaviour
         GameManager.Instance.OnGamePaused += inputOnGamePaused;
 
         _mainCamera = Camera.main;
+        _audioManager = AudioManager.Instance;
 
         _touchTime = 0.0f;
     }
@@ -54,8 +57,9 @@ public class PlayerTouchManager : MonoBehaviour
         //FOR TESTING, REMOVE LATER
         if (Input.GetMouseButtonDown(0))
         {
-            Vector2 worldClickPosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 worldClickPosition = Utilities.GetMouseWorldLocation(_mainCamera);
             OnPlayerTouchPosition?.Invoke(worldClickPosition);
+            _audioManager?.PlaySFXClip(AudioType.Gunshot);
         }
 
         if (Input.touchCount > 0)

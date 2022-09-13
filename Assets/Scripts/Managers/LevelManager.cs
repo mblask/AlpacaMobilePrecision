@@ -279,6 +279,14 @@ public class LevelManager : MonoBehaviour
 
     private void reloadGame()
     {
+        if (Utilities.ChanceFunc(50))
+        {
+            InterstitialAdExample adExample = AdsInitializer.Instance.gameObject.GetComponent<InterstitialAdExample>();
+
+            adExample.LoadAd();
+            adExample.ShowAd();
+        }            
+
         resetGameSettings();
 
         OnGameReload?.Invoke();
