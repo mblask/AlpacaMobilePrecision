@@ -59,7 +59,7 @@ public class PlayerTouchManager : MonoBehaviour
         {
             Vector2 worldClickPosition = Utilities.GetMouseWorldLocation(_mainCamera);
             OnPlayerTouchPosition?.Invoke(worldClickPosition);
-            _audioManager?.PlaySFXClip(AudioType.Gunshot);
+            _audioManager?.PlaySFXClip(SFXClipType.Gunshot);
         }
 
         if (Input.touchCount > 0)
@@ -126,7 +126,7 @@ public class PlayerTouchManager : MonoBehaviour
     private void mouseDoubleClick()
     {
         int mouseButton = 0;
-        float clickInterval = 0.2f;
+        float clickInterval = 0.15f;
 
         _mouseTimer += Time.deltaTime;
 

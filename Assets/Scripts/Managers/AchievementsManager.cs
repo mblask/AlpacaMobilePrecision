@@ -42,6 +42,8 @@ public class AchievementsManager : MonoBehaviour
 
     public Action<string> OnAchievementScored;
 
+    private AudioManager _audioManager;
+
     private int _negativeCharactersKilled = 0;
     private float _gameLevelStopwatch = 0.0f;
     private List<float> _accuracyPerAccuracyLevel = new List<float>();
@@ -61,6 +63,8 @@ public class AchievementsManager : MonoBehaviour
 
     private void Start()
     {
+        _audioManager = AudioManager.Instance;
+
         LevelManager.Instance.OnLoadLevel += achievementsOnLoadLevel;
         Character.OnCharacterDestroyed += trackCharactersKilled;
         LevelManager.Instance.OnBeforeLoadLevel += trackAccuracyLevels;
@@ -116,6 +120,7 @@ public class AchievementsManager : MonoBehaviour
         {
             _achievementsUnlocked.Add(achievementType);
             OnAchievementScored?.Invoke(getAchievementName(achievementType));
+            _audioManager?.PlaySFXClip(SFXClipType.AchievementScored);
         }
     }
 

@@ -37,12 +37,14 @@ public class Character : MonoBehaviour, IDamagable
         _spriteRenderer = GetComponent<SpriteRenderer>();
         if (_spriteRenderer == null)
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-
-        _characterType = AssignRandomCharacterType();
-        _spriteRenderer.color = assignCharacterColor(_characterType);
+        _spriteRenderer.sprite = GameAssets.Instance.CharacterSprites.GetRandomElement();
 
         _characterMove = GetComponent<ICharacterMove>();
         _characterSpawning = GetComponent<ISpawnCharacters>();
+
+        characterInitialSetup();
+        //_characterType = AssignRandomCharacterType();
+        //_spriteRenderer.color = assignCharacterColor(_characterType);
     }
 
     private void OnEnable()
@@ -62,6 +64,13 @@ public class Character : MonoBehaviour, IDamagable
         LevelManager.Instance.OnCharacterLevelUp -= levelUpCharacter;
     }
 
+    private void characterInitialSetup()
+    {
+        _characterType = AssignRandomCharacterType();
+        _spriteRenderer.color = assignCharacterColor(_characterType);
+        _spriteRenderer.sprite = GameAssets.Instance.CharacterSprites.GetRandomElement();
+    }
+
     private void levelUpCharacter(CharacterLevelUpProperties properties)
     {
         if (properties == null)
@@ -75,9 +84,9 @@ public class Character : MonoBehaviour, IDamagable
 
     public virtual void DamageThis()
     {
-        OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = GetCharacterColor() });
+        OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = GetCharacterColor(), PSTextureType = ParticleSystemSpawner.GetPSTextureTypeByCharacter(_characterType) });
         OnCharacterDestroyed?.Invoke(this);
-        _audioManager?.PlaySFXClip(AudioType.CharacterKilled);
+        _audioManager?.PlaySFXClip(SFXClipType.CharacterKilled);
         Destroy(gameObject);
     }
 
@@ -115,6 +124,22 @@ public class Character : MonoBehaviour, IDamagable
     {
         _characterType = type;
         _spriteRenderer.color = assignCharacterColor(_characterType);
+
+        switch (_characterType)
+        {
+            case CharacterType.Positive:
+            case CharacterType.Negative:
+                _spriteRenderer.sprite = GameAssets.Instance.CharacterSprites.GetRandomElement();
+                break;
+            case CharacterType.AffiliationTrigger:
+                _spriteRenderer.sprite = GameAssets.Instance.AffiliationTriggerSprites.GetRandomElement();
+                break;
+            case CharacterType.ObstacleDestroyer:
+                _spriteRenderer.sprite = GameAssets.Instance.ObstacleDestroyerSprites.GetRandomElement();
+                break;
+            default:
+                break;
+        }
     }
 
     public CharacterType GetCharacterType()

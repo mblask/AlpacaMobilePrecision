@@ -14,12 +14,19 @@ public class GameAssets : MonoBehaviour
         }
     }
 
+    [Header("Game Elements")]
     public Transform BulletMark;
     public Transform AffiliationTrigger;
     public Transform CharacterObject;
     public Transform ObstacleObject;
     public Transform ObstacleDestroyer;
     public Transform DestructionArea;
+
+    [Header("Sprites")]
+    public List<Sprite> CharacterSprites;
+    public List<Sprite> ObstacleSprites;
+    public List<Sprite> AffiliationTriggerSprites;
+    public List<Sprite> ObstacleDestroyerSprites;
 
     [Header("UI Elements")]
     public RectTransform WantedCharacterUI;

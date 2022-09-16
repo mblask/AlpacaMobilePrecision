@@ -33,11 +33,8 @@ public class TriggerMask : MonoBehaviour
 
     private void maskInitialSetup()
     {
-        //scalling the trigger mask to the size of characters
-        float characterScaleEqualizationFactor = 1.0f / 0.7f;
-        Vector2 maskScale = _triggerMaskTransform.localScale;
-        maskScale *= characterScaleEqualizationFactor;
-        _triggerMaskTransform.localScale = maskScale;
+        //assigning random Character sprite to the mask
+        _triggerMaskRenderer.sprite = GameAssets.Instance.CharacterSprites.GetRandomElement();
 
         //assigning a color to the mask
         _triggerMaskRenderer.color = Utilities.ChanceFunc(50) ? Color.green : Color.red;

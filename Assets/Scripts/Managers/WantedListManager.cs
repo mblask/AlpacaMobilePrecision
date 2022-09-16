@@ -18,6 +18,8 @@ public class WantedListManager : MonoBehaviour
 
     public Action<string> OnWantedKilled;
 
+    private AudioManager _audioManager;
+
     [SerializeField] private List<WantedCharacter> _wantedList;
     private List<WantedCharacter> _unlockedCharacters = new List<WantedCharacter>();
     private int _currentLevel;
@@ -29,6 +31,8 @@ public class WantedListManager : MonoBehaviour
 
     void Start()
     {
+        _audioManager = AudioManager.Instance;
+
         LevelManager.Instance.OnCharacterDestroyedAtLevel += checkWantedListAtLevel;
     }
 
@@ -57,6 +61,7 @@ public class WantedListManager : MonoBehaviour
                 {
                     _unlockedCharacters.Add(characterKilled);
                     OnWantedKilled?.Invoke(characterKilled.WantedName);
+                    _audioManager?.PlaySFXClip(SFXClipType.WantedKilled);
                     //Debug.Log("You killed " + characterKilled.WantedName + ". Ratio: " + (float)characterKilled.WantedLevel / level);
                 }
             }

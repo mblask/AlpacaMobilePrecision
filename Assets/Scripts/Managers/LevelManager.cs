@@ -60,6 +60,7 @@ public class LevelManager : MonoBehaviour
     private Transform _obstacleDestroyerTransform;
 
     private GameAssets _gameAssets;
+    private AudioManager _audioManager;
 
     private string _obstacleLayerMaskName = "Obstacle";
     private string _characterLayerMaskName = "Character";
@@ -90,6 +91,7 @@ public class LevelManager : MonoBehaviour
 
         _mainCamera = Camera.main;
         _gameAssets = GameAssets.Instance;
+        _audioManager = AudioManager.Instance;
 
         _numOfCharacters = _initialNumOfCharacters;
         _numOfObstacles = _initialNumOfObstacles;
@@ -100,6 +102,8 @@ public class LevelManager : MonoBehaviour
         //Testing purposes
         if (_spawnSingleCharacter)
             initializeObjects(_gameAssets.CharacterObject, 1, getLayerMask(_characterLayerMaskName));
+
+        _audioManager.PlayMusicClip();
     }
 
     private void OnDestroy()
@@ -169,7 +173,8 @@ public class LevelManager : MonoBehaviour
             loadLevel(_levelNumber);
             InvokeRepeating(nameof(fadeCharacter), UnityEngine.Random.Range(0.5f, 2.0f), UnityEngine.Random.Range(0.5f, 1.0f));
         }
-        
+
+        _audioManager.PlayMusicClip();
         OnInitializeGame?.Invoke();
     }
 

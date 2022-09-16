@@ -60,8 +60,6 @@ public class AchievementsMenuUI : MonoBehaviour
         if (highscore == null)
             return;
 
-        Debug.Log(highscore.Date);
-
         _highscoreNumberText.SetText(highscore.Score.ToString("F0"));
         _highscoreDateText.SetText(highscore.Date);
     }

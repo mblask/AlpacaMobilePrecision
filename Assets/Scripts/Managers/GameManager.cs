@@ -225,11 +225,11 @@ public class GameManager : MonoBehaviour
         switch (gameOverType)
         {
             case GameOverType.Victory:
-                _audioManager?.PlaySFXClip(AudioType.Victory);
+                _audioManager?.PlaySFXClip(SFXClipType.Victory);
                 Debug.LogError("Victory!!");
                 break;
             case GameOverType.Failure:
-                _audioManager?.PlaySFXClip(AudioType.Failure);
+                _audioManager?.PlaySFXClip(SFXClipType.Failure);
                 Debug.LogError("Game Over");
                 break;
             default:
@@ -299,6 +299,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < numOfExplosions; i++)
         {
             Instantiate(GameAssets.Instance.GlobalDestructionPS, Utilities.GetRandomWorldPosition(), Quaternion.identity, null);
+            _audioManager.PlaySFXClip(SFXClipType.Explosion);
         }
 
         //shake camera

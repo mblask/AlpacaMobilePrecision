@@ -462,8 +462,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 46
+  m_fontSizeBase: 46
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -845,8 +845,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -20}
-  m_SizeDelta: {x: 450, y: 100}
+  m_AnchoredPosition: {x: 0, y: -30}
+  m_SizeDelta: {x: 450, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &61348058
 MonoBehaviour:
@@ -1887,6 +1887,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 146113539}
+  - component: {fileID: 146113540}
   m_Layer: 5
   m_Name: VolumeMenuUI
   m_TagString: Untagged
@@ -1919,6 +1920,18 @@ RectTransform:
   m_AnchoredPosition: {x: -768, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &146113540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146113538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51fa7adb80c94584cb8f27acaf3aa43e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &156041040
 GameObject:
   m_ObjectHideFlags: 0
@@ -2961,8 +2974,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 46
+  m_fontSizeBase: 46
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4841,9 +4854,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayMessages: 1
   Urgents:
-  - Review the slider changes and the mute buttons!
-  - Review level settings!
-  - Review character, obstacle changes through levels!
+  - 'Add music: main menu, game'
+  - Review level settings!, review character, obstacle changes through levels!
   - UnityAds -> last step
   NonUrgents: []
 --- !u!4 &502288634
@@ -5985,7 +5997,7 @@ MonoBehaviour:
   _spawnAffiliationTrigger: 0
   _charactersSpawnNewCharacters: 0
   _initializeLevelNumber: 1
-  _levelNumber: 1
+  _levelNumber: 15
   _numOfObstacles: 0
   _numOfCharacters: 0
 --- !u!4 &625671165
@@ -6039,8 +6051,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 180}
-  m_SizeDelta: {x: 450, y: 100}
+  m_AnchoredPosition: {x: 0, y: 160}
+  m_SizeDelta: {x: 450, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &642025973
 MonoBehaviour:
@@ -8109,7 +8121,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 80}
+  m_AnchoredPosition: {x: 0, y: 70}
   m_SizeDelta: {x: 400, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &929602240
@@ -8159,7 +8171,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.6
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -11659,7 +11671,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.6
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -12190,16 +12202,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BulletMark: {fileID: 5160613043861113338, guid: 10d22d660b4eb0841b6bcead628d2af1,
     type: 3}
-  AffiliationTrigger: {fileID: 7955296327686602404, guid: 55c21b9cb48d9f8459e3937a2d56c362,
+  AffiliationTrigger: {fileID: 7955296327686602404, guid: b7bfe17249b3cd140b504a8ee54aed5c,
     type: 3}
-  CharacterObject: {fileID: 3216832492176375243, guid: bd784eb90daa67349a4fc77cf74f7e8d,
+  CharacterObject: {fileID: 3216832492176375243, guid: 824930debec1c254e9f393fb1bb89798,
     type: 3}
-  ObstacleObject: {fileID: 3360535773746258495, guid: b17095fc51c4ce64e9aec19b38c87abe,
+  ObstacleObject: {fileID: 3360535773746258495, guid: 3eb617f83cfbb564cb09bbc67f272770,
     type: 3}
-  ObstacleDestroyer: {fileID: 2532073248851909070, guid: 3e5c56450fd4a1c49bc32d868e6bcd75,
+  ObstacleDestroyer: {fileID: 2532073248851909070, guid: bc939d1e6c8aab34193674995b597f1d,
     type: 3}
   DestructionArea: {fileID: 4919671982406009828, guid: b2c69603470892d418332cfa159be020,
     type: 3}
+  CharacterSprites:
+  - {fileID: 21300000, guid: 3241c6f670495f947b27209cbefef52e, type: 3}
+  - {fileID: 21300000, guid: 5a9865c5022639f43a23ab7e0a37f787, type: 3}
+  ObstacleSprites:
+  - {fileID: 21300000, guid: 1b16056a7cc4614468bd5ec4941f0b57, type: 3}
+  - {fileID: 21300000, guid: 503d6858984bb8b4e8b44cdd4239ab04, type: 3}
+  - {fileID: 21300000, guid: 36b5dc38e13e04e4bac72d3a6f83af53, type: 3}
+  AffiliationTriggerSprites:
+  - {fileID: 21300000, guid: 1343128bf0ed20945a9b93c843c5da71, type: 3}
+  ObstacleDestroyerSprites:
+  - {fileID: 21300000, guid: 4830011ed8f24e84185e224176cfb42a, type: 3}
   WantedCharacterUI: {fileID: 1003979447621054587, guid: d8cfec69aba34434dae66a57dc89da5c,
     type: 3}
   AchievementUI: {fileID: 6842623321435528591, guid: a8988c2e3af89554ca3c3f65e5b60e9c,
@@ -14861,6 +14884,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainMixer: {fileID: 24100000, guid: 798e0ffd93164ef428641d4ec03694e9, type: 2}
+  _musicClips:
+  - {fileID: 8300000, guid: 862fa9378838f87459a9685edcc88182, type: 3}
+  - {fileID: 8300000, guid: 5fd111fba76ab304d90fe2bcce17a5ac, type: 3}
+  - {fileID: 8300000, guid: d198c0b432df9204c902f724f754db90, type: 3}
   _characterKilled:
   - {fileID: 8300000, guid: 4ed1a9a184c77914ea8c3ac50c2b1a8d, type: 3}
   - {fileID: 8300000, guid: d312b5d79414f194b8ed3c88a12a6976, type: 3}
@@ -14872,12 +14899,17 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bdd9f60510895684e843235e2cceee4b, type: 3}
   - {fileID: 8300000, guid: a48c1f6922de5944ba3f49323f6b645a, type: 3}
   - {fileID: 8300000, guid: 97b6f1112c8cd9045a991bd425aa979d, type: 3}
+  _explosions:
+  - {fileID: 8300000, guid: 7f75614c48eb1c94da2b53eca81b8f9c, type: 3}
+  - {fileID: 8300000, guid: 57e25bacba4929344b51b03fa4a132f4, type: 3}
+  - {fileID: 8300000, guid: a06d80098b68fb14c8ec097b0288f762, type: 3}
+  - {fileID: 8300000, guid: fece082f8f01e1843859707813a11efa, type: 3}
   _victory: {fileID: 0}
   _failure: {fileID: 0}
-  _spawning: {fileID: 0}
-  _dissolving: {fileID: 0}
+  _spawning: {fileID: 8300000, guid: 2435e2df3fc523e47a9b22715eaf2595, type: 3}
   _gunshot: {fileID: 8300000, guid: 76981588b9727d246b3b6812f3bab25e, type: 3}
-  _wantedKilled: {fileID: 0}
+  _wantedKilled: {fileID: 8300000, guid: 457c7008ef77b2e41b22238ac231fc20, type: 3}
+  _achievementScored: {fileID: 8300000, guid: 84266891a407bba41a3c406d2eeb091a, type: 3}
 --- !u!4 &2056777601
 Transform:
   m_ObjectHideFlags: 0

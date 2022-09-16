@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using AlpacaMyGames;
+using System;
 
 public enum AudioType
+{
+    Master,
+    SFX,
+    Music,
+}
+
+public enum SFXClipType
 {
     CharacterKilled,
     ObstacleHit,
@@ -12,9 +20,22 @@ public enum AudioType
     Victory,
     Failure,
     Spawning,
-    Disolving,
     Gunshot,
     WantedKilled,
+    AchievementScored,
+    Explosion,
+}
+
+public enum MusicClipType
+{
+    MainMenu,
+}
+
+public class AudioProperties
+{
+    public AudioType AudioType;
+    public bool IsMuted;
+    public float Volume;
 }
 
 public class AudioManager : MonoBehaviour
@@ -28,18 +49,26 @@ public class AudioManager : MonoBehaviour
             return _instance;
         }
     }
+
+    public event Action<AudioProperties> OnToggleMuteAudio;
+
     [SerializeField] private AudioMixer _mainMixer;
 
-    [Header("Audio Clips")]
+    [Header("Music Clips")]
+    //[SerializeField] private AudioClip _mainMenuMusic;
+    [SerializeField] private List<AudioClip> _musicClips;
+
+    [Header("SFX Clips")]
     [SerializeField] private List<AudioClip> _characterKilled;
     [SerializeField] private List<AudioClip> _obstacleHit;
     [SerializeField] private List<AudioClip> _obstacleSmashed;
+    [SerializeField] private List<AudioClip> _explosions;
     [SerializeField] private AudioClip _victory;
     [SerializeField] private AudioClip _failure;
     [SerializeField] private AudioClip _spawning;
-    [SerializeField] private AudioClip _dissolving;
     [SerializeField] private AudioClip _gunshot;
     [SerializeField] private AudioClip _wantedKilled;
+    [SerializeField] private AudioClip _achievementScored;
 
     private string _sfxVolumeString = "SFXVolume";
     private string _musicVolumeString = "MusicVolume";
@@ -49,15 +78,17 @@ public class AudioManager : MonoBehaviour
 
     private bool _sfxMuted = false;
     private bool _musicMuted = false;
-    private float _previousSFXVolume;
-    private float _previousMusicVolume;
+
+    private float _minDBZVolume = -80.0f;
+    private float _lastSFXVolume;
+    private float _lastMusicVolume;
 
     public float SFXVolume
     {
         get
         {
             _mainMixer.GetFloat(_sfxVolumeString, out float value);
-            return value;
+            return Mathf.Pow(10.0f, value / 30.0f);
         }
 
         set
@@ -71,7 +102,7 @@ public class AudioManager : MonoBehaviour
         get
         {
             _mainMixer.GetFloat(_musicVolumeString, out float value);
-            return value;
+            return Mathf.Pow(10.0f, value / 30.0f);
         }
 
         set
@@ -88,38 +119,47 @@ public class AudioManager : MonoBehaviour
         _musicSource = transform.Find("MusicSource").GetComponent<AudioSource>();
     }
 
-    public void PlaySFXClip(AudioType audioType)
+    private void LateUpdate()
+    {
+        if (!_musicSource.isPlaying)
+            PlayMusicClip();
+    }
+
+    public void PlaySFXClip(SFXClipType sfxType)
     {
         AudioClip clip;
 
-        switch (audioType)
+        switch (sfxType)
         {
-            case AudioType.CharacterKilled:
+            case SFXClipType.CharacterKilled:
                 clip = _characterKilled.GetRandomElement();
                 break;
-            case AudioType.ObstacleHit:
+            case SFXClipType.ObstacleHit:
                 clip = _obstacleHit.GetRandomElement();
                 break;
-            case AudioType.ObstacleSmashed:
+            case SFXClipType.ObstacleSmashed:
                 clip = _obstacleSmashed.GetRandomElement();
                 break;
-            case AudioType.Victory:
+            case SFXClipType.Victory:
                 clip = _victory;
                 break;
-            case AudioType.Failure:
+            case SFXClipType.Failure:
                 clip = _failure;
                 break;
-            case AudioType.Spawning:
+            case SFXClipType.Spawning:
                 clip = _spawning;
                 break;
-            case AudioType.Disolving:
-                clip = _dissolving;
-                break;
-            case AudioType.Gunshot:
+            case SFXClipType.Gunshot:
                 clip = _gunshot;
                 break;
-            case AudioType.WantedKilled:
+            case SFXClipType.WantedKilled:
                 clip = _wantedKilled;
+                break;
+            case SFXClipType.AchievementScored:
+                clip = _achievementScored;
+                break;
+            case SFXClipType.Explosion:
+                clip = _explosions.GetRandomElement();
                 break;
             default:
                 clip = null;
@@ -130,15 +170,39 @@ public class AudioManager : MonoBehaviour
             _sfxSource.PlayOneShot(clip);
     }
 
+    public void PlayMusicClip()
+    {
+        _musicSource.Stop();
+        _musicSource.PlayOneShot(_musicClips.GetRandomElement());
+    }
+
     public void ToggleMuteSFX()
     {
         _sfxMuted = !_sfxMuted;
-        SFXVolume = _sfxMuted ? -80.0f : 0.0f;
+
+        if (_sfxMuted)
+        {
+            _lastSFXVolume = SFXVolume;
+            SFXVolume = _minDBZVolume;
+        }
+        else
+            SFXVolume = _lastSFXVolume;
+
+        OnToggleMuteAudio?.Invoke(new AudioProperties { AudioType = AudioType.SFX, IsMuted = _sfxMuted, Volume = _lastSFXVolume });
     }
 
     public void ToggleMuteMusic()
     {
         _musicMuted = !_musicMuted;
-        MusicVolume = _musicMuted ? -80.0f : 0.0f;
+
+        if (_musicMuted)
+        {
+            _lastMusicVolume = MusicVolume;
+            MusicVolume = _minDBZVolume;
+        }
+        else
+            MusicVolume = _lastMusicVolume;
+
+        OnToggleMuteAudio?.Invoke(new AudioProperties { AudioType = AudioType.Music, IsMuted = _musicMuted, Volume = _lastMusicVolume });
     }
 }

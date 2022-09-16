@@ -73,7 +73,7 @@ public class CharacterSpawning : MonoBehaviour, ISpawnCharacters
         movement.SetCharacterSpeed(_characterMovement.GetCharacterSpeed());
         movement.ActivateRotation();
 
-        _audioManager?.PlaySFXClip(AudioType.Spawning);
+        _audioManager?.PlaySFXClip(SFXClipType.Spawning);
     }
 
     public void ActivateSpawning(bool value)

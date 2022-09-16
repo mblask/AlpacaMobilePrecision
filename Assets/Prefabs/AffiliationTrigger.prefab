@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterType: 2
+  _triggerOn: 1
 --- !u!114 &7955296327686602427
 MonoBehaviour:
   m_ObjectHideFlags: 0

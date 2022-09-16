@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using AlpacaMyGames;
 
 public enum ObstacleType
 {
@@ -28,6 +29,7 @@ public class Obstacle : MonoBehaviour, IDamagable
     private void Awake()
     {
         _spriteRenderer = transform.Find("ObstacleBody").GetComponent<SpriteRenderer>();
+        _spriteRenderer.sprite = GameAssets.Instance.ObstacleSprites.GetRandomElement();
         _obstacleAnimation = GetComponent<ObjectAnimation>();
     }
 
@@ -44,7 +46,7 @@ public class Obstacle : MonoBehaviour, IDamagable
     {
         _obstacleHitPoint--;
         _obstacleAnimation.PlayAnimation(AnimationType.ContractRelease);
-        _audioManager?.PlaySFXClip(AudioType.ObstacleHit);
+        _audioManager?.PlaySFXClip(SFXClipType.ObstacleHit);
 
         if (_obstacleHitPoint <= 0 && _obstacleType.Equals(ObstacleType.Fragile))
             DestroyObstacle();
@@ -53,8 +55,8 @@ public class Obstacle : MonoBehaviour, IDamagable
     public void DestroyObstacle()
     {
         OnObstacleDestroy?.Invoke(this);
-        OnParticleSystemToSpawn?.Invoke(new PSProperties { PSposition = transform.position, PSType = PSType.Destroy, PSColor = getObstacleColor(_obstacleType) });
-        _audioManager?.PlaySFXClip(AudioType.ObstacleSmashed);
+        OnParticleSystemToSpawn?.Invoke(new PSProperties { PSposition = transform.position, PSType = PSType.Destroy, PSColor = getObstacleColor(_obstacleType), PSTextureType = PSTextureType.Obstacle });
+        _audioManager?.PlaySFXClip(SFXClipType.ObstacleSmashed);
         Destroy(gameObject);
     }
 
