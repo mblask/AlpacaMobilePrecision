@@ -20,35 +20,14 @@ public class VolumeMenuUI : MonoBehaviour
 
     private void Start()
     {
-        AudioManager.Instance.OnToggleMuteAudio += onToggleMuteAudio;
-
         _sfxVolumeSlider.onValueChanged.AddListener(onSFXSliderValueChanged);
         _musicVolumeSlider.onValueChanged.AddListener(onMusicSliderValueChanged);
     }
 
     private void OnDisable()
     {
-        AudioManager.Instance.OnToggleMuteAudio -= onToggleMuteAudio;
-
         _sfxVolumeSlider.onValueChanged.RemoveAllListeners();
         _musicVolumeSlider.onValueChanged.RemoveAllListeners();
-    }
-
-    private void onToggleMuteAudio(AudioProperties audioProperties)
-    {
-        switch (audioProperties.AudioType)
-        {
-            case AudioType.Master:
-                break;
-            case AudioType.SFX:
-                _sfxVolumeSlider.value = audioProperties.IsMuted ? _sfxVolumeSlider.minValue : audioProperties.Volume;
-                break;
-            case AudioType.Music:
-                _musicVolumeSlider.value = audioProperties.IsMuted ? _musicVolumeSlider.minValue : audioProperties.Volume;
-                break;
-            default:
-                break;
-        }
     }
 
     private void onSFXSliderValueChanged(float value)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System;
 
@@ -14,17 +15,21 @@ public class WantedCharacterUI : MonoBehaviour
 
     private TextMeshProUGUI _buttonText;
     private IsLockedPanelUI _isLockedPanelUI;
+    private Image _buttonImage;
 
     private void Awake()
     {
         _buttonText = transform.Find("WantedCharacterButton").Find("ButtonText").GetComponent<TextMeshProUGUI>();
         _isLockedPanelUI = transform.Find("IsLockedPanelUI").GetComponent<IsLockedPanelUI>();
+        _buttonImage = transform.Find("WantedCharacterButton").GetComponent<Image>();
     }
 
     public void SetupUI(WantedCharacter wantedCharacter)
     {
         _wantedCharacter = wantedCharacter;
         setButtonText(wantedCharacter.WantedName);
+        if (wantedCharacter.WantedImage != null)
+            _buttonImage.sprite = wantedCharacter.WantedImage;
     }
 
     private void setButtonText(string text)

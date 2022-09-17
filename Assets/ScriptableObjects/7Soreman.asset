@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: Soreman
   WantedLevel: 7
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 24337776e5a7f0647891920866eb0233, type: 3}

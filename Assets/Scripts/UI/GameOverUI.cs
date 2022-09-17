@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using AlpacaMyGames;
 
 public class GameOverUI : MonoBehaviour
 {
@@ -51,7 +52,7 @@ public class GameOverUI : MonoBehaviour
 
     private void gameOverOnTime()
     {
-        _gameOverText.SetText(_gameOverOnTimeMessages[Random.Range(0, _gameOverOnTimeMessages.Count)]);
+        _gameOverText.SetText(_gameOverOnTimeMessages.GetRandomElement());
     }
 
     private void changeGameOverTextOnWorldDestruction()
@@ -59,7 +60,7 @@ public class GameOverUI : MonoBehaviour
         if (_randomGameOverText)
         {
             setTextColor(Color.red);
-            _gameOverText.SetText(_gameOverMessages[Random.Range(0, _gameOverMessages.Count)]);
+            _gameOverText.SetText(_gameOverMessages.GetRandomElement());
         }
     }
 
@@ -68,7 +69,7 @@ public class GameOverUI : MonoBehaviour
         if (_randomGameOverText)
         {
             setTextColor(Color.cyan);
-            _gameOverText.SetText(_gameVictoryMessages[Random.Range(0, _gameVictoryMessages.Count)]);
+            _gameOverText.SetText(_gameVictoryMessages.GetRandomElement());
         }
     }
 

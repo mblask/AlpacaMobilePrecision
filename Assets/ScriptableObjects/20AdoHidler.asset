@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: Ado Hidler
   WantedLevel: 20
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 97465bab89d5508489f07d4b59d2ce63, type: 3}

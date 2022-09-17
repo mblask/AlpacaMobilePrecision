@@ -62,7 +62,6 @@ public class WantedListManager : MonoBehaviour
                     _unlockedCharacters.Add(characterKilled);
                     OnWantedKilled?.Invoke(characterKilled.WantedName);
                     _audioManager?.PlaySFXClip(SFXClipType.WantedKilled);
-                    //Debug.Log("You killed " + characterKilled.WantedName + ". Ratio: " + (float)characterKilled.WantedLevel / level);
                 }
             }
         }

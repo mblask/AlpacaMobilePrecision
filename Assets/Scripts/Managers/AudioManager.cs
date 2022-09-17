@@ -26,18 +26,6 @@ public enum SFXClipType
     Explosion,
 }
 
-public enum MusicClipType
-{
-    MainMenu,
-}
-
-public class AudioProperties
-{
-    public AudioType AudioType;
-    public bool IsMuted;
-    public float Volume;
-}
-
 public class AudioManager : MonoBehaviour
 {
     private static AudioManager _instance;
@@ -50,12 +38,9 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public event Action<AudioProperties> OnToggleMuteAudio;
-
     [SerializeField] private AudioMixer _mainMixer;
 
     [Header("Music Clips")]
-    //[SerializeField] private AudioClip _mainMenuMusic;
     [SerializeField] private List<AudioClip> _musicClips;
 
     [Header("SFX Clips")]
@@ -70,18 +55,35 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _wantedKilled;
     [SerializeField] private AudioClip _achievementScored;
 
+    private string _masterVolumeString = "MasterVolume";
     private string _sfxVolumeString = "SFXVolume";
     private string _musicVolumeString = "MusicVolume";
 
     private AudioSource _sfxSource;
     private AudioSource _musicSource;
 
+    private bool _masterMuted = false;
     private bool _sfxMuted = false;
     private bool _musicMuted = false;
 
     private float _minDBZVolume = -80.0f;
+    private float _lastMasterVolume;
     private float _lastSFXVolume;
     private float _lastMusicVolume;
+
+    public float MasterVolume
+    {
+        get
+        {
+            _mainMixer.GetFloat(_masterVolumeString, out float value);
+            return Mathf.Pow(10.0f, value / 30.0f);
+        }
+
+        set
+        {
+            _mainMixer.SetFloat(_masterVolumeString, Mathf.Log10(value) * 30.0f);
+        }
+    }
 
     public float SFXVolume
     {
@@ -176,33 +178,60 @@ public class AudioManager : MonoBehaviour
         _musicSource.PlayOneShot(_musicClips.GetRandomElement());
     }
 
+    private void toggleMute(AudioType audioType)
+    {
+        switch (audioType)
+        {
+            case AudioType.Master:
+                _masterMuted = !_masterMuted;
+
+                if (_masterMuted)
+                {
+                    _lastMasterVolume = MasterVolume;
+                    MasterVolume = _minDBZVolume;
+                }
+                else
+                    MasterVolume = _lastMasterVolume;
+                break;
+            case AudioType.SFX:
+                _sfxMuted = !_sfxMuted;
+
+                if (_sfxMuted)
+                {
+                    _lastSFXVolume = SFXVolume;
+                    SFXVolume = _minDBZVolume;
+                }
+                else
+                    SFXVolume = _lastSFXVolume;
+                break;
+            case AudioType.Music:
+                _musicMuted = !_musicMuted;
+
+                if (_musicMuted)
+                {
+                    _lastMusicVolume = MusicVolume;
+                    MusicVolume = _minDBZVolume;
+                }
+                else
+                    MusicVolume = _lastMusicVolume;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void ToggleMuteMaster()
+    {
+        toggleMute(AudioType.Master);
+    }
+
     public void ToggleMuteSFX()
     {
-        _sfxMuted = !_sfxMuted;
-
-        if (_sfxMuted)
-        {
-            _lastSFXVolume = SFXVolume;
-            SFXVolume = _minDBZVolume;
-        }
-        else
-            SFXVolume = _lastSFXVolume;
-
-        OnToggleMuteAudio?.Invoke(new AudioProperties { AudioType = AudioType.SFX, IsMuted = _sfxMuted, Volume = _lastSFXVolume });
+        toggleMute(AudioType.SFX);
     }
 
     public void ToggleMuteMusic()
     {
-        _musicMuted = !_musicMuted;
-
-        if (_musicMuted)
-        {
-            _lastMusicVolume = MusicVolume;
-            MusicVolume = _minDBZVolume;
-        }
-        else
-            MusicVolume = _lastMusicVolume;
-
-        OnToggleMuteAudio?.Invoke(new AudioProperties { AudioType = AudioType.Music, IsMuted = _musicMuted, Volume = _lastMusicVolume });
+        toggleMute(AudioType.Music);
     }
 }

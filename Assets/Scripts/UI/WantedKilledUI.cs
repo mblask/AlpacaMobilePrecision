@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class WantedKilledUI : MonoBehaviour
 {
     private Animator _animator;
     private TextMeshProUGUI _title;
+    private Image _image;
 
     private string _idleUp = "IdleUp";
     private string _pullDown = "PullDown";

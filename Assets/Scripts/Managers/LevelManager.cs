@@ -208,18 +208,15 @@ public class LevelManager : MonoBehaviour
         {
             Transform objectToSpawn = spawnObject(objectTransform);
 
-            if (listToStoreObjects != null)
-                listToStoreObjects.Add(objectToSpawn);
-
             if (Utilities.CheckObjectEnvironment(objectToSpawn, _objectMinDistance, layerToAvoid))
             {
-                if (listToStoreObjects != null)
-                    listToStoreObjects.Remove(objectToSpawn);
-
                 Destroy(objectToSpawn.gameObject);
                 i--;
                 continue;
             }
+
+            if (listToStoreObjects != null)
+                listToStoreObjects.Add(objectToSpawn);
 
             if (i == (numOfObjects - 1) && getCharacterTypeAmount(CharacterType.Negative) == 0)
             {
@@ -337,27 +334,6 @@ public class LevelManager : MonoBehaviour
         changeLevelSettings(levelNumber);
     }
 
-    private void alterLevelObstaclesAndCharactersPerLevel(int levelNumber)
-    {
-        if (levelNumber <= 5)
-        {
-            _numOfCharacters += 1;
-        }
-        else if (levelNumber > 5 && levelNumber <= 10)
-        {
-            _numOfCharacters += 1;
-            _numOfObstacles += 1;
-
-            _objectMinDistance *= 0.95f;
-        }
-        else if (levelNumber > 10 && levelNumber <= 15)
-        {
-            _numOfObstacles += 1;
-
-            _objectMinDistance *= 0.9f;
-        }
-    }
-
     //UPDATE THE PROCEDURE
     private void alterLevelObstacleCharacterSettings(int levelNumber)
     {
@@ -370,8 +346,18 @@ public class LevelManager : MonoBehaviour
 
         if (levelNumber > firstThresholdLevel && levelNumber <= 15)
         {
-            _numOfObstacles = (levelNumber - firstThresholdLevel + 1);
-            _objectMinDistance = Mathf.Pow(0.95f, levelNumber - firstThresholdLevel);
+            _numOfObstacles = Mathf.RoundToInt((levelNumber - firstThresholdLevel) / 2.0f) + 1;
+            _objectMinDistance = Mathf.Pow(0.95f, (levelNumber - firstThresholdLevel) / 2.0f);
+        }
+
+        if (levelNumber > 15 && levelNumber <= 25)
+        {
+            _numOfObstacles = Mathf.RoundToInt((levelNumber - 10) / 2.0f);
+        }
+
+        if (levelNumber > 25)
+        {
+            _numOfObstacles = Mathf.RoundToInt(levelNumber / 2.0f) - 10;
         }
     }
 
@@ -383,33 +369,24 @@ public class LevelManager : MonoBehaviour
             editLevelSettings(false, false, false);
             _accuracyRequiredToPassLevel = (levelNumber + 1) / 10.0f;
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 10, SpeedDistanceDependance = SpeedDistanceDependance.None }, _accuracyRequiredToPassLevel, 0.0f);
-
-            //OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
-            //OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 30, SpeedDistanceDependance = SpeedDistanceDependance.Medium });
         }
         else if (levelNumber >= 5 && levelNumber < 7)
         {
             //FADING, DESTROYER
             editLevelSettings(true, false, true);
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.Medium }, 0.0f, 0.0f);
-
-            //OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None });
         }
         else if (levelNumber >= 7 && levelNumber < 9)
         {
             //FADING, AFFILIATION, TIMER
             editLevelSettings(true, true, false);
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None }, 0.0f, 0.0f);
-
-            //OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None });
         }
         else if (levelNumber >= 9 && levelNumber < 12)
         {
             //SPEED, FADING, DESTROYER
             editLevelSettings(true, false, true);
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 15, SpeedDistanceDependance = SpeedDistanceDependance.Medium }, 0.0f, 0.0f);
-
-            //OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 40, SpeedDistanceDependance = SpeedDistanceDependance.Medium });
         }
         else if (levelNumber >= 12 && levelNumber < 15)
         {
@@ -417,17 +394,12 @@ public class LevelManager : MonoBehaviour
             editLevelSettings(true, true, false);
             float timerValue = 15.0f - (levelNumber - 12) * 2.0f;
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 20, SpeedDistanceDependance = SpeedDistanceDependance.High }, 0.0f, timerValue);
-
-            //OnActivateTimer?.Invoke(timerValue);
-            //OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 50, SpeedDistanceDependance = SpeedDistanceDependance.High });
         }
         else if (levelNumber >= 15 && levelNumber < 18)
         {
             //SPEED, FADING, AFFILIATION, DESTROYER, SPAWNING
             editLevelSettings(true, true, true);
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 25, SpeedDistanceDependance = SpeedDistanceDependance.Medium, CharactersSpawnNewCharacters = true }, 0.0f, 0.0f);
-
-            //OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 70, SpeedDistanceDependance = SpeedDistanceDependance.Medium, CharactersSpawnNewCharacters = true });
         }
         else if (levelNumber >= 18 && levelNumber < 22)
         {
@@ -435,11 +407,6 @@ public class LevelManager : MonoBehaviour
             editLevelSettings(true, true, true);
             float timerValue = Mathf.Floor(20.0f - (levelNumber - 18) * levelNumber / 25.0f);
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(12.0f * levelNumber / 10.0f), SpeedDistanceDependance = SpeedDistanceDependance.Medium, CharactersSpawnNewCharacters = false }, 0.0f, timerValue);
-
-            //OnActivateTimer?.Invoke(timerValue);
-            //OnCharacterLevelUp?.Invoke(
-            //    new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(25 * levelNumber / 10.0f), SpeedDistanceDependance = SpeedDistanceDependance.High, //CharactersSpawnNewCharacters = true }
-            //    );
         }
         else if (levelNumber >= 22 && levelNumber <= 35)
         {
@@ -448,12 +415,6 @@ public class LevelManager : MonoBehaviour
             _accuracyRequiredToPassLevel = levelNumber * 1.5f / 100.0f;
             float timerValue = Mathf.Floor(25.0f - (levelNumber - 22) * levelNumber / 30.0f);
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(9.0f * levelNumber / 10.0f), SpeedDistanceDependance = SpeedDistanceDependance.High, CharactersSpawnNewCharacters = true }, _accuracyRequiredToPassLevel, timerValue);
-
-            //OnActivateAccuracy?.Invoke(_accuracyRequiredToPassLevel);
-            //OnActivateTimer?.Invoke(timerValue);
-            //OnCharacterLevelUp?.Invoke(
-            //    new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(25 * levelNumber / 10.0f), SpeedDistanceDependance = SpeedDistanceDependance.High, //CharactersSpawnNewCharacters = true }
-            //    );
         }
         else
             return;

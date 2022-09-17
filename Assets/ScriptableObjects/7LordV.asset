@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: Lord V.
   WantedLevel: 7
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: d46d702bdca971f4f9ce9cbd5bce6549, type: 3}

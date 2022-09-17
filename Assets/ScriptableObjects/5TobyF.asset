@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: Toby F.
   WantedLevel: 5
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: cbbe0c32042c6cc44b466fd0c32603e6, type: 3}

@@ -33,6 +33,7 @@ public class TimeManager : MonoBehaviour
     {
         LevelManager.Instance.OnActivateTimer += activateTimer;
         GameManager.Instance.OnGameOver += stopTimer;
+        GameManager.Instance.OnQuitToMainMenu += stopTimer;
     }
 
     private void Update()
@@ -44,6 +45,7 @@ public class TimeManager : MonoBehaviour
     {
         LevelManager.Instance.OnActivateTimer -= activateTimer;
         GameManager.Instance.OnGameOver += stopTimer;
+        GameManager.Instance.OnQuitToMainMenu += stopTimer;
     }
 
     private void activateTimer(float timeValue)

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: Agent John
   WantedLevel: 8
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 6a67afa20d1fbcc419e55c400babef13, type: 3}

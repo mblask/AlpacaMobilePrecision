@@ -124,22 +124,6 @@ public class GameManager : MonoBehaviour
         OnSetDifficulty?.Invoke(lightIntensity);
     }
 
-    private float getCurrentLightIntensity()
-    {
-        int hour = DateTime.Now.Hour;
-        float maxIntensity = 1.0f;
-        float minIntensity = 0.15f;
-
-        float slope = (maxIntensity - minIntensity) / 12;
-        float intensity;
-        if (hour >= 0 && hour < 12)
-            intensity = minIntensity + slope * hour;
-        else
-            intensity = maxIntensity - slope * Mathf.Abs(12 - hour);
-
-        return intensity;
-    }
-
     private void OnDestroy()
     {
         Character.OnCharacterDestroyed -= updateScoreByCharacterType;
