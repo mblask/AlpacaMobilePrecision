@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     [Header("Read-only")]
     [SerializeField] private bool _updateScore = true;
 
-    private int _numberOfGamesPassed = 0;
+    private int _numberOfGameVictories = 0;
     private bool _gamePaused = false;
 
     private void Awake()
@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
         _audioManager = AudioManager.Instance;
         resetScore();
 
-        SaveManager.LoadProgress();
+        //SaveManager.LoadProgress();
     }
 
     private void LateUpdate()
@@ -185,8 +185,7 @@ public class GameManager : MonoBehaviour
         {
             case GameOverType.Victory:
                 _audioManager?.PlaySFXClip(SFXClipType.Victory);
-                _numberOfGamesPassed++;
-
+                _numberOfGameVictories++;
                 Debug.LogError("Victory!!");
                 break;
             case GameOverType.Failure:
@@ -203,6 +202,11 @@ public class GameManager : MonoBehaviour
 
         OnGameOver?.Invoke();
         EvaluateNewHighscore(finalScore);
+    }
+
+    public int GetNumberOfVictories()
+    {
+        return _numberOfGameVictories;
     }
 
     private void gameOverOnTime()

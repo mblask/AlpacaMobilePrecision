@@ -10,6 +10,8 @@ public class AchievementsMenuUI : MonoBehaviour
 
     private TextMeshProUGUI _highscoreNumberText;
     private TextMeshProUGUI _highscoreDateText;
+    private Transform _gameVictoriesContainer;
+    private TextMeshProUGUI _numberOfGameVictoriesText;
 
     private GameManager _gameManager;
 
@@ -18,6 +20,8 @@ public class AchievementsMenuUI : MonoBehaviour
         _achievementsUIContainer = transform.Find("Container").Find("Achievements").Find("AchievementsContainer");
         _highscoreNumberText = transform.Find("Container").Find("Highscore").Find("HighscoreNumber").GetComponent<TextMeshProUGUI>();
         _highscoreDateText = transform.Find("Container").Find("Highscore").Find("HighscoreDate").GetComponent<TextMeshProUGUI>();
+        _gameVictoriesContainer = transform.Find("Container").Find("GamePassed");
+        _numberOfGameVictoriesText = _gameVictoriesContainer.Find("NumberText").GetComponent<TextMeshProUGUI>();
     }
 
     void OnEnable()
@@ -29,6 +33,7 @@ public class AchievementsMenuUI : MonoBehaviour
     private void updateAchievements()
     {
         updateHighscoreNumber(_gameManager.GetCurrentHighscore());
+        updateGamePassedNumberTimes(_gameManager.GetNumberOfVictories());
 
         if (_achievementsUIContainer.childCount != 0)
         {
@@ -62,5 +67,16 @@ public class AchievementsMenuUI : MonoBehaviour
 
         _highscoreNumberText.SetText(highscore.Score.ToString("F0"));
         _highscoreDateText.SetText(highscore.Date);
+    }
+
+    private void updateGamePassedNumberTimes(int numberOfPasses)
+    {
+        if (numberOfPasses > 0)
+        {
+            _gameVictoriesContainer.gameObject.SetActive(true);
+
+            string timeString = (numberOfPasses > 1) ? " times" : " time";
+            _numberOfGameVictoriesText.SetText(numberOfPasses.ToString() + timeString);
+        }
     }
 }

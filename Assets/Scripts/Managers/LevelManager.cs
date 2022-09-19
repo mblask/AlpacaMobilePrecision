@@ -46,10 +46,10 @@ public class LevelManager : MonoBehaviour
     private int _initialNumOfObstacles = 1;
     private int _initialNumOfCharacters = 1;
 
-    [Header("Read-only")]
+    [Header("Read-only and testing")]
     [SerializeField] private int _levelNumber = 1;
-    [SerializeField] private int _numOfObstacles;
-    [SerializeField] private int _numOfCharacters;
+    private int _numOfObstacles;
+    private int _numOfCharacters;
 
     private List<Transform> _obstaclesList = new List<Transform>();
     private List<Transform> _charactersList = new List<Transform>();
@@ -72,10 +72,9 @@ public class LevelManager : MonoBehaviour
     private float _accuracyRequiredToPassLevel = 0.0f;
     private float _currentAccuracy = 0.0f;
 
-    private bool _lvl15CheckpointReached = false;
-    private bool _lvl25CheckpointReached = false;
+    [SerializeField] private bool _useCheckpoints = true;
     private Checkpoint _checkpoint1 = new Checkpoint(15, false);
-    private Checkpoint _checkpoint2 = new Checkpoint(25, false);
+    private Checkpoint _checkpoint2 = new Checkpoint(30, false);
 
     private bool _gameRunning = true;
     private bool _checkLevelCompletion = true;
@@ -156,6 +155,9 @@ public class LevelManager : MonoBehaviour
             loadLevel(_initializeLevelNumber);
         else
         {
+            if (_useCheckpoints && getLastCheckpoint() != 0 && _levelNumber < getLastCheckpoint())
+                _levelNumber = getLastCheckpoint();
+
             if (_levelNumber == 1)
             {
                 resetGameSettings();
@@ -269,13 +271,10 @@ public class LevelManager : MonoBehaviour
             adExample.ShowAd();
         }
 
-        if (_checkpoint1.CheckpointUnlocked)
-        {            
-            if (_checkpoint2.CheckpointUnlocked)
-                loadLevel(_checkpoint2.CheckpointLevel);
-            else
-                loadLevel(_checkpoint1.CheckpointLevel);
-
+        //if any checkpoint is unlocked it will load the checkpoint level
+        if (_useCheckpoints && getLastCheckpoint() != 0)
+        {
+            loadLevel(getLastCheckpoint());
             return;
         }
 
@@ -284,6 +283,19 @@ public class LevelManager : MonoBehaviour
         OnGameReload?.Invoke();
 
         initializePlayground();
+    }
+
+    private int getLastCheckpoint()
+    {
+        if (_checkpoint1.CheckpointUnlocked)
+        {
+            if (_checkpoint2.CheckpointUnlocked)
+                return _checkpoint2.CheckpointLevel;
+            else
+                return _checkpoint1.CheckpointLevel;
+        }
+
+        return 0;
     }
 
     private void beforeLoadNewLevel()
@@ -299,26 +311,25 @@ public class LevelManager : MonoBehaviour
     {
         _levelNumber++;
 
-        if (_levelNumber >= _checkpoint1.CheckpointLevel)
-        {
-            _checkpoint1.CheckpointUnlocked = true;
-            _lvl15CheckpointReached = true;
-        }
-
-        if (_levelNumber >= _checkpoint2.CheckpointLevel)
-        {
-            _checkpoint2.CheckpointUnlocked = true;
-            _lvl25CheckpointReached = true;
-        }
-
         if (_levelNumber <= 35)
             loadLevel(_levelNumber);
         else
+        {
+            _checkpoint1.CheckpointUnlocked = false;
+            _checkpoint2.CheckpointUnlocked = false;
+
             OnGamePassed?.Invoke();
+        }
     }
 
     private void loadLevel(int levelNumber)
     {
+        if (levelNumber == 0)
+            return;
+
+        _checkpoint1.CheckpointUnlocked = _levelNumber >= _checkpoint1.CheckpointLevel;
+        _checkpoint2.CheckpointUnlocked = _levelNumber >= _checkpoint2.CheckpointLevel;
+
         _levelNumber = levelNumber;
         OnLoadLevel?.Invoke(levelNumber);
 
