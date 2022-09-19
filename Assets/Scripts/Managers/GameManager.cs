@@ -16,21 +16,6 @@ public enum Difficulty
     Ridiculous,
 }
 
-[Serializable]
-public class Highscore
-{
-    public float Score = 0.0f;
-    public string Date = "On 1 January 2000";
-}
-
-public class TotalScore
-{
-    public int Score;
-    public int Level;
-    public float Accuracy;
-    public float TimeRemaining;
-}
-
 public class GameManager : MonoBehaviour
 {
     public event Action<int> OnScoreUpdate;
@@ -68,6 +53,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Read-only")]
     [SerializeField] private bool _updateScore = true;
+
+    private int _numberOfGamesPassed = 0;
     private bool _gamePaused = false;
 
     private void Awake()
@@ -136,18 +123,6 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.OnTimeIsOut -= gameOverOnTime;
         DifficultyUI.OnDifficultyChanged -= setDifficulty;
     }
-
-    private void gameOverOnTime()
-    {
-        gameOver(GameOverType.Failure);
-        OnGameOverOnTime?.Invoke();
-    }
-
-    private void gameManager_onLoadLevel(int level)
-    {
-        resetAffiliationChanged();
-    }
-
     private void updateScoreByObstacle(Obstacle obstacle)
     {
         updateScore(_fragileObstHit);
@@ -178,17 +153,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-
-    public bool GetUpdateScore()
-    {
-        return _updateScore;
-    }
-
-    public void SetUpdateScore(bool value)
-    {
-        _updateScore = value;
-    }
-
+    
     private void updateScore(int scoreIncrement)
     {
         if (!_updateScore)
@@ -197,19 +162,31 @@ public class GameManager : MonoBehaviour
         _score += scoreIncrement;
         OnScoreUpdate?.Invoke(_score);
     }
-
+    
     private void resetScore()
     {
         _score = 0;
         OnScoreUpdate?.Invoke(_score);
     }
+    
+    public void SetUpdateScore(bool value)
+    {
+        _updateScore = value;
+    }
 
+    private void gameManager_onLoadLevel(int level)
+    {
+        resetAffiliationChanged();
+    }
+    
     private void gameOver(GameOverType gameOverType)
     {
         switch (gameOverType)
         {
             case GameOverType.Victory:
                 _audioManager?.PlaySFXClip(SFXClipType.Victory);
+                _numberOfGamesPassed++;
+
                 Debug.LogError("Victory!!");
                 break;
             case GameOverType.Failure:
@@ -220,22 +197,48 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        //get level number, current score, accuracy, time remaining
         TotalScore totalScore = new TotalScore { Level = LevelManager.GrabLevel(), Accuracy = HitManager.GrabPlayerAccuracy(), Score = _score, TimeRemaining = TimeManager.GrabTimerValue() };
 
-        //calculate final score
         float finalScore = calculateFinalScore(totalScore);
 
-        //send final score to the GameOverUI
         OnGameOver?.Invoke();
         EvaluateNewHighscore(finalScore);
     }
 
+    private void gameOverOnTime()
+    {
+        gameOver(GameOverType.Failure);
+        OnGameOverOnTime?.Invoke();
+    }
+    
     private void gamePassed()
     {
         gameOver(GameOverType.Victory);
     }
 
+    private void destroyWorld()
+    {
+        //create explosions
+        int numOfExplosions = 4;
+        for (int i = 0; i < numOfExplosions; i++)
+        {
+            Instantiate(GameAssets.Instance.GlobalDestructionPS, Utilities.GetRandomWorldPosition(), Quaternion.identity, null);
+            _audioManager.PlaySFXClip(SFXClipType.Explosion);
+        }
+
+        //shake camera
+        OnWorldDestruction?.Invoke();
+    }
+
+    private float calculateFinalScore(TotalScore totalScore)
+    {
+        float finalScore = totalScore.Level * (totalScore.Score + totalScore.Accuracy);
+        if (totalScore.TimeRemaining > 0.0f)
+            finalScore += totalScore.Level * totalScore.TimeRemaining;
+
+        return finalScore;
+    }
+    
     public void EvaluateNewHighscore(float highscore)
     {
         if (_currentHighscore.Score < highscore)
@@ -265,29 +268,6 @@ public class GameManager : MonoBehaviour
     public Highscore GetCurrentHighscore()
     {
         return _currentHighscore;
-    }
-
-    private float calculateFinalScore(TotalScore totalScore)
-    {
-        float finalScore = totalScore.Level * (totalScore.Score + totalScore.Accuracy);
-        if (totalScore.TimeRemaining > 0.0f)
-            finalScore += totalScore.Level * totalScore.TimeRemaining;
-
-        return finalScore;
-    }
-
-    private void destroyWorld()
-    {
-        //create explosions
-        int numOfExplosions = 4;
-        for (int i = 0; i < numOfExplosions; i++)
-        {
-            Instantiate(GameAssets.Instance.GlobalDestructionPS, Utilities.GetRandomWorldPosition(), Quaternion.identity, null);
-            _audioManager.PlaySFXClip(SFXClipType.Explosion);
-        }
-
-        //shake camera
-        OnWorldDestruction?.Invoke();
     }
 
     private void affiliationChangedThisLevel()

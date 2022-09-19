@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: The Tall Hill
   WantedLevel: 8
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 13c00a125f0e6084293536122976bef5, type: 3}

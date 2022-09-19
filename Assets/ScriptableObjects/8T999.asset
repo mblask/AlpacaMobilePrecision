@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: T-999
   WantedLevel: 8
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 46852249bcbc12f48a9504ec1763abd1, type: 3}

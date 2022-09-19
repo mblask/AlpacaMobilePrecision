@@ -3,14 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameProgress
-{
-    public int Level;
-    public List<WantedCharacter> WantedCharactersList;
-    public List<AchievementType> AchievementsList;
-    public Highscore Highscore;
-}
-
 public static class SaveManager
 {
     public static void SaveProgress()

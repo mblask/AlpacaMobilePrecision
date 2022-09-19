@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: Paul Escuchar
   WantedLevel: 15
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 439c31e142697b04cae286dbc88a6f97, type: 3}

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: Penny Clever
   WantedLevel: 8
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 45e29cbc74a595a46b05315bc3f7e35f, type: 3}

@@ -72,6 +72,11 @@ public class LevelManager : MonoBehaviour
     private float _accuracyRequiredToPassLevel = 0.0f;
     private float _currentAccuracy = 0.0f;
 
+    private bool _lvl15CheckpointReached = false;
+    private bool _lvl25CheckpointReached = false;
+    private Checkpoint _checkpoint1 = new Checkpoint(15, false);
+    private Checkpoint _checkpoint2 = new Checkpoint(25, false);
+
     private bool _gameRunning = true;
     private bool _checkLevelCompletion = true;
 
@@ -101,7 +106,7 @@ public class LevelManager : MonoBehaviour
 
         //Testing purposes
         if (_spawnSingleCharacter)
-            initializeObjects(_gameAssets.CharacterObject, 1, getLayerMask(_characterLayerMaskName));
+            initializeObjects(_gameAssets.CharacterObject, 1, Utilities.GetLayerMask(_characterLayerMaskName));
 
         _audioManager.PlayMusicClip();
     }
@@ -114,19 +119,6 @@ public class LevelManager : MonoBehaviour
         GameManager.Instance.OnQuitToMainMenu -= ClearGame;
         GameManager.Instance.OnGameOver -= resetGameSettings;
         PlayerTouchManager.Instance.OnDoubleTouch -= reloadGame;
-    }
-
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            //TESTING
-            if (_charactersList.Count != 0)
-            {
-                Transform randomCharacterTransform = _charactersList[UnityEngine.Random.Range(0, _charactersList.Count)];
-                randomCharacterTransform.GetComponentInChildren<IDamagable>().DamageThis();
-            }
-        }
     }
 
     private void addCharacterToList(Transform characterToAdd)
@@ -171,7 +163,7 @@ public class LevelManager : MonoBehaviour
             }
 
             loadLevel(_levelNumber);
-            InvokeRepeating(nameof(fadeCharacter), UnityEngine.Random.Range(0.5f, 2.0f), UnityEngine.Random.Range(0.5f, 1.0f));
+            InvokeRepeating(nameof(fadeCharacter), Utilities.RandomFloat(0.5f, 2.0f), Utilities.RandomFloat(0.5f, 1.0f));
         }
 
         _audioManager.PlayMusicClip();
@@ -183,8 +175,8 @@ public class LevelManager : MonoBehaviour
         ClearGame();
 
         //initializing new objects
-        initializeObjects(_gameAssets.ObstacleObject, _numOfObstacles, getLayerMask(_obstacleLayerMaskName), _obstaclesList);
-        initializeObjects(_gameAssets.CharacterObject, _numOfCharacters, getLayerMask(_characterLayerMaskName), _charactersList);
+        initializeObjects(_gameAssets.ObstacleObject, _numOfObstacles, Utilities.GetLayerMask(_obstacleLayerMaskName), _obstaclesList);
+        initializeObjects(_gameAssets.CharacterObject, _numOfCharacters, Utilities.GetLayerMask(_characterLayerMaskName), _charactersList);
 
         if (Utilities.ChanceFunc(90) && _initializeAffiliationTrigger)
             _affiliationTransform = spawnObject(_gameAssets.AffiliationTrigger);
@@ -233,18 +225,6 @@ public class LevelManager : MonoBehaviour
         return Instantiate(objectTransform, position, Quaternion.identity);
     }
 
-    private bool checkObjectEnvironment(Transform objectToCheck, float environmentRadius, LayerMask objectsToAvoid)
-    {
-        float scale = objectToCheck.localScale.x;
-
-        Collider2D[] hits = Physics2D.OverlapCircleAll(objectToCheck.position, environmentRadius * scale, objectsToAvoid);
-
-        if (hits.Length > 1)
-            return true;
-        else
-            return false;
-    }
-
     public List<Transform> GetObjectList(ObjectListType listType)
     {
         switch (listType)
@@ -287,7 +267,17 @@ public class LevelManager : MonoBehaviour
 
             adExample.LoadAd();
             adExample.ShowAd();
-        }            
+        }
+
+        if (_checkpoint1.CheckpointUnlocked)
+        {            
+            if (_checkpoint2.CheckpointUnlocked)
+                loadLevel(_checkpoint2.CheckpointLevel);
+            else
+                loadLevel(_checkpoint1.CheckpointLevel);
+
+            return;
+        }
 
         resetGameSettings();
 
@@ -308,6 +298,18 @@ public class LevelManager : MonoBehaviour
     private void loadNewLevel()
     {
         _levelNumber++;
+
+        if (_levelNumber >= _checkpoint1.CheckpointLevel)
+        {
+            _checkpoint1.CheckpointUnlocked = true;
+            _lvl15CheckpointReached = true;
+        }
+
+        if (_levelNumber >= _checkpoint2.CheckpointLevel)
+        {
+            _checkpoint2.CheckpointUnlocked = true;
+            _lvl25CheckpointReached = true;
+        }
 
         if (_levelNumber <= 35)
             loadLevel(_levelNumber);
@@ -334,7 +336,6 @@ public class LevelManager : MonoBehaviour
         changeLevelSettings(levelNumber);
     }
 
-    //UPDATE THE PROCEDURE
     private void alterLevelObstacleCharacterSettings(int levelNumber)
     {
         if (levelNumber <= 10)
@@ -460,11 +461,6 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public bool GetCheckLevelCompletion()
-    {
-        return _checkLevelCompletion;
-    }
-
     public void SetCheckLevelCompletion(bool value)
     {
         _checkLevelCompletion = value;
@@ -538,11 +534,6 @@ public class LevelManager : MonoBehaviour
             _obstaclesList.Remove(obstacle.transform);
     }
 
-    public void SetFadeCharacters(bool value)
-    {
-        _fadeCharacters = value;
-    }
-
     private void fadeCharacter()
     {
         if (_fadeCharacters && _gameRunning)
@@ -550,22 +541,12 @@ public class LevelManager : MonoBehaviour
             if (_charactersList.Count == 0)
                 return;
 
-            Transform characterTransform = _charactersList[UnityEngine.Random.Range(0, _charactersList.Count)];
+            Transform characterTransform = _charactersList.GetRandomElement();
             FadeObject fadeObject = characterTransform.GetComponent<FadeObject>();
 
             if (fadeObject != null)
                 fadeObject.ActivateFade(!fadeObject.IsInvisible());
         }
-    }
-
-    private LayerMask getLayerMask(string layerName)
-    {
-        return LayerMask.NameToLayer(layerName);
-    }
-
-    public bool IsGameRunning()
-    {
-        return _gameRunning;
     }
 
     public static int GrabLevel()

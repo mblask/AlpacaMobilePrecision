@@ -1,14 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
-public class TooltipParameters
-{
-    public Vector2 Position;
-    public string Title;
-    public string Description;
-}
 
 public class TooltipUI : MonoBehaviour
 {

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: Jeff Boreatheon
   WantedLevel: 15
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 53040ce5746b1324cb650409e6d26b94, type: 3}

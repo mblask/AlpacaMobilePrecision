@@ -4853,11 +4853,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayMessages: 1
   Urgents:
-  - Finish all wanted sketches!
-  - Review level settings!, review character, obstacle changes through levels!
+  - Review level settings!, review character changes through levels!
   - UnityAds -> last step
   NonUrgents:
   - Write couple of more game over on time texts and victory texts
+  - Implement games passed number and UI.
 --- !u!4 &502288634
 Transform:
   m_ObjectHideFlags: 0

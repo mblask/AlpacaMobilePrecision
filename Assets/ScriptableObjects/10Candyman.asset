@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b78a9dbd9699a3d49bdab04773b0d913, type: 3}
-  m_Name: 10MisterCandy
+  m_Name: 10Candyman
   m_EditorClassIdentifier: 
-  WantedName: Mister Candy
+  WantedName: Candyman
   WantedLevel: 10
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 75e1b4ed4e70848459d959795210bb82, type: 3}

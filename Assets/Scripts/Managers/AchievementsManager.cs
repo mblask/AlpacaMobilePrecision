@@ -19,15 +19,6 @@ public enum AchievementType
     Have100AccuracyAllGame,
 }
 
-[Serializable]
-public class Achievement
-{
-    public string AchievementName;
-    [TextArea] public string AchievementDescription;
-    public Sprite AchievementSprite;
-    public AchievementType AchievementType;
-}
-
 public class AchievementsManager : MonoBehaviour
 {
     private static AchievementsManager _instance;

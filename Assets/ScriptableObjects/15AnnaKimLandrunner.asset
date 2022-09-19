@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WantedName: Anna Kim Landrunner
   WantedLevel: 15
-  WantedImage: {fileID: 0}
+  WantedImage: {fileID: 21300000, guid: 48f03f194cb883b4ab1512c6db217197, type: 3}
