@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b78a9dbd9699a3d49bdab04773b0d913, type: 3}
-  m_Name: 20PaulPott
+  m_Name: 10TheTallHill
   m_EditorClassIdentifier: 
-  WantedName: Paul Pott
-  WantedLevel: 20
-  WantedImage: {fileID: 21300000, guid: 6d30d3cfe644d7a4dabfc5df47b8fa45, type: 3}
+  WantedName: The Tall Hill
+  WantedLevel: 10
+  WantedImage: {fileID: 21300000, guid: 13c00a125f0e6084293536122976bef5, type: 3}

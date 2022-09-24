@@ -6,7 +6,7 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Animator Override Controller
+  m_Name: WantedKilledAOC
   m_Controller: {fileID: 9100000, guid: 3e0ace249cd993a45ab9d5b14df6ed58, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: 63190cc69bf55e043b4fd25f75edb9cd, type: 2}

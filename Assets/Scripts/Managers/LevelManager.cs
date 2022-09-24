@@ -33,6 +33,7 @@ public class LevelManager : MonoBehaviour
     public Action<float> OnActivateTimer;
     public Action<float> OnActivateAccuracy;
     public Action OnGrabPlayerAccuracy;
+    public Action OnCheckpointReached;
 
     private Camera _mainCamera;
 
@@ -73,8 +74,9 @@ public class LevelManager : MonoBehaviour
     private float _currentAccuracy = 0.0f;
 
     [SerializeField] private bool _useCheckpoints = true;
-    private Checkpoint _checkpoint1 = new Checkpoint(15, false);
-    private Checkpoint _checkpoint2 = new Checkpoint(30, false);
+    private Checkpoint _checkpoint1 = new Checkpoint(10, false);
+    private Checkpoint _checkpoint2 = new Checkpoint(20, false);
+    private Checkpoint _checkpoint3 = new Checkpoint(30, false);
 
     private bool _gameRunning = true;
     private bool _checkLevelCompletion = true;
@@ -290,12 +292,24 @@ public class LevelManager : MonoBehaviour
         if (_checkpoint1.CheckpointUnlocked)
         {
             if (_checkpoint2.CheckpointUnlocked)
-                return _checkpoint2.CheckpointLevel;
+            {
+                if (_checkpoint3.CheckpointUnlocked)
+                    return _checkpoint3.CheckpointLevel;
+                else
+                    return _checkpoint2.CheckpointLevel;
+            }
             else
                 return _checkpoint1.CheckpointLevel;
         }
 
         return 0;
+    }
+
+    private void resetCheckpointsUnlocked()
+    {
+        _checkpoint1.CheckpointUnlocked = false;
+        _checkpoint2.CheckpointUnlocked = false;
+        _checkpoint3.CheckpointUnlocked = false;
     }
 
     private void beforeLoadNewLevel()
@@ -315,8 +329,7 @@ public class LevelManager : MonoBehaviour
             loadLevel(_levelNumber);
         else
         {
-            _checkpoint1.CheckpointUnlocked = false;
-            _checkpoint2.CheckpointUnlocked = false;
+            resetCheckpointsUnlocked();
 
             OnGamePassed?.Invoke();
         }
@@ -327,8 +340,24 @@ public class LevelManager : MonoBehaviour
         if (levelNumber == 0)
             return;
 
-        _checkpoint1.CheckpointUnlocked = _levelNumber >= _checkpoint1.CheckpointLevel;
-        _checkpoint2.CheckpointUnlocked = _levelNumber >= _checkpoint2.CheckpointLevel;
+        //Review and clean code!!!
+        if (levelNumber >= _checkpoint1.CheckpointLevel && !_checkpoint1.CheckpointUnlocked)
+        {
+            _checkpoint1.CheckpointUnlocked = true;
+            OnCheckpointReached?.Invoke();
+        }
+
+        if (levelNumber >= _checkpoint2.CheckpointLevel && !_checkpoint2.CheckpointUnlocked)
+        {
+            _checkpoint2.CheckpointUnlocked = true;
+            OnCheckpointReached?.Invoke();
+        }
+
+        if (levelNumber >= _checkpoint3.CheckpointLevel && !_checkpoint3.CheckpointUnlocked)
+        {
+            _checkpoint3.CheckpointUnlocked = true;
+            OnCheckpointReached?.Invoke();
+        }
 
         _levelNumber = levelNumber;
         OnLoadLevel?.Invoke(levelNumber);
@@ -402,23 +431,26 @@ public class LevelManager : MonoBehaviour
         }
         else if (levelNumber >= 12 && levelNumber < 15)
         {
-            //SPEED, FADING, AFFILIATION, TIMER
-            editLevelSettings(true, true, false);
+            //SPEED, ACCURACY, AFFILIATION, TIMER
+            editLevelSettings(false, true, false);
             float timerValue = 15.0f - (levelNumber - 12) * 2.0f;
-            editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 20, SpeedDistanceDependance = SpeedDistanceDependance.High }, 0.0f, timerValue);
+            _accuracyRequiredToPassLevel = levelNumber * 4.0f / 100.0f;
+            editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 20, SpeedDistanceDependance = SpeedDistanceDependance.High }, _accuracyRequiredToPassLevel, timerValue);
         }
         else if (levelNumber >= 15 && levelNumber < 18)
         {
-            //SPEED, FADING, AFFILIATION, DESTROYER, SPAWNING
-            editLevelSettings(true, true, true);
-            editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 25, SpeedDistanceDependance = SpeedDistanceDependance.Medium, CharactersSpawnNewCharacters = true }, 0.0f, 0.0f);
+            //SPEED, ACCURACY, AFFILIATION, DESTROYER, SPAWNING
+            editLevelSettings(false, true, true);
+            _accuracyRequiredToPassLevel = levelNumber * 3.0f / 100.0f;
+            editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = 25, SpeedDistanceDependance = SpeedDistanceDependance.Medium, CharactersSpawnNewCharacters = true }, _accuracyRequiredToPassLevel, 0.0f);
         }
         else if (levelNumber >= 18 && levelNumber < 22)
         {
             //SPEED, FADING, AFFILIATION, DESTROYER, TIMER, SPAWNING
             editLevelSettings(true, true, true);
             float timerValue = Mathf.Floor(20.0f - (levelNumber - 18) * levelNumber / 25.0f);
-            editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(12.0f * levelNumber / 10.0f), SpeedDistanceDependance = SpeedDistanceDependance.Medium, CharactersSpawnNewCharacters = false }, 0.0f, timerValue);
+            int speedIncrease = (int)Mathf.Floor(12.0f * levelNumber / 10.0f);
+            editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = speedIncrease, SpeedDistanceDependance = SpeedDistanceDependance.Medium, CharactersSpawnNewCharacters = false }, 0.0f, timerValue);
         }
         else if (levelNumber >= 22 && levelNumber <= 35)
         {
@@ -426,7 +458,8 @@ public class LevelManager : MonoBehaviour
             editLevelSettings(true, true, true);
             _accuracyRequiredToPassLevel = levelNumber * 1.5f / 100.0f;
             float timerValue = Mathf.Floor(25.0f - (levelNumber - 22) * levelNumber / 30.0f);
-            editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = (int)Mathf.Floor(9.0f * levelNumber / 10.0f), SpeedDistanceDependance = SpeedDistanceDependance.High, CharactersSpawnNewCharacters = true }, _accuracyRequiredToPassLevel, timerValue);
+            int speedIncrease = (int)Mathf.Floor(9.0f * levelNumber / 10.0f);
+            editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = speedIncrease, SpeedDistanceDependance = SpeedDistanceDependance.High, CharactersSpawnNewCharacters = true }, _accuracyRequiredToPassLevel, timerValue);
         }
         else
             return;

@@ -46,23 +46,20 @@ public class WantedListManager : MonoBehaviour
         if (_currentLevel != level)
             _currentLevel = level;
 
-        List<WantedCharacter> wantedPool = new List<WantedCharacter>();
-        if (Utilities.ChanceFunc(10))
+        float chanceToKillWanted = 7.0f - (level / 15.0f);
+        if (Utilities.ChanceFunc(chanceToKillWanted))
         {
-            wantedPool = createWantedPoolFromLevel(level);
+            List<WantedCharacter> wantedPool = createWantedPoolFromLevel(level);
 
             if (wantedPool.Count == 0)
                 return;
 
-            if (Utilities.ChanceFunc(70))
+            WantedCharacter characterKilled = wantedPool.GetRandomElement();
+            if (!_unlockedCharacters.Contains(characterKilled))
             {
-                WantedCharacter characterKilled = wantedPool[UnityEngine.Random.Range(0, wantedPool.Count)];
-                if (!_unlockedCharacters.Contains(characterKilled))
-                {
-                    _unlockedCharacters.Add(characterKilled);
-                    OnWantedKilled?.Invoke(characterKilled.WantedName);
-                    _audioManager?.PlaySFXClip(SFXClipType.WantedKilled);
-                }
+                _unlockedCharacters.Add(characterKilled);
+                OnWantedKilled?.Invoke(characterKilled.WantedName);
+                _audioManager?.PlaySFXClip(SFXClipType.WantedKilled);
             }
         }
     }
@@ -71,10 +68,8 @@ public class WantedListManager : MonoBehaviour
     {
         List<WantedCharacter> wantedPool = new List<WantedCharacter>();
         foreach (WantedCharacter wanted in _wantedList)
-        {
             if (level >= wanted.WantedLevel)
                 wantedPool.Add(wanted);
-        }
 
         return wantedPool;
     }
@@ -85,9 +80,7 @@ public class WantedListManager : MonoBehaviour
             _unlockedCharacters = new List<WantedCharacter>();
 
         foreach (WantedCharacter wantedCharacter in wantedCharacters)
-        {
             _unlockedCharacters.Add(wantedCharacter);
-        }
     }
 
     public List<WantedCharacter> GetWantedCharactersList()
