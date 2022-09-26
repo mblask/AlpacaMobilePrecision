@@ -6,6 +6,7 @@ using System;
 public class HitManager : MonoBehaviour
 {
     public Action<float> OnSendPlayerAccuracy;
+    public Action<int, int> OnHitTest;
 
     private static HitManager _instance;
 
@@ -63,6 +64,7 @@ public class HitManager : MonoBehaviour
         detectCharacterHit(worldPosition);
         detectAreaEffectHits(worldPosition);
         OnSendPlayerAccuracy?.Invoke(GetPlayerAccuracy());
+        OnHitTest?.Invoke(_playerTouchNumber, _playerHit);
     }
 
     private void destroyObstaclesInArea(Vector3 worldPosition)

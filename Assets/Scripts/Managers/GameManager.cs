@@ -74,18 +74,18 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
         DifficultyUI.OnDifficultyChanged += setDifficulty;
 
+        screenOrientation();
+
         _audioManager = AudioManager.Instance;
         resetScore();
 
-        //SaveManager.LoadProgress();
+        SaveManager.LoadProgress();
     }
 
-    private void LateUpdate()
+    private void screenOrientation()
     {
         if (Screen.orientation != _screenOrientationRight)
             Screen.orientation = _screenOrientationRight;
-        else
-            Screen.orientation = _screenOrientationLeft;
     }
 
     //DIFFICULTY IS STILL POSSIBLE TO CHANGE OR REMOVE

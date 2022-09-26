@@ -6,6 +6,7 @@ public class CheckpointReachedUI : MonoBehaviour
 {
     private Animator _animator;
 
+    private string _toDefault = "ToDefault";
     private string _pullDown = "PullDown";
     private string _pullUp = "PullUp";
 
@@ -28,6 +29,7 @@ public class CheckpointReachedUI : MonoBehaviour
 
     private void activateUI()
     {
+        _animator.SetTrigger(_toDefault);
         _animator.SetTrigger(_pullUp);
 
         Invoke(nameof(deactivateUI), _idleTime);

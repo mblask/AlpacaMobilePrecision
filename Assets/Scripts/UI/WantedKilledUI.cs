@@ -10,6 +10,7 @@ public class WantedKilledUI : MonoBehaviour
     private TextMeshProUGUI _title;
     private Image _image;
 
+    private string _toDefault = "ToDefault";
     private string _idleUp = "IdleUp";
     private string _pullDown = "PullDown";
     private string _pullUp = "PullUp";
@@ -41,7 +42,8 @@ public class WantedKilledUI : MonoBehaviour
 
     private void activateUI()
     {
-        _animator.SetTrigger(_pullDown);
+        _animator.SetTrigger(_toDefault);
+        _animator.SetTrigger(_pullDown);;
 
         Invoke(nameof(deactivateUI), _pullUpTime);
     }
@@ -49,13 +51,5 @@ public class WantedKilledUI : MonoBehaviour
     private void deactivateUI()
     {
         _animator.SetTrigger(_pullUp);
-    }
-
-    private void forceDeactivateUI()
-    {
-        _animator.ResetTrigger(_pullDown);
-        _animator.ResetTrigger(_pullUp);
-
-        _animator.Play(_idleUp);
     }
 }

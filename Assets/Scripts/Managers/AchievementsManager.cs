@@ -10,10 +10,10 @@ public enum AchievementType
     Reach20,
     Reach35,
     Smash15,
-    Smash40,
-    Smash70,
+    Smash50,
+    Smash100,
     SurviveAffSwitch,
-    Survive3AffSwtiches,
+    Survive5AffSwtiches,
     Have100Accuracy1Level,
     Have80PlusAccuracy5Levels,
     Have60PlusAccuracyAllGame,
@@ -159,9 +159,9 @@ public class AchievementsManager : MonoBehaviour
                     achievementUnlocked(AchievementType.SurviveAffSwitch);
                     break;
 
-                case 3:
+                case 5:
                     //Achievement scored! Survive three affiliation switches.
-                    achievementUnlocked(AchievementType.Survive3AffSwtiches);
+                    achievementUnlocked(AchievementType.Survive5AffSwtiches);
                     break;
 
                 default:
@@ -292,11 +292,11 @@ public class AchievementsManager : MonoBehaviour
                         break;
                     case 40:
                         //Kill 30 negative characters in a row.
-                        achievementUnlocked(AchievementType.Smash40);
+                        achievementUnlocked(AchievementType.Smash50);
                         break;
                     case 70:
                         //Achievement scored! Kill 50 negative characters in a row.
-                        achievementUnlocked(AchievementType.Smash70);
+                        achievementUnlocked(AchievementType.Smash100);
                         break;
                     default:
                         break;
@@ -312,6 +312,9 @@ public class AchievementsManager : MonoBehaviour
 
     public void LoadAchievements(List<AchievementType> achievements)
     {
+        if (achievements == null)
+            return;
+
         if (_achievementsUnlocked == null)
             _achievementsUnlocked = new List<AchievementType>();
 
@@ -321,6 +324,9 @@ public class AchievementsManager : MonoBehaviour
 
     public void LoadAchievementTrackers(AchievementTrackers achievementTrackers)
     {
+        if (achievementTrackers == null)
+            return;
+
         _gameLevelStopwatch = achievementTrackers.GameLevelStopwatch;
         _negativeCharactersKilled = achievementTrackers.NegativeCharactersKilled;
         _accuracyLevelsComplete = achievementTrackers.AccuracyLevelsComplete;

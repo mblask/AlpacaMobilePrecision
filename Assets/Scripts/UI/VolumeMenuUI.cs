@@ -10,6 +10,8 @@ public class VolumeMenuUI : MonoBehaviour
     private Toggle _muteSFXToggle;
     private Toggle _muteMusicToggle;
 
+    private AudioManager _audioManager;
+
     private void Awake()
     {
         _sfxVolumeSlider = transform.Find("SFXVolumeSlider").GetComponent<Slider>();
@@ -20,14 +22,25 @@ public class VolumeMenuUI : MonoBehaviour
 
     private void Start()
     {
+        _audioManager = AudioManager.Instance;
+
         _sfxVolumeSlider.onValueChanged.AddListener(onSFXSliderValueChanged);
         _musicVolumeSlider.onValueChanged.AddListener(onMusicSliderValueChanged);
+        _muteMusicToggle.onValueChanged.AddListener(onMusicMuteToggle);
+        _muteSFXToggle.onValueChanged.AddListener(onSFXMuteToggle);
     }
 
     private void OnDisable()
     {
         _sfxVolumeSlider.onValueChanged.RemoveAllListeners();
         _musicVolumeSlider.onValueChanged.RemoveAllListeners();
+        _muteMusicToggle.onValueChanged.RemoveAllListeners();
+        _muteSFXToggle.onValueChanged.RemoveAllListeners();
+    }
+
+    private void onSFXMuteToggle(bool value)
+    {
+        _audioManager?.ToggleMuteSFX();
     }
 
     private void onSFXSliderValueChanged(float value)
@@ -36,6 +49,11 @@ public class VolumeMenuUI : MonoBehaviour
             _muteSFXToggle.isOn = true;
         else
             _muteSFXToggle.isOn = false;
+    }
+
+    private void onMusicMuteToggle(bool value)
+    {
+        _audioManager?.ToggleMuteMusic();
     }
 
     private void onMusicSliderValueChanged(float value)

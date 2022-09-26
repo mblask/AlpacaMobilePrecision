@@ -52,6 +52,7 @@ public class PlayerTouchManager : MonoBehaviour
         if (!_inputActive)
             return;
 
+#if UNITY_EDITOR
         mouseDoubleClick();
 
         //FOR TESTING, REMOVE LATER
@@ -61,6 +62,7 @@ public class PlayerTouchManager : MonoBehaviour
             OnPlayerTouchPosition?.Invoke(worldClickPosition);
             _audioManager?.PlaySFXClip(SFXClipType.Gunshot);
         }
+#endif
 
         if (Input.touchCount > 0)
         {
@@ -88,6 +90,7 @@ public class PlayerTouchManager : MonoBehaviour
                     {
                         case TouchPhase.Began:
                             OnPlayerTouchPosition?.Invoke(worldTouchPosition);
+                            _audioManager?.PlaySFXClip(SFXClipType.Gunshot);
                             break;
                         case TouchPhase.Moved:
                             break;
