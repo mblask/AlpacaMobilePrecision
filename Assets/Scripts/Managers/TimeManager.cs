@@ -32,8 +32,8 @@ public class TimeManager : MonoBehaviour
     private void Start()
     {
         LevelManager.Instance.OnActivateTimer += activateTimer;
-        GameManager.Instance.OnGameOver += stopTimer;
-        GameManager.Instance.OnQuitToMainMenu += stopTimer;
+        GameManager.Instance.OnGameOver += StopTimer;
+        GameManager.Instance.OnQuitToMainMenu += StopTimer;
     }
 
     private void Update()
@@ -44,8 +44,8 @@ public class TimeManager : MonoBehaviour
     private void OnDestroy()
     {
         LevelManager.Instance.OnActivateTimer -= activateTimer;
-        GameManager.Instance.OnGameOver += stopTimer;
-        GameManager.Instance.OnQuitToMainMenu += stopTimer;
+        GameManager.Instance.OnGameOver += StopTimer;
+        GameManager.Instance.OnQuitToMainMenu += StopTimer;
     }
 
     private void activateTimer(float timeValue)
@@ -56,7 +56,7 @@ public class TimeManager : MonoBehaviour
         {
             OnActivateTime?.Invoke(true);
             setTimer(timeValue);
-            runTimer();
+            RunTimer();
         }
         else
             deactivateTimer();
@@ -65,7 +65,7 @@ public class TimeManager : MonoBehaviour
     private void deactivateTimer()
     {
         OnActivateTime?.Invoke(false);
-        stopTimer();
+        StopTimer();
     }
 
     private void updateTimer()
@@ -82,7 +82,7 @@ public class TimeManager : MonoBehaviour
 
             if (_timer <= 0.0f)
             {
-                stopTimer();
+                StopTimer();
                 _timer = 0.0f;
                 OnTimeIsOut?.Invoke();
                 OnUpdateTime?.Invoke(_timer);
@@ -109,12 +109,12 @@ public class TimeManager : MonoBehaviour
             return -1.0f;
     }
 
-    private void stopTimer()
+    public void StopTimer()
     {
         _timerOn = false;
     }
 
-    private void runTimer()
+    public void RunTimer()
     {
         _timerOn = true;
     }

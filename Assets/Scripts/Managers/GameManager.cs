@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
         DifficultyUI.OnDifficultyChanged += setDifficulty;
 
-        screenOrientation();
+        //screenOrientation();
 
         _audioManager = AudioManager.Instance;
         resetScore();
@@ -88,7 +88,6 @@ public class GameManager : MonoBehaviour
             Screen.orientation = _screenOrientationRight;
     }
 
-    //DIFFICULTY IS STILL POSSIBLE TO CHANGE OR REMOVE
     private void setDifficulty(Difficulty difficulty)
     {
         float normalIntensity = 1.0f;
@@ -123,6 +122,25 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.OnTimeIsOut -= gameOverOnTime;
         DifficultyUI.OnDifficultyChanged -= setDifficulty;
     }
+
+    public void ResetGameProgress()
+    {
+        //reset level manager
+        LevelManager.ResetGameSettings();
+
+        //reset achievements
+        AchievementsManager.ResetAchievements();
+
+        //reset wanted kills
+        WantedListManager.ResetWantedList();
+        
+        //reset current highscore
+        resetCurrentHighscore();
+
+        //save reseted state in save manager
+        SaveManager.SaveProgress();
+    }
+
     private void updateScoreByObstacle(Obstacle obstacle)
     {
         updateScore(_fragileObstHit);
@@ -272,6 +290,11 @@ public class GameManager : MonoBehaviour
     public Highscore GetCurrentHighscore()
     {
         return _currentHighscore;
+    }
+
+    public void resetCurrentHighscore()
+    {
+        _currentHighscore = new Highscore();
     }
 
     private void affiliationChangedThisLevel()

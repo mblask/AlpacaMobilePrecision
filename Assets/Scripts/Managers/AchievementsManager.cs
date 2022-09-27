@@ -15,7 +15,7 @@ public enum AchievementType
     SurviveAffSwitch,
     Survive5AffSwtiches,
     Have100Accuracy1Level,
-    Have80PlusAccuracy5Levels,
+    Have80PlusAccuracy8Levels,
     Have60PlusAccuracyAllGame,
 }
 
@@ -79,6 +79,17 @@ public class AchievementsManager : MonoBehaviour
         LevelManager.Instance.OnGameReload -= resetTrackers;
         GameManager.Instance.OnGameOver -= resetTrackers;
         GameManager.Instance.OnQuitToMainMenu -= stopTimeTracking;
+    }
+
+    public static void ResetAchievements()
+    {
+        _instance.resetAchievements();
+        _instance.resetTrackers();
+    }
+
+    private void resetAchievements()
+    {
+        _achievementsUnlocked.Clear();
     }
 
     private void resetTrackers()
@@ -175,35 +186,6 @@ public class AchievementsManager : MonoBehaviour
         _accuracyLevelsComplete++;
         _accuracyPerAccuracyLevel.Add(accuracy);
 
-        /*
-        switch (_accuracyLevelsComplete)
-        {
-            case 3:
-                if (_accuracyPerAccuracyLevel.TrueForAll(x => x >= 0.8f && x < 1.0f))
-                {
-                    //Debug.Log("Achievement scored! Have 3 levels in a row accuracy higher than 80%.");
-                    achievementUnlocked(AchievementType.Have80Accuracy3Levels);
-                }
-
-                if (_accuracyPerAccuracyLevel.TrueForAll(x => x == 1.0f))
-                {
-                    //Debug.Log("Achievement scored! Have 3 levels in a row accuracy of 100%.");
-                    achievementUnlocked(AchievementType.Have100Accuracy3Levels);
-                }
-                break;
-            case 17:
-                if (_accuracyPerAccuracyLevel.TrueForAll(x => x == 1.0f))
-                {
-                    //Debug.Log("Achievement scored! In all levels have 100% accuracy.");
-                    achievementUnlocked(AchievementType.Have100AccuracyAllGame);
-                }
-                break;
-            default:
-                break;
-        }
-        */
-
-        //***IF IT WORKS RENAME THE ENUMS FOR ACCURACY!!!!!***
         switch (_accuracyLevelsComplete)
         {
             case 1:
@@ -212,17 +194,17 @@ public class AchievementsManager : MonoBehaviour
                     achievementUnlocked(AchievementType.Have100Accuracy1Level);
                 break;
 
-            case 5:
+            case 8:
                 if (_accuracyPerAccuracyLevel.TrueForAll(x => x >= 0.8f && x <= 1.0f))
                     //Have 5 accuracy levels with 80-100% accuracy, provided you already scored previous achievement
                     if (_achievementsUnlocked.Contains(AchievementType.Have100Accuracy1Level))
-                        achievementUnlocked(AchievementType.Have80PlusAccuracy5Levels);
+                        achievementUnlocked(AchievementType.Have80PlusAccuracy8Levels);
                 break;
 
             case 17:
                 if (_accuracyPerAccuracyLevel.TrueForAll(x => x >= 0.6f && x <= 1.0f))
                     //Have 17 accuracy levels with 60-100% accuracy, provided you already scored previous achievement
-                    if (_achievementsUnlocked.Contains(AchievementType.Have80PlusAccuracy5Levels))
+                    if (_achievementsUnlocked.Contains(AchievementType.Have80PlusAccuracy8Levels))
                         achievementUnlocked(AchievementType.Have60PlusAccuracyAllGame);
                 break;
 
@@ -243,7 +225,7 @@ public class AchievementsManager : MonoBehaviour
 
     private void trackGameLevelTime(int level)
     {
-        List<float> timeCheckList = new List<float> { 5.0f, 40.0f, 180.0f, 300.0f };
+        List<float> timeCheckList = new List<float> { 5.0f, 30.0f, 180.0f, 300.0f };
 
         switch (level)
         {
@@ -254,7 +236,7 @@ public class AchievementsManager : MonoBehaviour
                 break;
             case 10:
                 if (_gameLevelStopwatch <= timeCheckList[1])
-                    //Reach level 10 within 40 seconds
+                    //Reach level 10 within 30 seconds
                     achievementUnlocked(AchievementType.Reach10);
                 break;
             case 20:
@@ -290,12 +272,12 @@ public class AchievementsManager : MonoBehaviour
                         //Kill 15 negative characters in a row.
                         achievementUnlocked(AchievementType.Smash15);
                         break;
-                    case 40:
-                        //Kill 30 negative characters in a row.
+                    case 50:
+                        //Kill 50 negative characters in a row.
                         achievementUnlocked(AchievementType.Smash50);
                         break;
-                    case 70:
-                        //Achievement scored! Kill 50 negative characters in a row.
+                    case 100:
+                        //Achievement scored! Kill 100 negative characters in a row.
                         achievementUnlocked(AchievementType.Smash100);
                         break;
                     default:

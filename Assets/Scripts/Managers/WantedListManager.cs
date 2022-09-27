@@ -41,12 +41,22 @@ public class WantedListManager : MonoBehaviour
         LevelManager.Instance.OnCharacterDestroyedAtLevel -= checkWantedListAtLevel;
     }
 
+    public static void ResetWantedList()
+    {
+        _instance.resetWantedList();
+    }
+
+    private void resetWantedList()
+    {
+        _unlockedCharacters.Clear();
+    }
+
     private void checkWantedListAtLevel(int level)
     {
         if (_currentLevel != level)
             _currentLevel = level;
 
-        float chanceToKillWanted = 7.0f - (level / 15.0f);
+        float chanceToKillWanted = 6.0f - (level / 15.0f);
         if (Utilities.ChanceFunc(chanceToKillWanted))
         {
             List<WantedCharacter> wantedPool = createWantedPoolFromLevel(level);

@@ -93,7 +93,7 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy += removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu += ClearGame;
         GameManager.Instance.OnGameOver += resetGameSettings;
-        PlayerTouchManager.Instance.OnDoubleTouch += reloadGame;
+        PlayerTouchManager.Instance.OnDoubleTouch += ReloadGame;
 
         _mainCamera = Camera.main;
         _gameAssets = GameAssets.Instance;
@@ -119,7 +119,7 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy -= removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu -= ClearGame;
         GameManager.Instance.OnGameOver -= resetGameSettings;
-        PlayerTouchManager.Instance.OnDoubleTouch -= reloadGame;
+        PlayerTouchManager.Instance.OnDoubleTouch -= ReloadGame;
     }
 
     private void addCharacterToList(Transform characterToAdd)
@@ -248,6 +248,12 @@ public class LevelManager : MonoBehaviour
         return null;
     }
 
+    public static void ResetGameSettings()
+    {
+        _instance.resetGameSettings();
+        _instance.resetCheckpointsUnlocked();
+    }
+
     private void resetGameSettings()
     {
         _levelNumber = 1;
@@ -263,28 +269,37 @@ public class LevelManager : MonoBehaviour
         _numOfObstacles = _initialNumOfObstacles;
     }
 
-    private void reloadGame()
+    public void ReloadGame()
     {
-        if (Utilities.ChanceFunc(50))
-        {
-            InterstitialAdExample adExample = AdsInitializer.Instance.gameObject.GetComponent<InterstitialAdExample>();
-
-            adExample.LoadAd();
-            adExample.ShowAd();
-        }
-
         //if any checkpoint is unlocked it will load the checkpoint level
         if (_useCheckpoints && getLastCheckpoint() != 0)
         {
+            loadAd();
+
             loadLevel(getLastCheckpoint());
             return;
         }
 
         resetGameSettings();
 
+        loadAd();
+
         OnGameReload?.Invoke();
 
         initializePlayground();
+    }
+
+    private void loadAd()
+    {
+        int chanceToShowAd = 100;
+
+        if (Utilities.ChanceFunc(chanceToShowAd))
+        {
+            InterstitialAd interstitialAd = AdsInitializer.Instance.GetComponent<InterstitialAd>();
+
+            interstitialAd.LoadAd();
+            interstitialAd.ShowAd();
+        }
     }
 
     private int getLastCheckpoint()
@@ -492,7 +507,7 @@ public class LevelManager : MonoBehaviour
             int badCharactersNum = getCharacterTypeAmount(CharacterType.Negative);
 
             if (badCharactersNum == 0)
-                reloadGame();
+                ReloadGame();
         }
 
         if (affiliationTrigger == null && obstacleDestroyer == null)
@@ -518,7 +533,7 @@ public class LevelManager : MonoBehaviour
         if (goodCharactersNum == 0)
         {
             if (lastCharacterDestroyed.GetCharacterType().Equals(CharacterType.Positive))
-                reloadGame();
+                ReloadGame();
             else
             {
                 if (badCharactersNum == 0)
@@ -547,7 +562,7 @@ public class LevelManager : MonoBehaviour
                 loadNewLevel();
             }
             else
-                reloadGame();
+                ReloadGame();
         }
         else
         {

@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: AlpacaMyGames
-  productName: AlpacaMobilePrecision
+  productName: Smash'Em
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -750,7 +750,7 @@ PlayerSettings:
     m_VersionName: 
   apiCompatibilityLevel: 6
   activeInputHandler: 0
-  cloudProjectId: 57341d96-49d7-405d-a656-6271bf173908
+  cloudProjectId: 91cfe32f-e9ac-4718-aea1-15b3f121c71e
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: AlpacaMobilePrecision

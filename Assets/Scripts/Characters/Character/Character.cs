@@ -86,8 +86,16 @@ public class Character : MonoBehaviour, IDamagable
     {
         OnParticleSystemToSpawn?.Invoke(new PSProperties{ PSposition = transform.position, PSType = PSType.Destroy, PSColor = GetCharacterColor(), PSTextureType = ParticleSystemSpawner.GetPSTextureTypeByCharacter(_characterType) });
         OnCharacterDestroyed?.Invoke(this);
-        _audioManager?.PlaySFXClip(SFXClipType.CharacterKilled);
+        playAudioClip(SFXClipType.CharacterKilled);
         Destroy(gameObject);
+    }
+
+    private void playAudioClip(SFXClipType SFXClipType)
+    {
+        if (_audioManager == null)
+            _audioManager = AudioManager.Instance;
+
+        _audioManager?.PlaySFXClip(SFXClipType);
     }
 
     private Color assignCharacterColor(CharacterType type)

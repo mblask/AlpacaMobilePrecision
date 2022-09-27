@@ -77,7 +77,7 @@ public class PlayerTouchManager : MonoBehaviour
                     {
                         case TouchPhase.Began:
                             //Reload game
-                            OnDoubleTouch?.Invoke();
+                            //OnDoubleTouch?.Invoke();
                             break;
                         default:
                             break;
