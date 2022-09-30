@@ -18,6 +18,7 @@ public enum Difficulty
 
 public class GameManager : MonoBehaviour
 {
+    public event Action OnFirstLaunch;
     public event Action<int> OnScoreUpdate;
     public event Action OnGameOver;
     public event Action<Highscore> OnGameOverSendFinalScore;
@@ -38,9 +39,6 @@ public class GameManager : MonoBehaviour
 
     private AudioManager _audioManager;
 
-    private ScreenOrientation _screenOrientationRight = ScreenOrientation.LandscapeRight;
-    private ScreenOrientation _screenOrientationLeft = ScreenOrientation.LandscapeLeft;
-
     [Header("Score Points")]
     [SerializeField] private int _score = 0;
     private Highscore _currentHighscore = new Highscore();
@@ -56,6 +54,8 @@ public class GameManager : MonoBehaviour
 
     private int _numberOfGameVictories = 0;
     private bool _gamePaused = false;
+
+    private bool _firstLaunch = true;
 
     private void Awake()
     {
@@ -74,40 +74,12 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
         DifficultyUI.OnDifficultyChanged += setDifficulty;
 
-        //screenOrientation();
-
         _audioManager = AudioManager.Instance;
         resetScore();
 
         SaveManager.LoadProgress();
-    }
 
-    private void screenOrientation()
-    {
-        if (Screen.orientation != _screenOrientationRight)
-            Screen.orientation = _screenOrientationRight;
-    }
-
-    private void setDifficulty(Difficulty difficulty)
-    {
-        float normalIntensity = 1.0f;
-        float ridiculousINtensity = 0.15f;
-
-        float lightIntensity;
-        switch (difficulty)
-        {
-            case Difficulty.Normal:
-                lightIntensity = normalIntensity;
-                break;
-            case Difficulty.Ridiculous:
-                lightIntensity = ridiculousINtensity;
-                break;
-            default:
-                lightIntensity = normalIntensity;
-                break;
-        }
-    
-        OnSetDifficulty?.Invoke(lightIntensity);
+        onFirstLaunch();
     }
 
     private void OnDestroy()
@@ -121,6 +93,47 @@ public class GameManager : MonoBehaviour
         LevelManager.Instance.OnGamePassed -= gamePassed;
         TimeManager.Instance.OnTimeIsOut -= gameOverOnTime;
         DifficultyUI.OnDifficultyChanged -= setDifficulty;
+    }
+
+    private void setDifficulty(Difficulty difficulty)
+    {
+        float normalIntensity = 1.0f;
+        float ridiculousIntensity = 0.15f;
+
+        float lightIntensity;
+        switch (difficulty)
+        {
+            case Difficulty.Normal:
+                lightIntensity = normalIntensity;
+                break;
+            case Difficulty.Ridiculous:
+                lightIntensity = ridiculousIntensity;
+                break;
+            default:
+                lightIntensity = normalIntensity;
+                break;
+        }
+
+        OnSetDifficulty?.Invoke(lightIntensity);
+    }
+
+    private void onFirstLaunch()
+    {
+        if (_firstLaunch)
+        {
+            OnFirstLaunch?.Invoke();
+            _firstLaunch = false;
+        }
+    }
+
+    public bool IsFirstLaunch()
+    {
+        return _firstLaunch;
+    }
+
+    public void SetFirstLaunch(bool value)
+    {
+        _firstLaunch = value;
     }
 
     public void ResetGameProgress()

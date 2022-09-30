@@ -7,7 +7,7 @@ public static class SaveManager
 {
     public static void SaveProgress()
     {
-        //Debug.Log("Save progress");
+        bool isFirstLaunch = GameManager.Instance.IsFirstLaunch();
         int level = LevelManager.Instance.GetLevel();
         List<WantedCharacter> wantedCharactersList = WantedListManager.Instance.GetUnlockedWantedCharactersList();
         
@@ -17,6 +17,7 @@ public static class SaveManager
         Highscore highscore = GameManager.Instance.GetCurrentHighscore();
 
         GameProgress newGameProgress = new GameProgress { 
+            FirstLaunch = isFirstLaunch,
             Level = level, 
             WantedCharactersList = wantedCharactersList, 
             AchievementsList = achievementsList, 
@@ -25,9 +26,7 @@ public static class SaveManager
         };
 
         string gameProgressString = JsonUtility.ToJson(newGameProgress);
-        //Debug.Log(gameProgressString);
 
-        //string persistentDataPath = Application.dataPath;
         string persistentDataPath = Application.persistentDataPath;
         string savePath = persistentDataPath + "/mobileprecgam.agsf";
 
@@ -36,9 +35,6 @@ public static class SaveManager
 
     public static void LoadProgress()
     {
-        //Debug.Log("Load progress");
-
-        //string persistentDataPath = Application.dataPath;
         string persistentDataPath = Application.persistentDataPath;
         string savePath = persistentDataPath + "/mobileprecgam.agsf";
 
@@ -47,9 +43,10 @@ public static class SaveManager
             string loadString = File.ReadAllText(savePath);
             GameProgress gameProgress = JsonUtility.FromJson<GameProgress>(loadString);
 
+            GameManager.Instance?.SetFirstLaunch(gameProgress.FirstLaunch);
             LevelManager.Instance?.SetLevel(gameProgress.Level);
             AchievementsManager.Instance?.LoadAchievements(gameProgress.AchievementsList);
-            //AchievementsManager.Instance?.LoadAchievementTrackers(gameProgress.AchievementTrackers);
+            AchievementsManager.Instance?.LoadAchievementTrackers(gameProgress.AchievementTrackers);
             WantedListManager.Instance?.LoadWantedList(gameProgress.WantedCharactersList);
             GameManager.Instance?.LoadCurrentHighscore(gameProgress.Highscore);
         }

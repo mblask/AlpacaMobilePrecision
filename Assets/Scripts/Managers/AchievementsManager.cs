@@ -42,12 +42,12 @@ public class AchievementsManager : MonoBehaviour
 
     private AudioManager _audioManager;
 
-    [SerializeField] private int _negativeCharactersKilled = 0;
     [SerializeField] private float _gameLevelStopwatch = 0.0f;
-    [SerializeField] private List<AccuracyLevel> _accuracyPerAccuracyLevel = new List<AccuracyLevel>();
-    [SerializeField] private int _accuracyLevelsComplete = 0;
-    [SerializeField] private bool _affiliationSwitched = false;
-    [SerializeField] private int _numOfAffiliationSwitchesSurvived = 0;
+    private int _negativeCharactersKilled = 0;
+    private List<AccuracyLevel> _accuracyPerAccuracyLevel = new List<AccuracyLevel>();
+    private int _accuracyLevelsComplete = 0;
+    private bool _affiliationSwitched = false;
+    private int _numOfAffiliationSwitchesSurvived = 0;
 
     [Space]
     [SerializeField] private List<Achievement> _possibleAchievements;
