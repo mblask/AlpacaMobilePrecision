@@ -56,7 +56,7 @@ public class WantedListManager : MonoBehaviour
         if (_currentLevel != level)
             _currentLevel = level;
 
-        float chanceToKillWanted = 6.0f - (level / 15.0f);
+        float chanceToKillWanted = 5.5f - (level / 15.0f);
         if (Utilities.ChanceFunc(chanceToKillWanted))
         {
             List<WantedCharacter> wantedPool = createWantedPoolFromLevel(level);

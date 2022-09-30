@@ -49,7 +49,7 @@ public static class SaveManager
 
             LevelManager.Instance?.SetLevel(gameProgress.Level);
             AchievementsManager.Instance?.LoadAchievements(gameProgress.AchievementsList);
-            AchievementsManager.Instance?.LoadAchievementTrackers(gameProgress.AchievementTrackers);
+            //AchievementsManager.Instance?.LoadAchievementTrackers(gameProgress.AchievementTrackers);
             WantedListManager.Instance?.LoadWantedList(gameProgress.WantedCharactersList);
             GameManager.Instance?.LoadCurrentHighscore(gameProgress.Highscore);
         }

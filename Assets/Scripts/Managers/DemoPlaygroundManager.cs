@@ -122,7 +122,7 @@ public class DemoPlaygroundManager : MonoBehaviour
     {
         _gameManager?.SetUpdateScore(gameManagerUpdateScore);
         _levelManager?.SetCheckLevelCompletion(levelManagerCheckLevelCompletion);
-        _achievementsManager?.SetTrackCharacters(achievementsManagerTrackCharacters);
+        _achievementsManager?.SetTrackingCharacters(achievementsManagerTrackCharacters);
     }
 
     private void createDemoPlayground()

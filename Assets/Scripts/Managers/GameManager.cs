@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour
         resetAffiliationChanged();
     }
     
-    private void gameOver(GameOverType gameOverType)
+    private void gameOver(GameOverType gameOverType, bool onTime = false)
     {
         switch (gameOverType)
         {
@@ -218,7 +218,9 @@ public class GameManager : MonoBehaviour
 
         float finalScore = calculateFinalScore(totalScore);
 
-        OnGameOver?.Invoke();
+        if (!onTime)
+            OnGameOver?.Invoke();
+
         EvaluateNewHighscore(finalScore);
     }
 

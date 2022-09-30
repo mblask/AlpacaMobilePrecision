@@ -5,6 +5,6 @@ public class AchievementTrackers
     public float GameLevelStopwatch;
     public int NegativeCharactersKilled;
     public int AccuracyLevelsComplete;
-    public List<float> AccuracyPerAccuracyLevel;
-    public bool AffiliationSwitched;
+    public List<AccuracyLevel> AccuracyPerAccuracyLevel;
+    public int NumberOfAffiliationSwitches;
 }

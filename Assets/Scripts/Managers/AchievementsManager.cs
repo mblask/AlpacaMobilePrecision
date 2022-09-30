@@ -13,10 +13,17 @@ public enum AchievementType
     Smash50,
     Smash100,
     SurviveAffSwitch,
-    Survive5AffSwtiches,
+    Survive10AffSwtiches,
     Have100Accuracy1Level,
     Have80PlusAccuracy8Levels,
     Have60PlusAccuracyAllGame,
+}
+
+[Serializable]
+public class AccuracyLevel
+{
+    public int LevelNumber;
+    public float Accuracy;
 }
 
 public class AchievementsManager : MonoBehaviour
@@ -35,13 +42,14 @@ public class AchievementsManager : MonoBehaviour
 
     private AudioManager _audioManager;
 
-    private int _negativeCharactersKilled = 0;
+    [SerializeField] private int _negativeCharactersKilled = 0;
     [SerializeField] private float _gameLevelStopwatch = 0.0f;
-    private List<float> _accuracyPerAccuracyLevel = new List<float>();
-    private int _accuracyLevelsComplete = 0;
-    private bool _affiliationSwitched = false;
-    private int _numOfAffiliationSwitchesSurvived = 0;
+    [SerializeField] private List<AccuracyLevel> _accuracyPerAccuracyLevel = new List<AccuracyLevel>();
+    [SerializeField] private int _accuracyLevelsComplete = 0;
+    [SerializeField] private bool _affiliationSwitched = false;
+    [SerializeField] private int _numOfAffiliationSwitchesSurvived = 0;
 
+    [Space]
     [SerializeField] private List<Achievement> _possibleAchievements;
     private List<AchievementType> _achievementsUnlocked = new List<AchievementType>();
 
@@ -57,12 +65,13 @@ public class AchievementsManager : MonoBehaviour
     {
         _audioManager = AudioManager.Instance;
 
-        LevelManager.Instance.OnLoadLevel += achievementsOnLoadLevel;
-        Character.OnCharacterDestroyed += trackCharactersKilled;
-        LevelManager.Instance.OnBeforeLoadLevel += trackAccuracyLevels;
-        LevelManager.Instance.OnGameReload += resetTrackers;
-        GameManager.Instance.OnGameOver += resetTrackers;
+        LevelManager.Instance.OnGameReload += onGameReloadReset;
+        GameManager.Instance.OnGameOver += onGameOverReset;
+        GameManager.Instance.OnGameOverOnTime += onGameOverOnTimeReset;
         GameManager.Instance.OnQuitToMainMenu += stopTimeTracking;
+        LevelManager.Instance.OnLoadLevel += trackAchievementsOnLoadLevel;
+        Character.OnCharacterDestroyed += trackCharactersKilled;
+        LevelManager.Instance.OnBeforeLoadLevel_v2 += trackAccuracyLevels;
     }
 
     private void Update()
@@ -73,18 +82,19 @@ public class AchievementsManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        LevelManager.Instance.OnLoadLevel -= achievementsOnLoadLevel;
-        Character.OnCharacterDestroyed -= trackCharactersKilled;
-        LevelManager.Instance.OnBeforeLoadLevel -= trackAccuracyLevels;
-        LevelManager.Instance.OnGameReload -= resetTrackers;
-        GameManager.Instance.OnGameOver -= resetTrackers;
+        LevelManager.Instance.OnGameReload -= onGameReloadReset;
+        GameManager.Instance.OnGameOver -= onGameOverReset;
+        GameManager.Instance.OnGameOverOnTime -= onGameOverOnTimeReset;
         GameManager.Instance.OnQuitToMainMenu -= stopTimeTracking;
+        LevelManager.Instance.OnLoadLevel -= trackAchievementsOnLoadLevel;
+        Character.OnCharacterDestroyed -= trackCharactersKilled;
+        LevelManager.Instance.OnBeforeLoadLevel_v2 -= trackAccuracyLevels;
     }
 
     public static void ResetAchievements()
     {
         _instance.resetAchievements();
-        _instance.resetTrackers();
+        _instance.resetAllTrackers();
     }
 
     private void resetAchievements()
@@ -92,7 +102,25 @@ public class AchievementsManager : MonoBehaviour
         _achievementsUnlocked.Clear();
     }
 
-    private void resetTrackers()
+    private void onGameReloadReset()
+    {
+        _affiliationSwitched = false;
+    }
+
+    private void onGameOverOnTimeReset()
+    {
+        _trackTime = false;
+        _affiliationSwitched = false;
+    }
+
+    private void onGameOverReset()
+    {
+        _trackTime = false;
+        _negativeCharactersKilled = 0;
+        _affiliationSwitched = false;
+    }
+
+    private void resetAllTrackers()
     {
         _trackTime = false;
         _gameLevelStopwatch = 0.0f;
@@ -100,6 +128,7 @@ public class AchievementsManager : MonoBehaviour
         _accuracyLevelsComplete = 0;
         _accuracyPerAccuracyLevel.Clear();
         _affiliationSwitched = false;
+        _numOfAffiliationSwitchesSurvived = 0;
     }
 
     public AchievementTrackers GetAchievementTrackers()
@@ -109,13 +138,13 @@ public class AchievementsManager : MonoBehaviour
             NegativeCharactersKilled = _negativeCharactersKilled,
             AccuracyLevelsComplete = _accuracyLevelsComplete,
             AccuracyPerAccuracyLevel = _accuracyPerAccuracyLevel,
-            AffiliationSwitched = _affiliationSwitched
+            NumberOfAffiliationSwitches = _numOfAffiliationSwitchesSurvived
         };
     }
 
-    private void achievementsOnLoadLevel(int level)
+    private void trackAchievementsOnLoadLevel(int level)
     {
-        if (level == 1)
+        if (!_trackTime)
             runTimeTracking();
 
         trackGameLevelTime(level);
@@ -170,41 +199,59 @@ public class AchievementsManager : MonoBehaviour
                     achievementUnlocked(AchievementType.SurviveAffSwitch);
                     break;
 
-                case 5:
-                    //Achievement scored! Survive three affiliation switches.
-                    achievementUnlocked(AchievementType.Survive5AffSwtiches);
+                case 10:
+                    //Achievement scored! Survive ten affiliation switches.
+                    achievementUnlocked(AchievementType.Survive10AffSwtiches);
                     break;
 
                 default:
                     break;
             }
+
+            _affiliationSwitched = false;
         }
     }
 
-    private void trackAccuracyLevels(float accuracy)
+    private bool accuracyLevelComplete(AccuracyLevel accuracyLevel)
     {
+        bool levelComplete = false;
+        foreach (AccuracyLevel accLevel in _accuracyPerAccuracyLevel)
+            if (accLevel.LevelNumber == accuracyLevel.LevelNumber)
+            {
+                levelComplete = true;
+                break;
+            }
+
+        return levelComplete;
+    }
+
+    private void trackAccuracyLevels(AccuracyLevel accuracyLevel)
+    {
+        if (accuracyLevelComplete(accuracyLevel))
+            return;
+
         _accuracyLevelsComplete++;
-        _accuracyPerAccuracyLevel.Add(accuracy);
+        _accuracyPerAccuracyLevel.Add(accuracyLevel);
 
         switch (_accuracyLevelsComplete)
         {
             case 1:
-                if (_accuracyPerAccuracyLevel.TrueForAll(x => x == 1.0f))
+                if (_accuracyPerAccuracyLevel.TrueForAll(x => x.Accuracy == 1.0f))
                     //Have 1 accuracy level with a 100% accuracy
                     achievementUnlocked(AchievementType.Have100Accuracy1Level);
                 break;
 
             case 8:
-                if (_accuracyPerAccuracyLevel.TrueForAll(x => x >= 0.8f && x <= 1.0f))
+                if (_accuracyPerAccuracyLevel.TrueForAll(x => x.Accuracy >= 0.8f && x.Accuracy <= 1.0f))
                     //Have 5 accuracy levels with 80-100% accuracy, provided you already scored previous achievement
-                    if (_achievementsUnlocked.Contains(AchievementType.Have100Accuracy1Level))
+                    //if (_achievementsUnlocked.Contains(AchievementType.Have100Accuracy1Level))
                         achievementUnlocked(AchievementType.Have80PlusAccuracy8Levels);
                 break;
 
-            case 17:
-                if (_accuracyPerAccuracyLevel.TrueForAll(x => x >= 0.6f && x <= 1.0f))
+            case 23:
+                if (_accuracyPerAccuracyLevel.TrueForAll(x => x.Accuracy >= 0.6f && x.Accuracy <= 1.0f))
                     //Have 17 accuracy levels with 60-100% accuracy, provided you already scored previous achievement
-                    if (_achievementsUnlocked.Contains(AchievementType.Have80PlusAccuracy8Levels))
+                    //if (_achievementsUnlocked.Contains(AchievementType.Have80PlusAccuracy8Levels))
                         achievementUnlocked(AchievementType.Have60PlusAccuracyAllGame);
                 break;
 
@@ -225,6 +272,9 @@ public class AchievementsManager : MonoBehaviour
 
     private void trackGameLevelTime(int level)
     {
+        if (_gameLevelStopwatch == 0.0f)
+            return;
+
         List<float> timeCheckList = new List<float> { 5.0f, 30.0f, 180.0f, 300.0f };
 
         switch (level)
@@ -315,19 +365,19 @@ public class AchievementsManager : MonoBehaviour
 
         if (_accuracyPerAccuracyLevel == null)
         {
-            _accuracyPerAccuracyLevel = new List<float>();
+            _accuracyPerAccuracyLevel = new List<AccuracyLevel>();
             _accuracyPerAccuracyLevel = achievementTrackers.AccuracyPerAccuracyLevel;
         }
         
-        _affiliationSwitched = achievementTrackers.AffiliationSwitched;
+        _numOfAffiliationSwitchesSurvived = achievementTrackers.NumberOfAffiliationSwitches;
     }
 
-    public bool GetTrackCharacters()
+    public bool IsTrackingCharacters()
     {
         return _trackCharacters;
     }
 
-    public void SetTrackCharacters(bool value)
+    public void SetTrackingCharacters(bool value)
     {
         _trackCharacters = value;
     }

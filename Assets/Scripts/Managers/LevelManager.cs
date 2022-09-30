@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour
 
     public Action OnInitializeGame;
     public Action<float> OnBeforeLoadLevel;
+    public Action<AccuracyLevel> OnBeforeLoadLevel_v2;
     public Action<int> OnLoadLevel;
     public Action OnGameReload;
     public Action OnGamePassed;
@@ -93,7 +94,7 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy += removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu += ClearGame;
         GameManager.Instance.OnGameOver += resetGameSettings;
-        PlayerTouchManager.Instance.OnDoubleTouch += ReloadGame;
+        //PlayerTouchManager.Instance.OnDoubleTouch += ReloadGame;
 
         _mainCamera = Camera.main;
         _gameAssets = GameAssets.Instance;
@@ -119,7 +120,7 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy -= removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu -= ClearGame;
         GameManager.Instance.OnGameOver -= resetGameSettings;
-        PlayerTouchManager.Instance.OnDoubleTouch -= ReloadGame;
+        //PlayerTouchManager.Instance.OnDoubleTouch -= ReloadGame;
     }
 
     private void addCharacterToList(Transform characterToAdd)
@@ -333,6 +334,7 @@ public class LevelManager : MonoBehaviour
         {
             float playerAccuracy = HitManager.GrabPlayerAccuracy();
             OnBeforeLoadLevel?.Invoke(playerAccuracy);
+            OnBeforeLoadLevel_v2?.Invoke(new AccuracyLevel { LevelNumber = _levelNumber, Accuracy = playerAccuracy });
         }
     }
 
