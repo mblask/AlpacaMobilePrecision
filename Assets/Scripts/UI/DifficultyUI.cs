@@ -19,10 +19,36 @@ public class DifficultyUI : MonoBehaviour
         _dropdown = transform.Find("DifficultyDropdown").GetComponent<TMP_Dropdown>();
     }
 
+    private void OnEnable()
+    {
+        GameManager.Instance.OnSetDifficulty += setDifficultyOption;
+    }
+
     private void Start()
     {
         _button.onClick.AddListener(onButtonClick);
         _dropdown.onValueChanged.AddListener(difficultyChanged);
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnSetDifficulty -= setDifficultyOption;
+    }
+
+    private void setDifficultyOption(Difficulty difficulty)
+    {
+        switch (difficulty)
+        {
+            case Difficulty.Normal:
+                _dropdown.value = 0;
+                break;
+            case Difficulty.Ridiculous:
+                _dropdown.value = 1;
+                break;
+            default:
+                _dropdown.value = 0;
+                break;
+        }
     }
 
     private void onButtonClick()

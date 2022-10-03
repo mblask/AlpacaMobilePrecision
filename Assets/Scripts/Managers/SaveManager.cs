@@ -9,16 +9,21 @@ public static class SaveManager
     {
         bool isFirstLaunch = GameManager.Instance.IsFirstLaunch();
         int level = LevelManager.Instance.GetLevel();
+        List<Checkpoint> checkpointsList = LevelManager.Instance.GetCheckpoints();
+
         List<WantedCharacter> wantedCharactersList = WantedListManager.Instance.GetUnlockedWantedCharactersList();
         
         List<AchievementType> achievementsList = AchievementsManager.Instance.GetAchievementsUnlocked();
         AchievementTrackers achievementTrackers = AchievementsManager.Instance.GetAchievementTrackers();
 
+        Difficulty difficulty = GameManager.Instance.GetDifficulty();
         Highscore highscore = GameManager.Instance.GetCurrentHighscore();
 
-        GameProgress newGameProgress = new GameProgress { 
+        GameProgress newGameProgress = new GameProgress {
             FirstLaunch = isFirstLaunch,
-            Level = level, 
+            Difficulty = difficulty,
+            Level = level,
+            CheckpointsList = checkpointsList,
             WantedCharactersList = wantedCharactersList, 
             AchievementsList = achievementsList, 
             AchievementTrackers = achievementTrackers,
@@ -44,7 +49,9 @@ public static class SaveManager
             GameProgress gameProgress = JsonUtility.FromJson<GameProgress>(loadString);
 
             GameManager.Instance?.SetFirstLaunch(gameProgress.FirstLaunch);
+            GameManager.Instance.SetDifficulty(gameProgress.Difficulty);
             LevelManager.Instance?.SetLevel(gameProgress.Level);
+            LevelManager.Instance?.SetCheckpoints(gameProgress.CheckpointsList);
             AchievementsManager.Instance?.LoadAchievements(gameProgress.AchievementsList);
             AchievementsManager.Instance?.LoadAchievementTrackers(gameProgress.AchievementTrackers);
             WantedListManager.Instance?.LoadWantedList(gameProgress.WantedCharactersList);

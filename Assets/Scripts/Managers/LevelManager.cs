@@ -23,8 +23,7 @@ public class LevelManager : MonoBehaviour
     }
 
     public Action OnInitializeGame;
-    public Action<float> OnBeforeLoadLevel;
-    public Action<AccuracyLevel> OnBeforeLoadLevel_v2;
+    public Action<AccuracyLevel> OnBeforeLoadLevel;
     public Action<int> OnLoadLevel;
     public Action OnGameReload;
     public Action OnGamePassed;
@@ -94,7 +93,6 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy += removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu += ClearGame;
         GameManager.Instance.OnGameOver += resetGameSettings;
-        //PlayerTouchManager.Instance.OnDoubleTouch += ReloadGame;
 
         _mainCamera = Camera.main;
         _gameAssets = GameAssets.Instance;
@@ -120,7 +118,6 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy -= removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu -= ClearGame;
         GameManager.Instance.OnGameOver -= resetGameSettings;
-        //PlayerTouchManager.Instance.OnDoubleTouch -= ReloadGame;
     }
 
     private void addCharacterToList(Transform characterToAdd)
@@ -158,7 +155,7 @@ public class LevelManager : MonoBehaviour
             loadLevel(_initializeLevelNumber);
         else
         {
-            if (_useCheckpoints && getLastCheckpoint() != 0 && _levelNumber < getLastCheckpoint())
+            if (_useCheckpoints && getLastCheckpoint() != 0/* && _levelNumber < getLastCheckpoint()*/)
                 _levelNumber = getLastCheckpoint();
 
             if (_levelNumber == 1)
@@ -273,11 +270,13 @@ public class LevelManager : MonoBehaviour
     public void ReloadGame()
     {
         //if any checkpoint is unlocked it will load the checkpoint level
-        if (_useCheckpoints && getLastCheckpoint() != 0)
+        if (_useCheckpoints && getLastCheckpoint() != 0/* && _levelNumber < getLastCheckpoint()*/)
         {
             loadAd();
 
-            loadLevel(getLastCheckpoint());
+            _levelNumber = getLastCheckpoint();
+
+            loadLevel(_levelNumber);
             return;
         }
 
@@ -328,13 +327,27 @@ public class LevelManager : MonoBehaviour
         _checkpoint3.CheckpointUnlocked = false;
     }
 
+    public void SetCheckpoints(List<Checkpoint> checkpoints)
+    {
+        if (checkpoints == null)
+            return;
+
+        _checkpoint1 = checkpoints[0];
+        _checkpoint2 = checkpoints[1];
+        _checkpoint3 = checkpoints[2];
+    }
+
+    public List<Checkpoint> GetCheckpoints()
+    {
+        return new List<Checkpoint> { _checkpoint1, _checkpoint2, _checkpoint3 };
+    }
+
     private void beforeLoadNewLevel()
     {
         if (_accuracyRequiredToPassLevel != 0.0f)
         {
             float playerAccuracy = HitManager.GrabPlayerAccuracy();
-            OnBeforeLoadLevel?.Invoke(playerAccuracy);
-            OnBeforeLoadLevel_v2?.Invoke(new AccuracyLevel { LevelNumber = _levelNumber, Accuracy = playerAccuracy });
+            OnBeforeLoadLevel?.Invoke(new AccuracyLevel { LevelNumber = _levelNumber, Accuracy = playerAccuracy });
         }
     }
 

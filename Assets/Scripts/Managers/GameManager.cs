@@ -25,7 +25,8 @@ public class GameManager : MonoBehaviour
     public event Action OnGameOverOnTime;
     public event Action OnQuitToMainMenu;
     public event Action OnWorldDestruction;
-    public event Action<float> OnSetDifficulty;
+    public event Action<float> OnSetLightingIntensity;
+    public event Action<Difficulty> OnSetDifficulty;
     public event Action<bool> OnGamePaused;
 
     private static GameManager _instance;
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
 
     private int _numberOfGameVictories = 0;
     private bool _gamePaused = false;
+    private Difficulty _difficulty;
 
     private bool _firstLaunch = true;
 
@@ -72,12 +74,12 @@ public class GameManager : MonoBehaviour
         LevelManager.Instance.OnResetUI += resetScore;
         LevelManager.Instance.OnGamePassed += gamePassed;
         TimeManager.Instance.OnTimeIsOut += gameOverOnTime;
-        DifficultyUI.OnDifficultyChanged += setDifficulty;
+        DifficultyUI.OnDifficultyChanged += SetDifficulty;
 
         _audioManager = AudioManager.Instance;
         resetScore();
 
-        SaveManager.LoadProgress();
+        //SaveManager.LoadProgress();
 
         onFirstLaunch();
     }
@@ -92,29 +94,42 @@ public class GameManager : MonoBehaviour
         LevelManager.Instance.OnResetUI -= resetScore;
         LevelManager.Instance.OnGamePassed -= gamePassed;
         TimeManager.Instance.OnTimeIsOut -= gameOverOnTime;
-        DifficultyUI.OnDifficultyChanged -= setDifficulty;
+        DifficultyUI.OnDifficultyChanged -= SetDifficulty;
     }
 
-    private void setDifficulty(Difficulty difficulty)
+    public Difficulty GetDifficulty()
+    {
+        return _difficulty;
+    }
+
+    public void SetDifficulty(Difficulty difficulty)
+    {
+        if (_difficulty.Equals(difficulty))
+            return;
+
+        _difficulty = difficulty;
+        OnSetDifficulty?.Invoke(difficulty);
+
+        setLightingIntensity(difficulty);
+    }
+
+    private void setLightingIntensity(Difficulty difficulty)
     {
         float normalIntensity = 1.0f;
         float ridiculousIntensity = 0.15f;
 
-        float lightIntensity;
         switch (difficulty)
         {
             case Difficulty.Normal:
-                lightIntensity = normalIntensity;
+                OnSetLightingIntensity?.Invoke(normalIntensity);
                 break;
             case Difficulty.Ridiculous:
-                lightIntensity = ridiculousIntensity;
+                OnSetLightingIntensity?.Invoke(ridiculousIntensity);
                 break;
             default:
-                lightIntensity = normalIntensity;
+                OnSetLightingIntensity?.Invoke(normalIntensity);
                 break;
         }
-
-        OnSetDifficulty?.Invoke(lightIntensity);
     }
 
     private void onFirstLaunch()
@@ -138,6 +153,9 @@ public class GameManager : MonoBehaviour
 
     public void ResetGameProgress()
     {
+        //reset difficulty
+        SetDifficulty(Difficulty.Normal);
+
         //reset level manager
         LevelManager.ResetGameSettings();
 

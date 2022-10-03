@@ -11,7 +11,6 @@ public class WantedKilledUI : MonoBehaviour
     private Image _image;
 
     private string _toDefault = "ToDefault";
-    private string _idleUp = "IdleUp";
     private string _pullDown = "PullDown";
     private string _pullUp = "PullUp";
 

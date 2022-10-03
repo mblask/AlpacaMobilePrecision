@@ -8,22 +8,29 @@ public class GameHintUI : MonoBehaviour
     private Transform _container;
     private Button _closeButton;
 
+    private GameManager _gameManager;
+
     private void Awake()
     {
         _container = transform.Find("Container");
         _closeButton = _container.Find("CloseButton").GetComponent<Button>();
+
+        _gameManager = GameManager.Instance;
+    }
+
+    private void OnEnable()
+    {
+        _gameManager.OnFirstLaunch += activateUI;
     }
 
     private void Start()
     {
-        GameManager.Instance.OnFirstLaunch += activateUI;
-
         _closeButton.onClick.AddListener(closeUI);
     }
 
     private void OnDestroy()
     {
-        GameManager.Instance.OnFirstLaunch -= activateUI;
+        _gameManager.OnFirstLaunch -= activateUI;
     }
 
     private void activateUI()

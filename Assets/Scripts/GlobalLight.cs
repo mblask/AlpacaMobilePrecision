@@ -14,12 +14,12 @@ public class GlobalLight : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnSetDifficulty += setGlobalLight;
+        GameManager.Instance.OnSetLightingIntensity += setGlobalLight;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnSetDifficulty -= setGlobalLight;
+        GameManager.Instance.OnSetLightingIntensity -= setGlobalLight;
     }
 
     private void setGlobalLight(float intensity)

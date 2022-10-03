@@ -19,13 +19,6 @@ public enum AchievementType
     Have60PlusAccuracyAllGame,
 }
 
-[Serializable]
-public class AccuracyLevel
-{
-    public int LevelNumber;
-    public float Accuracy;
-}
-
 public class AchievementsManager : MonoBehaviour
 {
     private static AchievementsManager _instance;
@@ -71,7 +64,7 @@ public class AchievementsManager : MonoBehaviour
         GameManager.Instance.OnQuitToMainMenu += stopTimeTracking;
         LevelManager.Instance.OnLoadLevel += trackAchievementsOnLoadLevel;
         Character.OnCharacterDestroyed += trackCharactersKilled;
-        LevelManager.Instance.OnBeforeLoadLevel_v2 += trackAccuracyLevels;
+        LevelManager.Instance.OnBeforeLoadLevel += trackAccuracyLevels;
     }
 
     private void Update()
@@ -88,7 +81,7 @@ public class AchievementsManager : MonoBehaviour
         GameManager.Instance.OnQuitToMainMenu -= stopTimeTracking;
         LevelManager.Instance.OnLoadLevel -= trackAchievementsOnLoadLevel;
         Character.OnCharacterDestroyed -= trackCharactersKilled;
-        LevelManager.Instance.OnBeforeLoadLevel_v2 -= trackAccuracyLevels;
+        LevelManager.Instance.OnBeforeLoadLevel -= trackAccuracyLevels;
     }
 
     public static void ResetAchievements()
