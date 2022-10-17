@@ -22,6 +22,7 @@ public class PlayerTouchManager : MonoBehaviour
     private Camera _mainCamera;
 
     private AudioManager _audioManager;
+    private RuntimePlatform _runtimePlatform;
 
     private float _touchTime;
     private float _mouseTimer = 0.0f;
@@ -32,6 +33,8 @@ public class PlayerTouchManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+
+        _runtimePlatform = Application.platform;
     }
 
     private void Start()
@@ -52,18 +55,39 @@ public class PlayerTouchManager : MonoBehaviour
         if (!_inputActive)
             return;
 
-#if UNITY_EDITOR
-        mouseDoubleClick();
+        if (_runtimePlatform.Equals(RuntimePlatform.Android))
+            androidInput();
+        
+        if (_runtimePlatform.Equals(RuntimePlatform.WindowsEditor))
+        {
+            windowsInput();
+            androidInput();
+        }
+        
+        if (_runtimePlatform.Equals(RuntimePlatform.WindowsPlayer))
+            windowsInput();
+    }
 
-        //FOR TESTING, REMOVE LATER
+    private void OnDestroy()
+    {
+        LevelManager.Instance.OnInitializeGame -= activateInput;
+        GameManager.Instance.OnGameOver -= deactivateInput;
+        GameManager.Instance.OnQuitToMainMenu -= deactivateInput;
+        GameManager.Instance.OnGamePaused -= inputOnGamePaused;
+    }
+
+    private void windowsInput()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 worldClickPosition = Utilities.GetMouseWorldLocation(_mainCamera);
             OnPlayerTouchPosition?.Invoke(worldClickPosition);
             _audioManager?.PlaySFXClip(SFXClipType.Gunshot);
         }
-#endif
+    }
 
+    private void androidInput()
+    {
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -115,31 +139,6 @@ public class PlayerTouchManager : MonoBehaviour
                 default:
                     break;
             }
-        }
-    }
-
-    private void OnDestroy()
-    {
-        LevelManager.Instance.OnInitializeGame -= activateInput;
-        GameManager.Instance.OnGameOver -= deactivateInput;
-        GameManager.Instance.OnQuitToMainMenu -= deactivateInput;
-        GameManager.Instance.OnGamePaused -= inputOnGamePaused;
-    }
-
-    private void mouseDoubleClick()
-    {
-        int mouseButton = 0;
-        float clickInterval = 0.15f;
-
-        _mouseTimer += Time.deltaTime;
-
-        if (Input.GetMouseButtonDown(mouseButton))
-        {
-            if (_mouseTimer < clickInterval)
-            {
-                OnDoubleTouch?.Invoke();
-            }
-            _mouseTimer = 0.0f;
         }
     }
 

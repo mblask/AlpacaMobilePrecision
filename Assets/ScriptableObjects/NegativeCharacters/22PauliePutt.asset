@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b78a9dbd9699a3d49bdab04773b0d913, type: 3}
-  m_Name: 7Burns
+  m_Name: 22PauliePutt
   m_EditorClassIdentifier: 
-  WantedName: Barnes
-  WantedLevel: 7
-  WantedImage: {fileID: 21300000, guid: a5c06f0ba56bf8f4ebc3b6fe81571919, type: 3}
+  WantedName: Paulie Putt
+  WantedLevel: 22
+  WantedImage: {fileID: 21300000, guid: 6d30d3cfe644d7a4dabfc5df47b8fa45, type: 3}

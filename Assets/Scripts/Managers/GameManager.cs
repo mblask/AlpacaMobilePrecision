@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public event Action OnGameOver;
     public event Action<Highscore> OnGameOverSendFinalScore;
     public event Action OnGameOverOnTime;
+    public event Action OnGameOverOnScore;
     public event Action OnQuitToMainMenu;
     public event Action OnWorldDestruction;
     public event Action<float> OnSetLightingIntensity;
@@ -79,7 +80,7 @@ public class GameManager : MonoBehaviour
         _audioManager = AudioManager.Instance;
         resetScore();
 
-        //SaveManager.LoadProgress();
+        SaveManager.LoadProgress();
 
         onFirstLaunch();
     }
@@ -209,6 +210,11 @@ public class GameManager : MonoBehaviour
             return;
 
         _score += scoreIncrement;
+
+        if (_score < 0)
+        {
+            Debug.Log("Game over on score");
+        }
         OnScoreUpdate?.Invoke(_score);
     }
     
@@ -277,7 +283,7 @@ public class GameManager : MonoBehaviour
         int numOfExplosions = 4;
         for (int i = 0; i < numOfExplosions; i++)
         {
-            Instantiate(GameAssets.Instance.GlobalDestructionPS, Utilities.GetRandomWorldPosition(), Quaternion.identity, null);
+            Instantiate(GameAssets.Instance.GlobalDestructionPS, Utilities.GetRandomWorldPositionFromScreen(), Quaternion.identity, null);
             _audioManager.PlaySFXClip(SFXClipType.Explosion);
         }
 

@@ -102,13 +102,13 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
             }
             else
             {
-                Vector2 randomPosition = Utilities.GetRandomWorldPosition(borderScaling, origin);
+                Vector2 randomPosition = Utilities.GetRandomWorldPositionFromScreen(borderScaling, origin);
                 _waypointPositions.Add(randomPosition);
             }
         }
         else
         {
-            Vector2 randomPosition = Utilities.GetRandomWorldPosition(borderScaling, origin);
+            Vector2 randomPosition = Utilities.GetRandomWorldPositionFromScreen(borderScaling, origin);
             _waypointPositions.Add(randomPosition);
         }
     }

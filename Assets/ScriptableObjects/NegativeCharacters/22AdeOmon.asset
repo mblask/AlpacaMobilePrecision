@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b78a9dbd9699a3d49bdab04773b0d913, type: 3}
-  m_Name: 30DollyUnderbridge
+  m_Name: 22AdeOmon
   m_EditorClassIdentifier: 
-  WantedName: Dolly Underbridge
-  WantedLevel: 30
-  WantedImage: {fileID: 21300000, guid: 60ebbbb78b3109c4ca7b057ee85b2ed9, type: 3}
+  WantedName: Ade Omon
+  WantedLevel: 22
+  WantedImage: {fileID: 21300000, guid: 2e352ca9f72e3494689d38653443b43d, type: 3}

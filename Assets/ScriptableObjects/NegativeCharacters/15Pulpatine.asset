@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b78a9dbd9699a3d49bdab04773b0d913, type: 3}
   m_Name: 15Pulpatine
   m_EditorClassIdentifier: 
-  WantedName: Pulpatine
+  WantedName: Pulpaline
   WantedLevel: 15
   WantedImage: {fileID: 21300000, guid: adf434a3b7d2ab742a1d93efb5587c36, type: 3}

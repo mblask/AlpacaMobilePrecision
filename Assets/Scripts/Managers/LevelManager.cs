@@ -101,14 +101,16 @@ public class LevelManager : MonoBehaviour
         _numOfCharacters = _initialNumOfCharacters;
         _numOfObstacles = _initialNumOfObstacles;
 
+        /*
         if (_initializeGame)
             InitializeGame();
 
         //Testing purposes
         if (_spawnSingleCharacter)
             initializeObjects(_gameAssets.CharacterObject, 1, Utilities.GetLayerMask(_characterLayerMaskName));
+        */
 
-        _audioManager.PlayMusicClip();
+        _audioManager?.PlayMusicClip();
     }
 
     private void OnDestroy()
@@ -168,7 +170,7 @@ public class LevelManager : MonoBehaviour
             InvokeRepeating(nameof(fadeCharacter), Utilities.RandomFloat(0.5f, 2.0f), Utilities.RandomFloat(0.5f, 1.0f));
         }
 
-        _audioManager.PlayMusicClip();
+        _audioManager?.PlayMusicClip();
         OnInitializeGame?.Invoke();
     }
 
@@ -198,6 +200,44 @@ public class LevelManager : MonoBehaviour
         if (objectTransform == null || numOfObjects == 0)
             return;
 
+        float borderMargin = 1.2f;
+        List<Vector2> listOfLocations = Utilities.GetListOfRandom2DLocations(numOfObjects, _objectMinDistance, borderMargin);
+
+        for (int i = 0; i < numOfObjects; i++)
+        {
+            Transform objectToSpawn = spawnObjectAt(objectTransform, listOfLocations[i]);
+
+            if (listToStoreObjects == null)
+                listToStoreObjects = new List<Transform>();
+
+            listToStoreObjects.Add(objectToSpawn);
+        }
+
+        Character characterTest = objectTransform.GetComponent<Character>();
+        if (characterTest != null)
+        {
+            if (getCharacterTypeAmount(CharacterType.Negative) == 0)
+            {
+                if (numOfObjects < 3)
+                {
+                    Character character = listToStoreObjects.GetRandomElement().GetComponent<Character>();
+                    character?.AssignCharacterType(CharacterType.Negative);
+                }
+                else
+                {
+                    bool divisibleByThree = listToStoreObjects.Count % 3 == 0;
+                    int countUpToThis = divisibleByThree ? numOfObjects / 3 : Mathf.FloorToInt(numOfObjects / 3.0f);
+
+                    for (int i = 0; i < countUpToThis; i++)
+                    {
+                        Character character = listToStoreObjects[i].GetComponent<Character>();
+                        character?.AssignCharacterType(CharacterType.Negative);
+                    }
+                }
+            }
+        }
+
+        /*
         for (int i = 0; i < numOfObjects; i++)
         {
             Transform objectToSpawn = spawnObject(objectTransform);
@@ -219,6 +259,12 @@ public class LevelManager : MonoBehaviour
                     character.AssignCharacterType(CharacterType.Negative);
             }
         }
+        */
+    }
+
+    private Transform spawnObjectAt(Transform objectTransform, Vector2 position)
+    {
+        return Instantiate(objectTransform, position, Quaternion.identity);
     }
 
     private Transform spawnObject(Transform objectTransform)
@@ -286,7 +332,8 @@ public class LevelManager : MonoBehaviour
 
         OnGameReload?.Invoke();
 
-        initializePlayground();
+        //initializePlayground();
+        loadLevel(1);
     }
 
     private void loadAd()

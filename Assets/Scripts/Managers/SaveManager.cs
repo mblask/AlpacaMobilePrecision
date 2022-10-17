@@ -31,17 +31,52 @@ public static class SaveManager
         };
 
         string gameProgressString = JsonUtility.ToJson(newGameProgress);
-
+        /*
         string persistentDataPath = Application.persistentDataPath;
         string savePath = persistentDataPath + "/mobileprecgam.agsf";
+        */
+
+        string dataPath;
+        switch (Application.platform)
+        {
+            case RuntimePlatform.Android:
+            case RuntimePlatform.WindowsEditor:
+                dataPath = Application.persistentDataPath;
+                break;
+            case RuntimePlatform.WindowsPlayer:
+                dataPath = Application.dataPath;
+                break;
+            default:
+                dataPath = "";
+                break;
+        }
+
+        string savePath = dataPath + "/mobileprecgam.agsf";
 
         File.WriteAllText(savePath, gameProgressString);
     }
 
     public static void LoadProgress()
     {
-        string persistentDataPath = Application.persistentDataPath;
-        string savePath = persistentDataPath + "/mobileprecgam.agsf";
+        string dataPath;
+        switch (Application.platform)
+        {
+            case RuntimePlatform.Android:
+            case RuntimePlatform.WindowsEditor:
+                dataPath = Application.persistentDataPath;
+                break;
+            case RuntimePlatform.WindowsPlayer:
+                dataPath = Application.dataPath;
+                break;
+            default:
+                dataPath = "";
+                break;
+        }
+
+        string savePath = dataPath + "/mobileprecgam.agsf";
+        
+        //string persistentDataPath = Application.persistentDataPath;
+        //string savePath = persistentDataPath + "/mobileprecgam.agsf";
 
         if (File.Exists(savePath))
         {
