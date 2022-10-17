@@ -5,7 +5,7 @@ using UnityEngine;
 public class DestructionArea : MonoBehaviour
 {
     private float _destructionSpeed = 50.0f;
-    private float _destructionRadius = 6.0f;
+    private float _destructionRadius = 8.0f;
 
     private void Update()
     {

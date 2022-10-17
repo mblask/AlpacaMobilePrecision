@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MessageObject : MonoBehaviour
 {
+#if UNITY_EDITOR
     public bool DisplayImportant = true;
     public bool DisplayLessImportant = true;
 
@@ -32,4 +33,5 @@ public class MessageObject : MonoBehaviour
             }
         }
     }
+#endif
 }

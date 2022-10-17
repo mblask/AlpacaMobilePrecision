@@ -38,8 +38,6 @@ public class LevelManager : MonoBehaviour
     private Camera _mainCamera;
 
     [Header("For testing")]
-    [SerializeField] private bool _initializeGame = true;
-    [SerializeField] private bool _spawnSingleCharacter = false;
     [SerializeField] private bool _spawnAffiliationTrigger = false;
     [SerializeField] private bool _charactersSpawnNewCharacters = false;
     [SerializeField] private int _initializeLevelNumber = 1;
@@ -66,7 +64,7 @@ public class LevelManager : MonoBehaviour
     private string _obstacleLayerMaskName = "Obstacle";
     private string _characterLayerMaskName = "Character";
 
-    private float _borderScaling = 0.95f;
+    private float _borderMargin = 0.15f;
     private float _objectMinDistance = 1.0f;
 
     private bool _fadeCharacters = false;
@@ -100,15 +98,6 @@ public class LevelManager : MonoBehaviour
 
         _numOfCharacters = _initialNumOfCharacters;
         _numOfObstacles = _initialNumOfObstacles;
-
-        /*
-        if (_initializeGame)
-            InitializeGame();
-
-        //Testing purposes
-        if (_spawnSingleCharacter)
-            initializeObjects(_gameAssets.CharacterObject, 1, Utilities.GetLayerMask(_characterLayerMaskName));
-        */
 
         _audioManager?.PlayMusicClip();
     }
@@ -185,7 +174,7 @@ public class LevelManager : MonoBehaviour
         if (Utilities.ChanceFunc(90) && _initializeAffiliationTrigger)
             _affiliationTransform = spawnObject(_gameAssets.AffiliationTrigger);
 
-        if (Utilities.ChanceFunc(75) && _initializeObstacleDestroyer)
+        if (Utilities.ChanceFunc(90) && _initializeObstacleDestroyer)
             _obstacleDestroyerTransform = spawnObject(_gameAssets.ObstacleDestroyer);
 
         //Testing purposes
@@ -200,8 +189,7 @@ public class LevelManager : MonoBehaviour
         if (objectTransform == null || numOfObjects == 0)
             return;
 
-        float borderMargin = 1.2f;
-        List<Vector2> listOfLocations = Utilities.GetListOfRandom2DLocations(numOfObjects, _objectMinDistance, borderMargin);
+        List<Vector2> listOfLocations = Utilities.GetListOfRandom2DLocations(numOfObjects, _objectMinDistance, _borderMargin);
 
         for (int i = 0; i < numOfObjects; i++)
         {
@@ -236,30 +224,6 @@ public class LevelManager : MonoBehaviour
                 }
             }
         }
-
-        /*
-        for (int i = 0; i < numOfObjects; i++)
-        {
-            Transform objectToSpawn = spawnObject(objectTransform);
-
-            if (Utilities.CheckObjectEnvironment(objectToSpawn, _objectMinDistance, layerToAvoid))
-            {
-                Destroy(objectToSpawn.gameObject);
-                i--;
-                continue;
-            }
-
-            if (listToStoreObjects != null)
-                listToStoreObjects.Add(objectToSpawn);
-
-            if (i == (numOfObjects - 1) && getCharacterTypeAmount(CharacterType.Negative) == 0)
-            {
-                Character character = objectToSpawn.GetComponent<Character>();
-                if (character != null)
-                    character.AssignCharacterType(CharacterType.Negative);
-            }
-        }
-        */
     }
 
     private Transform spawnObjectAt(Transform objectTransform, Vector2 position)
@@ -269,7 +233,7 @@ public class LevelManager : MonoBehaviour
 
     private Transform spawnObject(Transform objectTransform)
     {
-        Vector2 position = _mainCamera.ScreenToWorldPoint(Utilities.GetRandomScreenPosition(_borderScaling));
+        Vector2 position = Utilities.GetRandomWorldPositionFromScreen(_borderMargin);
         return Instantiate(objectTransform, position, Quaternion.identity);
     }
 

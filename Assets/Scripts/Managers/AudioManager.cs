@@ -48,6 +48,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private List<AudioClip> _obstacleHit;
     [SerializeField] private List<AudioClip> _obstacleSmashed;
     [SerializeField] private List<AudioClip> _explosions;
+    [Space]
     [SerializeField] private AudioClip _victory;
     [SerializeField] private AudioClip _failure;
     [SerializeField] private AudioClip _spawning;

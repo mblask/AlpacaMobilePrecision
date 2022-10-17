@@ -19,7 +19,7 @@ public class DemoPlaygroundManager : MonoBehaviour
     private Transform _affiliationTriggerTransform;
     private Transform _obstacleDestroyerTransform;
 
-    private float _borderScaling = 0.95f;
+    private float _borderMargin = 0.15f;
 
     private float _timer = 1.0f;
 
@@ -175,29 +175,16 @@ public class DemoPlaygroundManager : MonoBehaviour
 
     private void instantiateObjects(Transform objectTransform, int numberOfObjects, List<Transform> storingList = null)
     {
-        for (int i = 0; i < numberOfObjects; i++)
-        {
-            Transform spawnedObject = spawnObject(objectTransform);
+        float emptyRadius = 2.0f;
+        List<Vector2> listOfLocations = Utilities.GetListOfRandom2DLocations(numberOfObjects, emptyRadius, _borderMargin);
 
-            if (storingList != null)
-                storingList.Add(spawnedObject);
-
-            LayerMask layerMask = 9999;
-            if (Utilities.CheckObjectEnvironment(spawnedObject, 1.0f, layerMask))
-            {
-                if (storingList != null)
-                    storingList.Remove(spawnedObject);
-
-                Destroy(spawnedObject.gameObject);
-                i--;
-                continue;
-            }
-        }
+        foreach (Vector2 location in listOfLocations)
+            storingList.Add(Instantiate(objectTransform, location, Quaternion.identity, null));
     }
 
     private Transform spawnObject(Transform objectTransform, Transform parent = null)
     {
-        Vector2 position = Camera.main.ScreenToWorldPoint(Utilities.GetRandomScreenPosition(_borderScaling));
+        Vector2 position = Utilities.GetRandomWorldPositionFromScreen(_borderMargin);
         return spawnObject(objectTransform, position, parent);
     }
 

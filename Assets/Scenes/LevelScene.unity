@@ -218,12 +218,12 @@ RectTransform:
   - {fileID: 1476817693}
   - {fileID: 10124367}
   - {fileID: 933879527}
+  - {fileID: 1805347089}
   - {fileID: 64548867}
   - {fileID: 1782933231}
   - {fileID: 1553711268}
   - {fileID: 1452956942}
   - {fileID: 1724311669}
-  - {fileID: 1805347089}
   - {fileID: 2022122138}
   - {fileID: 355058381}
   - {fileID: 431788749}
@@ -1241,7 +1241,7 @@ RectTransform:
   m_Children:
   - {fileID: 865159312}
   m_Father: {fileID: 3785150}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -6135,11 +6135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayImportant: 1
   DisplayLessImportant: 1
-  Important:
-  - Implement the new random location generating method for the object spawning!!
-  - Review GetListOfRandom2DLocations method in Utilities
-  - Review GetRandomWorldPositionFromScreen method in Utilities
-  - Review  GetRandomScreenPosition method in Utilities
+  Important: []
   LessImportant: []
 --- !u!4 &502288634
 Transform:
@@ -7888,8 +7884,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0467bcc815bcb4b9670f190e545998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initializeGame: 0
-  _spawnSingleCharacter: 0
   _spawnAffiliationTrigger: 0
   _charactersSpawnNewCharacters: 0
   _initializeLevelNumber: 1
@@ -8206,49 +8200,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 663624953}
   m_CullTransparentMesh: 1
---- !u!1 &676215117
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 676215119}
-  - component: {fileID: 676215118}
-  m_Layer: 0
-  m_Name: Testing
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &676215118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 676215117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b9e7677a00f3b84d93972560e3e6a64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &676215119
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 676215117}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 24
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &681903891
 GameObject:
   m_ObjectHideFlags: 0
@@ -15068,7 +15019,7 @@ RectTransform:
   - {fileID: 2097724599}
   - {fileID: 1870209016}
   m_Father: {fileID: 3785150}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -15451,7 +15402,7 @@ RectTransform:
   m_Children:
   - {fileID: 92599415}
   m_Father: {fileID: 3785150}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -17132,7 +17083,7 @@ RectTransform:
   - {fileID: 171077952}
   - {fileID: 1658543441}
   m_Father: {fileID: 3785150}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -17521,7 +17472,7 @@ RectTransform:
   m_Children:
   - {fileID: 1018403337}
   m_Father: {fileID: 3785150}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -17843,7 +17794,7 @@ RectTransform:
   - {fileID: 2022726828}
   - {fileID: 625378744}
   m_Father: {fileID: 3785150}
-  m_RootOrder: 9
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -19946,7 +19897,7 @@ GameObject:
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2056777600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19980,9 +19931,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 57e25bacba4929344b51b03fa4a132f4, type: 3}
   - {fileID: 8300000, guid: a06d80098b68fb14c8ec097b0288f762, type: 3}
   - {fileID: 8300000, guid: fece082f8f01e1843859707813a11efa, type: 3}
-  _victory: {fileID: 0}
-  _failure: {fileID: 0}
-  _spawning: {fileID: 8300000, guid: 2435e2df3fc523e47a9b22715eaf2595, type: 3}
+  _victory: {fileID: 8300000, guid: a63a596a379131f46a6f2ded20bac10f, type: 3}
+  _failure: {fileID: 8300000, guid: b12ecec4ba239814881488465f517a07, type: 3}
+  _spawning: {fileID: 8300000, guid: 74f35bb410b330d40b5a80af6e02a480, type: 3}
   _gunshot: {fileID: 8300000, guid: 76981588b9727d246b3b6812f3bab25e, type: 3}
   _wantedKilled: {fileID: 8300000, guid: 457c7008ef77b2e41b22238ac231fc20, type: 3}
   _achievementScored: {fileID: 8300000, guid: 84266891a407bba41a3c406d2eeb091a, type: 3}

@@ -29,6 +29,7 @@ public class GameOverUI : MonoBehaviour
 
         GameManager.Instance.OnGameOver += activateGameOverScreen;
         GameManager.Instance.OnGameOverOnTime += gameOverOnTime;
+        GameManager.Instance.OnGameOverOnScore += gameOverOnScore;
         GameManager.Instance.OnQuitToMainMenu += deactivateGameOverScreen;
         GameManager.Instance.OnGameOverSendFinalScore += updateHighsoreValue;
         GameManager.Instance.OnWorldDestruction += changeGameOverTextOnWorldDestruction;
@@ -39,6 +40,7 @@ public class GameOverUI : MonoBehaviour
     {
         GameManager.Instance.OnGameOver -= activateGameOverScreen;
         GameManager.Instance.OnGameOverOnTime -= gameOverOnTime;
+        GameManager.Instance.OnGameOverOnScore -= gameOverOnScore;
         GameManager.Instance.OnQuitToMainMenu -= deactivateGameOverScreen;
         GameManager.Instance.OnGameOverSendFinalScore -= updateHighsoreValue;
         GameManager.Instance.OnWorldDestruction -= changeGameOverTextOnWorldDestruction;
@@ -53,6 +55,11 @@ public class GameOverUI : MonoBehaviour
     private void gameOverOnTime()
     {
         _gameOverText.SetText(_gameOverOnTimeMessages.GetRandomElement());
+    }
+
+    private void gameOverOnScore()
+    {
+        _gameOverText.SetText("Lost on score, you say?");
     }
 
     private void changeGameOverTextOnWorldDestruction()

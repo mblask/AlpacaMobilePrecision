@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
         DifficultyUI.OnDifficultyChanged += SetDifficulty;
 
         _audioManager = AudioManager.Instance;
+
         resetScore();
 
         SaveManager.LoadProgress();
@@ -212,9 +213,8 @@ public class GameManager : MonoBehaviour
         _score += scoreIncrement;
 
         if (_score < 0)
-        {
-            Debug.Log("Game over on score");
-        }
+            gameOverOnScore();
+
         OnScoreUpdate?.Invoke(_score);
     }
     
@@ -251,9 +251,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        TotalScore totalScore = new TotalScore { Level = LevelManager.GrabLevel(), Accuracy = HitManager.GrabPlayerAccuracy(), Score = _score, TimeRemaining = TimeManager.GrabTimerValue() };
-
-        float finalScore = calculateFinalScore(totalScore);
+        float finalScore = calculateFinalScore();
 
         if (!onTime)
             OnGameOver?.Invoke();
@@ -271,6 +269,13 @@ public class GameManager : MonoBehaviour
         gameOver(GameOverType.Failure);
         OnGameOverOnTime?.Invoke();
     }
+
+    private void gameOverOnScore()
+    {
+        gameOver(GameOverType.Failure);
+        OnGameOverOnScore?.Invoke();
+        OnGameOverSendFinalScore?.Invoke(new Highscore { Score = _score });
+    }
     
     private void gamePassed()
     {
@@ -284,15 +289,23 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < numOfExplosions; i++)
         {
             Instantiate(GameAssets.Instance.GlobalDestructionPS, Utilities.GetRandomWorldPositionFromScreen(), Quaternion.identity, null);
-            _audioManager.PlaySFXClip(SFXClipType.Explosion);
+            _audioManager?.PlaySFXClip(SFXClipType.Explosion);
         }
 
         //shake camera
         OnWorldDestruction?.Invoke();
     }
 
-    private float calculateFinalScore(TotalScore totalScore)
+    private float calculateFinalScore()
     {
+        TotalScore totalScore = new TotalScore
+        {
+            Level = LevelManager.GrabLevel(),
+            Accuracy = HitManager.GrabPlayerAccuracy(),
+            Score = _score,
+            TimeRemaining = TimeManager.GrabTimerValue()
+        };
+
         float finalScore = totalScore.Level * (totalScore.Score + totalScore.Accuracy);
         if (totalScore.TimeRemaining > 0.0f)
             finalScore += totalScore.Level * totalScore.TimeRemaining;
@@ -349,6 +362,10 @@ public class GameManager : MonoBehaviour
     public void QuitToMainMenu()
     {
         PauseGame(false);
+
+        float finalScore = calculateFinalScore();
+        EvaluateNewHighscore(finalScore);
+
         OnQuitToMainMenu?.Invoke();
     }
 

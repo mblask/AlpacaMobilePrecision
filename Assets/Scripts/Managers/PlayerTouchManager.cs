@@ -25,7 +25,6 @@ public class PlayerTouchManager : MonoBehaviour
     private RuntimePlatform _runtimePlatform;
 
     private float _touchTime;
-    private float _mouseTimer = 0.0f;
 
     [Header("For Testing")]
     [SerializeField] private bool _inputActive = false;

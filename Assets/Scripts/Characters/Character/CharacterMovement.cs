@@ -93,7 +93,7 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
 
         List<Transform> obstaclesList = _levelManager.GetObjectList(ObjectListType.Obstacle);
 
-        float borderScaling = 1.2f;
+        float borderMargin = 0.14f;
         if (obstaclesList != null && _waypointsDependOnObstacles)
         {
             if (Utilities.ChanceFunc(50))
@@ -102,13 +102,13 @@ public class CharacterMovement : MonoBehaviour, ICharacterMove
             }
             else
             {
-                Vector2 randomPosition = Utilities.GetRandomWorldPositionFromScreen(borderScaling, origin);
+                Vector2 randomPosition = Utilities.GetRandomWorldPositionFromScreen(borderMargin, origin);
                 _waypointPositions.Add(randomPosition);
             }
         }
         else
         {
-            Vector2 randomPosition = Utilities.GetRandomWorldPositionFromScreen(borderScaling, origin);
+            Vector2 randomPosition = Utilities.GetRandomWorldPositionFromScreen(borderMargin, origin);
             _waypointPositions.Add(randomPosition);
         }
     }
