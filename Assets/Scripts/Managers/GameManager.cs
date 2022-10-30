@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
     private void setLightingIntensity(Difficulty difficulty)
     {
         float normalIntensity = 1.0f;
-        float ridiculousIntensity = 0.15f;
+        float ridiculousIntensity = 0.25f;
 
         switch (difficulty)
         {

@@ -41,6 +41,7 @@ public class AchievementsManager : MonoBehaviour
     private int _accuracyLevelsComplete = 0;
     private bool _affiliationSwitched = false;
     private int _numOfAffiliationSwitchesSurvived = 0;
+    private List<int> _levelsReached = new List<int>();
 
     [Space]
     [SerializeField] private List<Achievement> _possibleAchievements;
@@ -117,6 +118,7 @@ public class AchievementsManager : MonoBehaviour
     {
         _trackTime = false;
         _gameLevelStopwatch = 0.0f;
+        _levelsReached.Clear();
         _negativeCharactersKilled = 0;
         _accuracyLevelsComplete = 0;
         _accuracyPerAccuracyLevel.Clear();
@@ -128,6 +130,7 @@ public class AchievementsManager : MonoBehaviour
     {
         return new AchievementTrackers {
             GameLevelStopwatch = _gameLevelStopwatch,
+            LevelsReached = _levelsReached,
             NegativeCharactersKilled = _negativeCharactersKilled,
             AccuracyLevelsComplete = _accuracyLevelsComplete,
             AccuracyPerAccuracyLevel = _accuracyPerAccuracyLevel,
@@ -268,33 +271,49 @@ public class AchievementsManager : MonoBehaviour
         if (_gameLevelStopwatch == 0.0f)
             return;
 
-        List<float> timeCheckList = new List<float> { 5.0f, 30.0f, 180.0f, 300.0f };
+        List<float> timeCheckList = new List<float> { 5.0f, 30.0f, 180.0f, 600.0f };
 
         switch (level)
         {
             case 4:
-                if (_gameLevelStopwatch <= timeCheckList[0])
-                    //Reach level 4 within 5 seconds
-                    achievementUnlocked(AchievementType.Reach4);
+                if (!levelIsReached(level))
+                    if (_gameLevelStopwatch <= timeCheckList[0])
+                        //Reach level 4 within 5 seconds
+                        achievementUnlocked(AchievementType.Reach4);
+
                 break;
             case 10:
-                if (_gameLevelStopwatch <= timeCheckList[1])
-                    //Reach level 10 within 30 seconds
-                    achievementUnlocked(AchievementType.Reach10);
+                if (!levelIsReached(level))
+                    if (_gameLevelStopwatch <= timeCheckList[1])
+                        //Reach level 10 within 30 seconds
+                        achievementUnlocked(AchievementType.Reach10);
                 break;
             case 20:
-                if (_gameLevelStopwatch <= timeCheckList[2])
-                    //Reach level 20 withing 3 minutes (180 seconds)
-                    achievementUnlocked(AchievementType.Reach20);
+                if (!levelIsReached(level))
+                    if (_gameLevelStopwatch <= timeCheckList[2])
+                        //Reach level 20 withing 3 minutes (180 seconds)
+                        achievementUnlocked(AchievementType.Reach20);
                 break;
             case 35:
-                if (_gameLevelStopwatch <= timeCheckList[3])
-                    //Reach final level within 5 minutes (300 seconds)
-                    achievementUnlocked(AchievementType.Reach35);
+                if (!levelIsReached(level))
+                    if (_gameLevelStopwatch <= timeCheckList[3])
+                        //Reach final level within 5 minutes (300 seconds)
+                        achievementUnlocked(AchievementType.Reach35);
                 break;
             default:
                 break;
         }
+    }
+
+    private bool levelIsReached(int level)
+    {
+        if (!_levelsReached.Contains(level))
+        {
+            _levelsReached.Add(level);
+            return false;
+        }
+
+        return true;
     }
 
     private void trackCharactersKilled(Character characterKilled)
@@ -353,6 +372,12 @@ public class AchievementsManager : MonoBehaviour
             return;
 
         _gameLevelStopwatch = achievementTrackers.GameLevelStopwatch;
+        if (_levelsReached == null)
+        {
+            _levelsReached = new List<int>();
+            _levelsReached = achievementTrackers.LevelsReached;
+        }
+        _levelsReached = achievementTrackers.LevelsReached;
         _negativeCharactersKilled = achievementTrackers.NegativeCharactersKilled;
         _accuracyLevelsComplete = achievementTrackers.AccuracyLevelsComplete;
 

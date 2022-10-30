@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[System.Serializable]
 public class TooltipParameters
 {
     public Vector2 Position;

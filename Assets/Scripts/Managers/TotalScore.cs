@@ -1,3 +1,4 @@
+[System.Serializable]
 public class TotalScore
 {
     public int Score;

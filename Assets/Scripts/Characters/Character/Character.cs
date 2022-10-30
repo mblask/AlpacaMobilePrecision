@@ -43,8 +43,6 @@ public class Character : MonoBehaviour, IDamagable
         _characterSpawning = GetComponent<ISpawnCharacters>();
 
         characterInitialSetup();
-        //_characterType = AssignRandomCharacterType();
-        //_spriteRenderer.color = assignCharacterColor(_characterType);
     }
 
     private void OnEnable()
@@ -69,6 +67,9 @@ public class Character : MonoBehaviour, IDamagable
         _characterType = AssignRandomCharacterType();
         _spriteRenderer.color = assignCharacterColor(_characterType);
         _spriteRenderer.sprite = GameAssets.Instance.CharacterSprites.GetRandomElement();
+
+        float zRotation = UnityEngine.Random.Range(0.0f, 180.0f);
+        transform.Rotate(0.0f, 0.0f, zRotation);
     }
 
     private void levelUpCharacter(CharacterLevelUpProperties properties)

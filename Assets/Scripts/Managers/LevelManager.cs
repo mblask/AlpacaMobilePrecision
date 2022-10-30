@@ -146,8 +146,11 @@ public class LevelManager : MonoBehaviour
             loadLevel(_initializeLevelNumber);
         else
         {
-            if (_useCheckpoints && getLastCheckpoint() != 0/* && _levelNumber < getLastCheckpoint()*/)
-                _levelNumber = getLastCheckpoint();
+            if (_useCheckpoints)
+                if (getLastCheckpoint() != 0)
+                    _levelNumber = getLastCheckpoint();
+                else
+                    _levelNumber = 1;
 
             if (_levelNumber == 1)
             {
@@ -277,6 +280,12 @@ public class LevelManager : MonoBehaviour
         _numOfObstacles = _initialNumOfObstacles;
     }
 
+    private void restartGame()
+    {
+        ReloadGame();
+        _audioManager?.PlaySFXClip(SFXClipType.Failure);
+    }
+
     public void ReloadGame()
     {
         //if any checkpoint is unlocked it will load the checkpoint level
@@ -302,7 +311,7 @@ public class LevelManager : MonoBehaviour
 
     private void loadAd()
     {
-        int chanceToShowAd = 100;
+        int chanceToShowAd = 50;
 
         if (Utilities.ChanceFunc(chanceToShowAd))
         {
@@ -310,6 +319,28 @@ public class LevelManager : MonoBehaviour
 
             interstitialAd.LoadAd();
             interstitialAd.ShowAd();
+        }
+    }
+
+    private void checkCheckpoints(int levelNumber)
+    {
+        //Review and clean code!!!
+        if (levelNumber >= _checkpoint1.CheckpointLevel && !_checkpoint1.CheckpointUnlocked)
+        {
+            _checkpoint1.CheckpointUnlocked = true;
+            OnCheckpointReached?.Invoke();
+        }
+
+        if (levelNumber >= _checkpoint2.CheckpointLevel && !_checkpoint2.CheckpointUnlocked)
+        {
+            _checkpoint2.CheckpointUnlocked = true;
+            OnCheckpointReached?.Invoke();
+        }
+
+        if (levelNumber >= _checkpoint3.CheckpointLevel && !_checkpoint3.CheckpointUnlocked)
+        {
+            _checkpoint3.CheckpointUnlocked = true;
+            OnCheckpointReached?.Invoke();
         }
     }
 
@@ -381,24 +412,7 @@ public class LevelManager : MonoBehaviour
         if (levelNumber == 0)
             return;
 
-        //Review and clean code!!!
-        if (levelNumber >= _checkpoint1.CheckpointLevel && !_checkpoint1.CheckpointUnlocked)
-        {
-            _checkpoint1.CheckpointUnlocked = true;
-            OnCheckpointReached?.Invoke();
-        }
-
-        if (levelNumber >= _checkpoint2.CheckpointLevel && !_checkpoint2.CheckpointUnlocked)
-        {
-            _checkpoint2.CheckpointUnlocked = true;
-            OnCheckpointReached?.Invoke();
-        }
-
-        if (levelNumber >= _checkpoint3.CheckpointLevel && !_checkpoint3.CheckpointUnlocked)
-        {
-            _checkpoint3.CheckpointUnlocked = true;
-            OnCheckpointReached?.Invoke();
-        }
+        checkCheckpoints(levelNumber);
 
         _levelNumber = levelNumber;
         OnLoadLevel?.Invoke(levelNumber);
@@ -498,7 +512,7 @@ public class LevelManager : MonoBehaviour
             //SPEED, FADING, AFFILIATION, DESTROYER, TIMER, SPAWNING, ACCURACY
             editLevelSettings(true, true, true);
             _accuracyRequiredToPassLevel = levelNumber * 1.5f / 100.0f;
-            float timerValue = Mathf.Floor(25.0f - (levelNumber - 22) * levelNumber / 30.0f);
+            float timerValue = Mathf.Floor(30.0f - (levelNumber - 22) * levelNumber / 30.0f);
             int speedIncrease = (int)Mathf.Floor(9.0f * levelNumber / 10.0f);
             editLevelEvents(new CharacterLevelUpProperties { PercentageSpeedIncrease = speedIncrease, SpeedDistanceDependance = SpeedDistanceDependance.High, CharactersSpawnNewCharacters = true }, _accuracyRequiredToPassLevel, timerValue);
         }
@@ -533,7 +547,7 @@ public class LevelManager : MonoBehaviour
             int badCharactersNum = getCharacterTypeAmount(CharacterType.Negative);
 
             if (badCharactersNum == 0)
-                ReloadGame();
+                restartGame();
         }
 
         if (affiliationTrigger == null && obstacleDestroyer == null)
@@ -559,7 +573,7 @@ public class LevelManager : MonoBehaviour
         if (goodCharactersNum == 0)
         {
             if (lastCharacterDestroyed.GetCharacterType().Equals(CharacterType.Positive))
-                ReloadGame();
+                restartGame();
             else
             {
                 if (badCharactersNum == 0)
@@ -588,7 +602,7 @@ public class LevelManager : MonoBehaviour
                 loadNewLevel();
             }
             else
-                ReloadGame();
+                restartGame();
         }
         else
         {

@@ -1,3 +1,4 @@
+[System.Serializable]
 public class CharacterLevelUpProperties
 {
     public int PercentageSpeedIncrease;

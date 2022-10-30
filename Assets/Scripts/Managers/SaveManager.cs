@@ -81,10 +81,11 @@ public static class SaveManager
         if (File.Exists(savePath))
         {
             string loadString = File.ReadAllText(savePath);
+
             GameProgress gameProgress = JsonUtility.FromJson<GameProgress>(loadString);
 
             GameManager.Instance?.SetFirstLaunch(gameProgress.FirstLaunch);
-            GameManager.Instance.SetDifficulty(gameProgress.Difficulty);
+            GameManager.Instance?.SetDifficulty(gameProgress.Difficulty);
             LevelManager.Instance?.SetLevel(gameProgress.Level);
             LevelManager.Instance?.SetCheckpoints(gameProgress.CheckpointsList);
             AchievementsManager.Instance?.LoadAchievements(gameProgress.AchievementsList);
