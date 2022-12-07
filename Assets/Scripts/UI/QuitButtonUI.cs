@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class QuitButtonUI : MonoBehaviour
 {
@@ -17,6 +18,15 @@ public class QuitButtonUI : MonoBehaviour
         _button.onClick.AddListener(() => {
             SaveManager.SaveProgress();
         });
+    }
+
+    private void Start()
+    {
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            _button.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().SetText("WebGL Ver.");
+            _button.interactable = false;
+        }
     }
 
     private void OnDisable()

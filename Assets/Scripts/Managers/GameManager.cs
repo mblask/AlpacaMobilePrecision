@@ -81,7 +81,8 @@ public class GameManager : MonoBehaviour
 
         resetScore();
 
-        SaveManager.LoadProgress();
+        if (Application.platform != RuntimePlatform.WebGLPlayer)
+            SaveManager.LoadProgress();
 
         onFirstLaunch();
     }
@@ -155,6 +156,9 @@ public class GameManager : MonoBehaviour
 
     public void ResetGameProgress()
     {
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+            return;
+
         //reset difficulty
         SetDifficulty(Difficulty.Normal);
 

@@ -30,6 +30,7 @@ public class LevelManager : MonoBehaviour
     public Action OnResetUI;
     public Action<CharacterLevelUpProperties> OnCharacterLevelUp;
     public Action<int> OnCharacterDestroyedAtLevel;
+    public Action<int> OnSendNegativeCharactersNumber;
     public Action<float> OnActivateTimer;
     public Action<float> OnActivateAccuracy;
     public Action OnGrabPlayerAccuracy;
@@ -116,6 +117,12 @@ public class LevelManager : MonoBehaviour
         _charactersList.Add(characterToAdd);
     }
 
+    private void removeCharacterFromList(Transform characterToRemove)
+    {
+        _charactersList.Remove(characterToRemove);
+
+    }
+
     public void ClearGame()
     {
         //cleaning the lists and destroying existing objects
@@ -185,6 +192,8 @@ public class LevelManager : MonoBehaviour
             _affiliationTransform = spawnObject(_gameAssets.AffiliationTrigger);
         //Testing purposes
         OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None, CharactersSpawnNewCharacters = _charactersSpawnNewCharacters });
+
+        OnSendNegativeCharactersNumber?.Invoke(getCharacterTypeAmount(CharacterType.Negative));
     }
 
     private void initializeObjects(Transform objectTransform, int numOfObjects, LayerMask layerToAvoid, List<Transform> listToStoreObjects = null)
@@ -397,6 +406,14 @@ public class LevelManager : MonoBehaviour
     {
         _levelNumber++;
 
+        if (_levelNumber > 10 && Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            resetGameSettings();
+            resetCheckpointsUnlocked();
+            ReloadGame();
+            return;
+        }
+
         if (_levelNumber <= 35)
             loadLevel(_levelNumber);
         else
@@ -548,6 +565,8 @@ public class LevelManager : MonoBehaviour
 
             if (badCharactersNum == 0)
                 restartGame();
+
+            OnSendNegativeCharactersNumber?.Invoke(getCharacterTypeAmount(CharacterType.Negative));
         }
 
         if (affiliationTrigger == null && obstacleDestroyer == null)
@@ -556,7 +575,10 @@ public class LevelManager : MonoBehaviour
             checkAmountOfGoodBadChars(characterDestroyed);
 
             if (characterDestroyed.GetCharacterType().Equals(CharacterType.Negative))
+            {
                 OnCharacterDestroyedAtLevel?.Invoke(_levelNumber);
+                OnSendNegativeCharactersNumber?.Invoke(getCharacterTypeAmount(CharacterType.Negative));
+            }
         }
     }
 

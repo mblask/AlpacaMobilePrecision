@@ -63,7 +63,7 @@ public class PlayerTouchManager : MonoBehaviour
             androidInput();
         }
         
-        if (_runtimePlatform.Equals(RuntimePlatform.WindowsPlayer))
+        if (_runtimePlatform.Equals(RuntimePlatform.WindowsPlayer) || _runtimePlatform.Equals(RuntimePlatform.WebGLPlayer))
             windowsInput();
     }
 

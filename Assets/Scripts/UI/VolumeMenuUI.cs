@@ -16,26 +16,34 @@ public class VolumeMenuUI : MonoBehaviour
     {
         _sfxVolumeSlider = transform.Find("SFXVolumeSlider").GetComponent<Slider>();
         _musicVolumeSlider = transform.Find("MusicVolumeSlider").GetComponent<Slider>();
-        _muteSFXToggle = transform.Find("MuteSFXCheckbox").GetComponent<Toggle>();
-        _muteMusicToggle = transform.Find("MuteMusicCheckbox").GetComponent<Toggle>();
+        //_muteSFXToggle = transform.Find("MuteSFXCheckbox").GetComponent<Toggle>();
+        //_muteMusicToggle = transform.Find("MuteMusicCheckbox").GetComponent<Toggle>();
+    }
+
+    private void OnEnable()
+    {
+        _sfxVolumeSlider.onValueChanged.AddListener(onSFXSliderValueChanged);
+        _musicVolumeSlider.onValueChanged.AddListener(onMusicSliderValueChanged);
+        //_muteMusicToggle.onValueChanged.AddListener(onMusicMuteToggle);
+        //_muteSFXToggle.onValueChanged.AddListener(onSFXMuteToggle);
     }
 
     private void Start()
     {
         _audioManager = AudioManager.Instance;
 
-        _sfxVolumeSlider.onValueChanged.AddListener(onSFXSliderValueChanged);
-        _musicVolumeSlider.onValueChanged.AddListener(onMusicSliderValueChanged);
-        _muteMusicToggle.onValueChanged.AddListener(onMusicMuteToggle);
-        _muteSFXToggle.onValueChanged.AddListener(onSFXMuteToggle);
+        //_sfxVolumeSlider.onValueChanged.AddListener(onSFXSliderValueChanged);
+        //_musicVolumeSlider.onValueChanged.AddListener(onMusicSliderValueChanged);
+        //_muteMusicToggle.onValueChanged.AddListener(onMusicMuteToggle);
+        //_muteSFXToggle.onValueChanged.AddListener(onSFXMuteToggle);
     }
 
     private void OnDisable()
     {
         _sfxVolumeSlider.onValueChanged.RemoveAllListeners();
         _musicVolumeSlider.onValueChanged.RemoveAllListeners();
-        _muteMusicToggle.onValueChanged.RemoveAllListeners();
-        _muteSFXToggle.onValueChanged.RemoveAllListeners();
+        //_muteMusicToggle.onValueChanged.RemoveAllListeners();
+        //_muteSFXToggle.onValueChanged.RemoveAllListeners();
     }
 
     private void onSFXMuteToggle(bool value)
