@@ -7,6 +7,7 @@ public class TimeManager : MonoBehaviour
 {
     public Action<bool> OnActivateTime;
     public Action<float> OnUpdateTime;
+    public Action OnLastFiveSeconds;
     public Action OnTimeIsOut;
 
     private static TimeManager _instance;
@@ -23,6 +24,7 @@ public class TimeManager : MonoBehaviour
 
     [SerializeField] private float _timer;
     private bool _timerOn = false;
+    private bool _lastFiveReached = false;
 
     private void Awake()
     {
@@ -78,6 +80,13 @@ public class TimeManager : MonoBehaviour
                 _timer -= 0.1f;
                 _timeDelta = 0.0f;
                 OnUpdateTime?.Invoke(_timer);
+            }
+
+            if (_timer <= 5.0f && !_lastFiveReached)
+            {
+                _lastFiveReached = true;
+                Debug.Log("Last five seconds!");
+                OnLastFiveSeconds?.Invoke();
             }
 
             if (_timer <= 0.0f)

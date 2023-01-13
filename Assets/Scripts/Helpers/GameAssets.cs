@@ -25,6 +25,7 @@ public class GameAssets : MonoBehaviour
     [Header("Sprites")]
     public List<Sprite> CharacterSprites;
     public List<Sprite> ObstacleSprites;
+    public List<Sprite> IndestructableObstacleSprites;
     public List<Sprite> AffiliationTriggerSprites;
     public List<Sprite> ObstacleDestroyerSprites;
 

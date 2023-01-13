@@ -29,13 +29,14 @@ public class Obstacle : MonoBehaviour, IDamagable
     private void Awake()
     {
         _spriteRenderer = transform.Find("ObstacleBody").GetComponent<SpriteRenderer>();
-        _spriteRenderer.sprite = GameAssets.Instance.ObstacleSprites.GetRandomElement();
+        //_spriteRenderer.sprite = GameAssets.Instance.ObstacleSprites.GetRandomElement();
         _obstacleAnimation = GetComponent<ObjectAnimation>();
     }
 
     private void Start()
     {
         _obstacleType = getObstacleType();
+        _spriteRenderer.sprite = getObstacleSprite(_obstacleType);
         _spriteRenderer.color = getObstacleColor(_obstacleType);
         _obstacleHitPoint = getObstacleHitPoints(_obstacleType);
 
@@ -78,11 +79,24 @@ public class Obstacle : MonoBehaviour, IDamagable
         switch (type)
         {
             case ObstacleType.Solid:
-                return Color.gray;
+                return new Color(0.8f, 0.8f, 0.8f);
             case ObstacleType.Fragile:
-                return Color.blue;
+                return new Color(0.1f, 0.5f, 0.8f);
             default:
                 return Color.black;
+        }
+    }
+
+    private Sprite getObstacleSprite(ObstacleType type)
+    {
+        switch (type)
+        {
+            case ObstacleType.Solid:
+                return GameAssets.Instance.IndestructableObstacleSprites.GetRandomElement();
+            case ObstacleType.Fragile:
+                return GameAssets.Instance.ObstacleSprites.GetRandomElement();
+            default:
+                return null;
         }
     }
 

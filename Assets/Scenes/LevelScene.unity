@@ -9964,7 +9964,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _randomStartingColor: 1
-  _colorsFlow: 1
+  _colorsFlow: 0
 --- !u!4 &438377006
 Transform:
   m_ObjectHideFlags: 0
@@ -12589,8 +12589,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnAffiliationTrigger: 0
   _charactersSpawnNewCharacters: 0
-  _initializeLevelNumber: 1
-  _levelNumber: 1
+  _initializeLevelNumber: 25
+  _levelNumber: 12
   _useCheckpoints: 1
 --- !u!4 &625671165
 Transform:
@@ -21173,10 +21173,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1b16056a7cc4614468bd5ec4941f0b57, type: 3}
   - {fileID: 21300000, guid: 503d6858984bb8b4e8b44cdd4239ab04, type: 3}
   - {fileID: 21300000, guid: 36b5dc38e13e04e4bac72d3a6f83af53, type: 3}
+  IndestructableObstacleSprites:
+  - {fileID: 21300000, guid: 9f85b39141eb77647b42cf8256f0b7e7, type: 3}
+  - {fileID: 21300000, guid: 7e519839238a78041bdc317ad50cd2e2, type: 3}
   AffiliationTriggerSprites:
   - {fileID: 21300000, guid: 1343128bf0ed20945a9b93c843c5da71, type: 3}
+  - {fileID: 21300000, guid: 387e58d4d9124b14d83006d1ceb751c7, type: 3}
   ObstacleDestroyerSprites:
   - {fileID: 21300000, guid: 4830011ed8f24e84185e224176cfb42a, type: 3}
+  - {fileID: 21300000, guid: 2dd1e65278092dc40bc84f01558f644c, type: 3}
   WantedCharacterUI: {fileID: 1003979447621054587, guid: d8cfec69aba34434dae66a57dc89da5c,
     type: 3}
   AchievementUI: {fileID: 6842623321435528591, guid: a8988c2e3af89554ca3c3f65e5b60e9c,
@@ -29210,7 +29215,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Version: 1.1'
+  m_text: 'Version: 1.2'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 197ca795e3025c441bfd9e5928013088, type: 2}
   m_sharedMaterial: {fileID: 155400222926427328, guid: 197ca795e3025c441bfd9e5928013088,

@@ -92,6 +92,7 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy += removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu += ClearGame;
         GameManager.Instance.OnGameOver += resetGameSettings;
+        TimeManager.Instance.OnLastFiveSeconds += deactivateFadeAndShowAllCharacters;
 
         _mainCamera = Camera.main;
         _gameAssets = GameAssets.Instance;
@@ -110,17 +111,19 @@ public class LevelManager : MonoBehaviour
         Obstacle.OnObstacleDestroy -= removeObstacleFromList;
         GameManager.Instance.OnQuitToMainMenu -= ClearGame;
         GameManager.Instance.OnGameOver -= resetGameSettings;
+        TimeManager.Instance.OnLastFiveSeconds -= deactivateFadeAndShowAllCharacters;
     }
 
     private void addCharacterToList(Transform characterToAdd)
     {
         _charactersList.Add(characterToAdd);
+        OnSendNegativeCharactersNumber?.Invoke(getCharacterTypeAmount(CharacterType.Negative));
     }
 
     private void removeCharacterFromList(Transform characterToRemove)
     {
         _charactersList.Remove(characterToRemove);
-
+        OnSendNegativeCharactersNumber?.Invoke(getCharacterTypeAmount(CharacterType.Negative));
     }
 
     public void ClearGame()
@@ -166,7 +169,6 @@ public class LevelManager : MonoBehaviour
             }
 
             loadLevel(_levelNumber);
-            InvokeRepeating(nameof(fadeCharacter), Utilities.RandomFloat(0.5f, 2.0f), Utilities.RandomFloat(0.5f, 1.0f));
         }
 
         _audioManager?.PlayMusicClip();
@@ -194,6 +196,8 @@ public class LevelManager : MonoBehaviour
         OnCharacterLevelUp?.Invoke(new CharacterLevelUpProperties { PercentageSpeedIncrease = 0, SpeedDistanceDependance = SpeedDistanceDependance.None, CharactersSpawnNewCharacters = _charactersSpawnNewCharacters });
 
         OnSendNegativeCharactersNumber?.Invoke(getCharacterTypeAmount(CharacterType.Negative));
+
+        InvokeRepeating(nameof(fadeCharacter), Utilities.RandomFloat(0.5f, 2.0f), Utilities.RandomFloat(0.5f, 1.0f));
     }
 
     private void initializeObjects(Transform objectTransform, int numOfObjects, LayerMask layerToAvoid, List<Transform> listToStoreObjects = null)
@@ -667,6 +671,25 @@ public class LevelManager : MonoBehaviour
 
             if (fadeObject != null)
                 fadeObject.ActivateFade(!fadeObject.IsInvisible());
+        }
+    }
+
+    private void deactivateFadeAndShowAllCharacters()
+    {
+        if (!_fadeCharacters)
+            return;
+
+        if (!_gameRunning)
+            return;
+
+        if (_charactersList.Count == 0)
+            return;
+
+        _fadeCharacters = false;
+        foreach (Transform characterTransform in _charactersList)
+        {
+            FadeObject fade = characterTransform.GetComponent<FadeObject>();
+            fade.ActivateFade(false);
         }
     }
 

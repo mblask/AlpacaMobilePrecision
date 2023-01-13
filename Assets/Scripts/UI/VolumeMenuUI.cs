@@ -53,6 +53,9 @@ public class VolumeMenuUI : MonoBehaviour
 
     private void onSFXSliderValueChanged(float value)
     {
+        if (_muteSFXToggle == null)
+            return;
+
         if (value == _sfxVolumeSlider.minValue)
             _muteSFXToggle.isOn = true;
         else
@@ -66,6 +69,9 @@ public class VolumeMenuUI : MonoBehaviour
 
     private void onMusicSliderValueChanged(float value)
     {
+        if (_muteMusicToggle == null)
+            return;
+
         if (value == _musicVolumeSlider.minValue)
             _muteMusicToggle.isOn = true;
         else
